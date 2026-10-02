@@ -50,7 +50,7 @@
   /* ------------------------------------- 滚动进度 / 回到顶部 / 扫掠动效 */
   var progress = document.getElementById("navProgress");
   var toTop = document.getElementById("toTop");
-  var consoleGrid = document.querySelector(".console-grid");
+  var consoleGrid = document.querySelector("[data-camera]");
 
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;

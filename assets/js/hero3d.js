@@ -12,7 +12,7 @@ const hero = document.querySelector(".hero");
 const canvas = document.getElementById("heroCanvas");
 
 if (hero && canvas) {
-  const CORE_NDC = { x: 0.55, y: -0.66 };   // 核心的目标屏幕位置（NDC）
+  const CORE_NDC = { x: 0.228, y: 0.5 };    // 核心的目标屏幕位置（NDC，对准 [01] LAYER_ALPHA 标框）
 
   const readTheme = () => {
     const light = document.documentElement.getAttribute("data-theme") === "positive";
@@ -53,11 +53,11 @@ if (hero && canvas) {
     new THREE.LineBasicMaterial({ color: theme.line, transparent: true, opacity });
 
   const outerCore = new THREE.LineSegments(
-    new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(0.42, 0)),
+    new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(0.26, 0)),
     lineMat(0.6)
   );
   const innerCore = new THREE.LineSegments(
-    new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(0.24, 0)),
+    new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(0.15, 0)),
     lineMat(0.32)
   );
   coreGroup.add(outerCore, innerCore);
@@ -74,8 +74,8 @@ if (hero && canvas) {
     );
   };
 
-  const ringA = circleLine(0.68, 0.36);
-  const ringB = circleLine(0.55, 0.22);
+  const ringA = circleLine(0.42, 0.36);
+  const ringB = circleLine(0.34, 0.22);
   ringA.rotation.set(Math.PI / 2.6, 0.3, 0);
   ringB.rotation.set(-Math.PI / 3.2, -0.5, 0.4);
   coreGroup.add(ringA, ringB);

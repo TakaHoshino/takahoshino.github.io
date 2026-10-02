@@ -5,11 +5,11 @@
 
 - 线上地址：https://takahoshino.github.io/
 - 站点结构：个人主页（`/`）+ 项目详情页（`/wenku8reader/`、`/fuckets/`），
-  共用同一份样式表与设计语言
-- 设计方向：高密度信息图层 / 工业战术 UI / 编辑化海报排版
-- 骨架色：白 · 近黑 · 冷灰；系统色：单一高亮 `#d9ff00`（只用于编号、状态、
+  共用同一套设计令牌与组件语言
+- 设计方向：白色编辑化海报 / 高密度信息图层 / 工业战术 UI
+- 骨架色：白 · 近黑 · 冷灰；系统色：单一高亮 `#53ff18`（只用于编号、状态、
   线条、图形标记和激活态，不做大面积铺色）
-- 两套模式：`NEGATIVE`（黑底，默认）与 `POSITIVE`（白底），右上角切换并记忆选择
+- 两套模式：`POSITIVE`（白底，默认）与 `NEGATIVE`（黑底），右上角切换并记忆选择
 - **所有图形都由 CSS / SVG 手绘**，没有引用任何游戏素材、Logo、角色或图标
 
 ## 设计手法参考
@@ -19,18 +19,18 @@
 
 | 手法 | 在本站的落地 |
 | --- | --- |
-| 巨型粗体标题 + 横向饱和色带穿过文字 | 首屏 `.hero-slice`，色带从标题下方穿过并在卡片后消失 |
-| 大字后方的重复三角阵（半调纹理） | 首屏 `.tri-field`，铺在 `HOSHINO` 字形后方并向右侧渐隐 |
-| 斜向高亮条切割版面 | 作品区 `.sec-bar`，从卡片后方斜穿而过 |
-| 定位十字标（方框 + 圆心） | 首屏 `.reg-mark`，散布在版面边角 |
-| 超大字被前景物体遮挡 | 线框立方体 `.wire-cube` 压在身份卡上、色带穿过卡片后方 |
+| 巨大的两行粗体标题，一行描边、一行实心并点亮首字母 | 首屏 `.hero-name-line`（`.is-hollow` 描边 / `.is-solid em` 高亮） |
+| 巨型字号后方的重复几何 / 半调纹理 | 区块标题后的 `.ghost` 描边水印 |
+| 斜向高亮条切割版面 | 首屏 `.stage-diag`，一道细高光线斜穿版面 |
+| 定位十字标、虚线标框、坐标读数 | 首屏 `.rail-mark-*` 与 `[01] LAYER_ALPHA` / `[03] X:031 · Y:204` 之类的小标签 |
+| 2D 界面与 3D 物体分层穿插 | 首屏 Three.js 线框核心落在 `[01]` 标框内，UI 面板压在其上层 |
+| 直角、切角面板与细边框 | `.case` / `.dossier` 的 `clip-path` 切角 + 1px 描边 |
 | 左边缘竖排 Latin 边注 | `.edge-label`（`HOSHINO // PERSONAL ARCHIVE — EST.2022`） |
-| `[代号] 拉丁副标题` 细框铭牌 | `.hero-plate`（`[HS-001] 个人档案 · PERSONAL ARCHIVE`） |
+| `[编号] 小标签` 与状态条 | `.hero-id`、`.rail-label`、`.index-state` |
 | 巨型幽灵字水印 | 每个区块标题后的 `.ghost`（WORKS / PROFILE / LOG / CONTACT） |
-| 重复几何形 / V 形斜纹填充 | `.sec-rule` 的斜纹刻度线、`.corners` 的角标括号 |
+| 重复刻度线 / 细线网格 | `.sec-rule` 的刻度线、`.fx-grid` 的全局网格 |
 | 装饰性分隔与编号标记 | `.sec-meta` 前的 `◆`、区块编号 `01–04`、`W-001` 文件号 |
-| 高频小字标签与坐标读数 | 标签行、坐标轴、`.radar-legend` 的点线引导 |
-| 色差描边（RGB 分离） | `.hero-title-en` 的 `text-shadow` 偏移 |
+| 高频小字标签与读数 | `.hero-readout`、`.hero-tags`、`.radar-legend` |
 
 ## 目录结构
 
@@ -44,7 +44,8 @@
 ├── robots.txt / sitemap.xml   # 搜索引擎相关（新增页面记得补 sitemap）
 ├── .nojekyll                  # 让 GitHub Pages 跳过 Jekyll 处理
 └── assets
-    ├── css/style.css          # 样式系统：主题变量 + 网格 + 各区块组件 + 项目页
+    ├── css/style.css          # 共享设计系统：主题变量 + 网格 + 组件 + 项目页
+    ├── css/home.css           # 首页专属层（首屏空间 + 作品档案墙 + 档案面板）
     ├── img/avatar.jpg         # 头像（已本地化，不依赖 GitHub CDN）
     ├── img/wenku8reader.png   # 分享图（只给 og:image 用，页面内不展示）
     ├── js/main.js             # 配色切换、时钟、滚动进度、导航高亮、入场动画、复制邮箱
@@ -88,40 +89,43 @@ $env:PREVIEW_BROWSER='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.e
 
 | 编号 | 区块 | 锚点 | 内容 |
 | --- | --- | --- | --- |
-| — | 首屏主控台 | `#top` | 空间化三层结构，见下方 |
-| 01 | WORK 作品 | `#work` | 4 个项目卡（编号 / 类型 / 年份 / 技术栈 / 状态条 / 生成式缩略图） |
+| — | 首屏档案页 | `#top` | 编辑化海报 + 空间化背景，见下方 |
+| 01 | WORK 作品 | `#work` | 4 张作品档案卡（编号 / 类型 / 年份 / 技术栈 / 状态条 / 生成式缩略图），2 大 2 小的错落网格 |
 | 02 | PROFILE 档案 | `#profile` | 系统参数面板 + 能力雷达（含数值图例）+ 12 格模块阵列 |
 | 03 | LOG 日志 | `#log` | 5 条时间线记录（真实日期，取自 GitHub 仓库） |
 | 04 | CONTACT 联络 | `#contact` | 终端式提交面板 + 联系方式列表 |
 
-### 首屏：空间化主控台
+### 首屏：档案海报
 
-首屏不是卡片列表，而是一个分层的可操作空间：
+首屏不是卡片列表，而是一张可以读的档案海报，左侧是文字主体、右侧是坐标标记与身份节点：
 
-| 层 | 元素 | 实现 |
+| 区块 | 元素 | 实现 |
 | --- | --- | --- |
-| 背景层 | 弧形巨幕、凸起平台、透视地面网格 | `.stage` 内的 `.stage-wall` / `.stage-platform` / `.stage-floor`，用 `perspective` + `rotateX` 做等距视角 |
-| 中景层 | HUD 状态条、代号标题、身份舱（头像 + 年限圆环 + 档案字段）、读数 | `.hud-strip` / `.hero-title` / `.pod` / `.hero-readout` |
-| 前景层 | 6 块错落悬浮的功能面板 | `.console` 内 `.mod`，整组 `rotateY(-9deg) rotateX(3deg)`，单块用 `--z` / `--y` 做前后错落 |
-| 底栏 | 系统状态条：焦点 / 最近更新 / 合作状态 / 邮箱 | `.statusbar` |
+| 背景层 | 细网格、柔和辉光、斜穿版面的高光线、十字标记 | `.stage` 内的 `.stage-grid` / `.stage-glow` / `.stage-diag` / `.stage-mark-*` |
+| 文字主体 | 档案编号行、两行巨型代号（一行描边一行实心）、三行说明、标签组、读数、主行动 | `.hero-id` / `.hero-name-line` / `.hero-sub` / `.hero-tags` / `.hero-readout` / `.hero-cta` |
+| 坐标标记 | `[01] LAYER_ALPHA` 虚线标框、绿色方块、`[03] X:031 · Y:204` 准星、`[04] RENDER_OK` | `.rail-mark-alpha` / `.rail-square` / `.rail-mark-coord` / `.rail-label-*` |
+| 身份节点 | 头像卡（含年限圆环）、代号与 ID 说明 | `.rail-node`（`[02] NODE_ACTIVE`） |
+| 系统索引 | 6 格功能入口与状态（ACTIVE / IN PROGRESS / LOCKED） | `.hero-index` 内 `.index-item` |
+| 底栏 | 焦点 / 最近更新 / 合作状态 / 邮箱 | `.statusbar` |
 
 #### WebGL 空间层
 
-首屏另有一层 Three.js 场景叠在 CSS 背景层之上：透视地面网格、粒子尘、右侧的悬浮线框核心（自转 + 轻微漂浮）。
+首屏另有一层 Three.js 场景叠在 CSS 背景层之上：透视地面网格、粒子尘、悬浮线框核心（自转 + 轻微漂浮）。
+宽屏时核心正好落在 `[01] LAYER_ALPHA` 标框内；窄屏或不支持 WebGL 时由 CSS 的静态圆环兜底。
 
 - **按需加载**：只有「视口 ≥ 1024px + 支持 WebGL + 未开启减少动效」时，页面空闲后才动态 `import()`，不会拖慢首屏。
-- **兜底**：不满足条件、加载失败或禁用 JS 时，CSS 的等距地面与平台照常显示（`.hero.has-3d` 控制两者切换）。
+- **兜底**：不满足条件、加载失败或禁用 JS 时，CSS 层与静态圆环照常显示（`.hero.has-3d` 控制两者切换）。
 - **交互**：鼠标移动产生视差，滚动时相机后退，切换配色时线条颜色跟随主题，页面不可见或离屏时暂停渲染。
 - **想关掉 3D**：删掉 `index.html` 末尾的「首屏 3D 引导」`<script type="module">` 即可，其余部分不受影响。
 - 依赖只有 Three.js 本体，已内置在 `assets/vendor/`，不请求任何外部 CDN。
 
-功能面板自带系统状态，映射关系：
+系统索引里的每个入口都带状态，映射关系：
 
 - `ACTIVE` — WORKS / PROFILE / LOG / CONTACT，可点击进入
 - `IN PROGRESS` — NOW，正在维护的项目
-- `LOCKED` — NOTES，尚未开放的内容（虚线边框 + 锁图标，不隐藏）
+- `LOCKED` — NOTES，尚未开放的内容（降透明度 + 虚线，不隐藏）
 
-滚动时首屏会轻微后退并淡出（`.console-grid` 上的 `transform`，由 `main.js` 按滚动比例驱动）。
+滚动时首屏会轻微后退并淡出（`[data-camera]` 上的 `transform`，由 `main.js` 按滚动比例驱动）。
 
 ## 项目详情页
 
@@ -171,22 +175,22 @@ $env:PREVIEW_BROWSER='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.e
 
 ### 静态资源版本号
 
-各页面引用的 CSS / JS 都带 `?v=` 版本号（当前 `?v=20261002b`）。
+各页面引用的 CSS / JS 都带 `?v=` 版本号（当前 `?v=20261002e`）。
 GitHub Pages 的静态资源会被浏览器缓存，如果出现「新版 HTML + 旧版 style.css」的混排，
 页面会整体错乱（首屏标题被裁、参数逐字换行等）；换 URL 能强制重新拉取。
 
-> **改完 `assets/` 下的 CSS / JS，记得把所有页面里的 `?v=` 同步递增**（例如 `20261002c`）。
+> **改完 `assets/` 下的 CSS / JS，记得把所有页面里的 `?v=` 同步递增**（例如 `20261002f`）。
 
 ## 常见修改
 
 | 想改什么 | 改哪里 |
 | --- | --- |
-| 代号 / 身份 / 座右铭 | `index.html` 首屏的 `.hero-title`、`.hero-lead`、`.hero-motto` |
-| 顶部状态标签 | 首屏 `.tag-row` 里的 `li.tag`（ID / ORIGIN / UPDATED） |
+| 代号大字 / 副标题 | `index.html` 首屏的 `.hero-name-line`（`.is-hollow` 描边行、`.is-solid` 实心行）与 `.hero-sub` |
+| 顶部状态标签 | 首屏 `.hud-strip` 里的 `li.hud-item`、`.hero-tags` 里的 `li.hero-tag` |
 | 读数数字 | `.hero-readout` 中的 `data-count="10"`，改属性同时改显示文本 |
-| 项目卡片 | 复制一个 `<article class="work-card ...">`；`work-card-lg` 控制跨 7 列还是 5 列 |
-| 项目缩略图 | 由 CSS 生成，样式在 `style.css` 的 `.thumb-a` ~ `.thumb-d` |
-| 参数面板字段 | `.param-list` 里的 `.param-row`（`dt` 是字段名，`dd` 是内容） |
+| 项目卡片 | 复制一个 `<article class="case ...">`；`case-wide` 控制跨 7 列还是 5 列 |
+| 项目缩略图 | 由 CSS 生成，图形在 `home.css` 的 `.case-media` 与 `.case-bars` / `.case-pane` / `.case-ring` / `.case-cross` / `.case-plus` |
+| 参数面板字段 | `.dossier-rows` 里的 `.dossier-row`（`dt` 是字段名，`dd` 是内容） |
 | 能力雷达数值 | `index.html` 里 `.radar-shape` 的 `points` 与 `.radar-legend` 的数字（**自评数值，按需修改**） |
 | 模块阵列 | `.modules` 里的 `li.module`，`is-on` 控制指示灯亮起 |
 | 日志条目 | `.log` 里的 `li.log-item`（日期 / 编号 / 标题 / 说明 / 状态） |
@@ -195,9 +199,10 @@ GitHub Pages 的静态资源会被浏览器缓存，如果出现「新版 HTML +
 | 新增项目页 | 见「项目详情页」一节：复制 `fuckets/index.html` 再改文案与 `data-gh-repo` |
 | 项目页版本号 / 体积 / 星标 | 不用手改，`version-sync.js` 按 `data-gh` 锚点自动填充；静态文案只是降级兜底 |
 | 静态资源版本号 | 各页面的 `style.css?v=` / `main.js?v=` / `version-sync.js?v=`，改完 `assets/` 就递增 |
-| 高亮色 | `style.css` 顶部 `--acc` / `--acc-strong`（`--acc` 是填充色，`--acc-strong` 是浅底上的文字色） |
+| 高亮色 | `style.css` 顶部 `--acc` / `--acc-strong`（`--acc` 是填充色 `#53ff18`，`--acc-strong` 是浅底上的文字色） |
 | 切角大小 | CSS 变量 `--cut`（大面板）与 `--cut-sm` |
-| 强制默认黑底 | `<head>` 里的小脚本，把 `var theme = saved \|\| (...)` 改成 `var theme = saved \|\| "negative"` |
+| 默认配色 | `<head>` 里的小脚本只管「读回上次选择」；想固定默认值，直接改 `<html data-theme="...">` |
+| 首页专属样式 | `assets/css/home.css`（`style.css` 是项目页共用的设计系统） |
 
 ## 关于雷达图数值
 

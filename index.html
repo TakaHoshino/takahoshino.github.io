@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="negative">
+<html lang="zh-CN" data-theme="positive">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -8,8 +8,8 @@
   <meta name="description" content="Hoshino 的个人档案 —— 独立开发者，专注 Android（Kotlin / Jetpack Compose）与 Windows 桌面（C# / .NET / WPF）应用开发。" />
   <meta name="author" content="Hoshino" />
   <meta name="keywords" content="Hoshino, TakaHoshino, 个人主页, 作品集, Android 开发, Kotlin, Jetpack Compose, C#, .NET, WPF" />
-  <meta name="theme-color" content="#0a0b0b" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#f4f5f3" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0a0b0b" media="(prefers-color-scheme: dark)" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="HOSHINO // 个人档案" />
@@ -22,15 +22,17 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <!-- 资源版本号：改动 assets 下的 CSS / JS 后同步递增，避免浏览器缓存旧文件与新页面混用 -->
-  <link rel="stylesheet" href="assets/css/style.css?v=20261002b" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20261002e" />
+  <link rel="stylesheet" href="assets/css/home.css?v=20261002e" />
 
   <script>
     (function () {
       try {
         var saved = localStorage.getItem("theme");
-        var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-        document.documentElement.setAttribute("data-theme", saved || (prefersLight ? "positive" : "negative"));
-      } catch (e) { /* 保持默认 negative */ }
+        if (saved === "negative" || saved === "positive") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) { /* 保持默认 positive */ }
     })();
   </script>
 
@@ -52,7 +54,7 @@
 <body>
   <a class="skip-link" href="#work">跳到主要内容</a>
 
-  <!-- 背景图层：网格 / 噪点 / 扫描线 / 缓慢漂移的几何体 -->
+  <!-- 背景图层：细网格 / 噪点 / 扫描线 / 缓慢漂移的几何体 -->
   <div class="fx" aria-hidden="true">
     <span class="fx-grid"></span>
     <span class="fx-lines"></span>
@@ -70,11 +72,12 @@
 
     <div class="nav-inner">
       <a class="nav-brand" href="#top" aria-label="返回顶部">
-        <span class="nav-mark" aria-hidden="true">HS</span>
+        <span class="nav-mark" aria-hidden="true"></span>
         <span class="nav-brand-text">
-          <b>HOSHINO</b>
-          <small>SYS.ID 103877289</small>
+          <b>HS // HOSHINO</b>
+          <small>PERSONAL ARCHIVE</small>
         </span>
+        <span class="nav-live"><i></i>SYS ONLINE</span>
       </a>
 
       <nav class="nav-links" id="navLinks" aria-label="主导航">
@@ -89,9 +92,8 @@
           <small>LOCAL</small>
           <b id="navClock">--:--:--</b>
         </span>
-        <span class="nav-live"><i></i>ONLINE</span>
         <button class="nav-toggle" id="themeToggle" type="button" aria-label="切换配色模式" title="切换配色模式">
-          <span aria-hidden="true">◐</span><b id="themeLabel">NEGATIVE</b>
+          <span aria-hidden="true">◐</span><b id="themeLabel">POSITIVE</b>
         </button>
       </div>
     </div>
@@ -100,157 +102,146 @@
   <main>
     <!-- ============================== HERO ============================== -->
     <section class="hero" id="top">
-      <div class="shell hero-shell">
-        <!-- 空间背景层：展厅弧墙 / 凸起平台 / 透视地面 -->
-        <div class="stage" aria-hidden="true">
-          <span class="stage-glow"></span>
-          <span class="stage-wall"></span>
-          <span class="stage-wall stage-wall-inner"></span>
-          <span class="stage-platform"></span>
-          <span class="stage-floor"></span>
-        </div>
+      <div class="stage" aria-hidden="true">
+        <span class="stage-grid"></span>
+        <span class="stage-glow"></span>
+        <span class="stage-diag"></span>
+        <span class="stage-mark stage-mark-a"></span>
+        <span class="stage-mark stage-mark-b"></span>
+      </div>
 
-        <!-- WebGL 空间层（宽屏 + 支持 WebGL 时按需加载，CSS 层作为兜底） -->
-        <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+      <!-- WebGL 空间层（宽屏 + 支持 WebGL 时按需加载，CSS 层作为兜底） -->
+      <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
 
-        <!-- 左边缘竖排标识（参考方舟海报的竖排 Latin 边注） -->
-        <span class="edge-label" aria-hidden="true">HOSHINO // PERSONAL ARCHIVE — EST.2022</span>
+      <div class="shell hero-shell" data-camera>
+        <div class="hero-grid">
+          <!-- 左：档案文字主体 -->
+          <div class="hero-copy">
+            <p class="hero-id">
+              <span>PROFILE ID: HS-2026-001</span>
+              <span class="hero-id-rule" aria-hidden="true"></span>
+              <span>UPDATED 2026.10</span>
+            </p>
 
-        <!-- 背景图形层：三角形阵 + 斜向高亮条 + 定位十字标 -->
-        <div class="hero-fx" aria-hidden="true">
-          <span class="reg-mark reg-a"></span>
-          <span class="reg-mark reg-b"></span>
-          <span class="reg-mark reg-c"></span>
-        </div>
-
-        <!-- 坐标刻度 -->
-        <div class="axis axis-x" aria-hidden="true">
-          <span class="axis-line"></span>
-          <span class="axis-label">X:031</span>
-          <span class="axis-tick"></span>
-        </div>
-        <div class="axis axis-y" aria-hidden="true">
-          <span class="axis-line"></span>
-          <span class="axis-label">Y:204</span>
-          <span class="axis-tick"></span>
-        </div>
-
-        <!-- 中景：身份核心 ｜ 前景：悬浮功能面板群 ｜ 底部：系统状态条 -->
-        <div class="console-grid">
-          <div class="identity">
-            <ul class="hud-strip fx-in">
-              <li class="hud-item is-live"><i></i>AVAILABLE</li>
-              <li class="hud-item">UPDATED 2026.10</li>
-              <li class="hud-item">PROJECTS 04</li>
-              <li class="hud-item">CN · UTC+8</li>
-            </ul>
-
-            <h1 class="hero-title fx-in">
-              <span class="hero-title-line">
-                <span class="tri-field" aria-hidden="true"></span>
-                <span class="hero-slice" aria-hidden="true"></span>
-                <span class="hero-title-en" data-text="HOSHINO">HOSHINO</span>
-              </span>
-              <span class="hero-plate">
-                <b class="plate-code">HS-001</b>
-                <span class="plate-text">个人档案 · PERSONAL ARCHIVE</span>
-              </span>
+            <h1 class="hero-name">
+              <span class="hero-name-line is-hollow" data-text="HOSHINO">HOSHINO</span>
+              <span class="hero-name-line is-solid"><em>A</em>RCHIVE</span>
             </h1>
 
-            <p class="hero-lead fx-in">
-              独立开发者<span class="sep">/</span>Android &amp; Windows 桌面应用
+            <p class="hero-sub">
+              <span>独立开发者 — INDEPENDENT DEVELOPER</span>
+              <span>ANDROID &amp; WINDOWS DESKTOP APPLICATIONS</span>
+              <span>KOTLIN · COMPOSE · C# · .NET · WPF</span>
             </p>
 
-            <!-- 身份舱：头像 + 年限圆环 + 档案字段 -->
-            <div class="pod fx-in">
-              <div class="pod-avatar">
-                <img src="assets/img/avatar.jpg"
-                     alt="Hoshino 的头像" width="208" height="208" decoding="async" />
-                <span class="pod-id">ID 103877289</span>
-              </div>
+            <ul class="hero-tags">
+              <li class="hero-tag is-live">AVAILABLE</li>
+              <li class="hero-tag">ANDROID</li>
+              <li class="hero-tag">WINDOWS</li>
+              <li class="hero-tag">KOTLIN / C#</li>
+              <li class="hero-tag">CN · UTC+8</li>
+            </ul>
 
-              <div class="pod-data">
-                <div class="ring">
-                  <svg viewBox="0 0 100 100" aria-hidden="true">
-                    <circle class="ring-bg" cx="50" cy="50" r="42" />
-                    <circle class="ring-fg" cx="50" cy="50" r="42" />
-                  </svg>
-                  <span class="ring-num">04<em>YRS</em></span>
-                </div>
-
-                <dl class="id-rows">
-                  <div class="id-row"><dt>CLASS</dt><dd>DEVELOPER</dd></div>
-                  <div class="id-row"><dt>ROLE</dt><dd>独立开发者</dd></div>
-                  <div class="id-row"><dt>BRANCH</dt><dd>KOTLIN · C#</dd></div>
-                  <div class="id-row"><dt>SINCE</dt><dd>2022.04</dd></div>
-                </dl>
-              </div>
-            </div>
-
-            <p class="hero-motto fx-in">
-              <span class="hero-motto-mark" aria-hidden="true">“</span>
-              把想法变成能跑起来的程序。<span class="hero-motto-mark" aria-hidden="true">”</span>
-            </p>
-
-            <dl class="hero-readout fx-in">
+            <dl class="hero-readout">
               <div><dt>REPOSITORY</dt><dd><b data-count="10">10</b></dd></div>
               <div><dt>ORIGINAL</dt><dd><b data-count="2">2</b></dd></div>
               <div><dt>MAX STARS</dt><dd><b data-count="11">11</b></dd></div>
-              <div><dt>SINCE</dt><dd><b>2022</b></dd></div>
+              <div><dt>SINCE</dt><dd>2022</dd></div>
             </dl>
+
+            <div class="hero-cta">
+              <a class="hero-btn is-main" href="#work">
+                <i>01</i><span>查看作品</span>
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+              </a>
+              <a class="hero-btn" href="#contact">
+                <i>02</i><span>建立联络</span>
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+              </a>
+            </div>
           </div>
 
-          <!-- 前景：错落排列的功能面板，带系统状态 -->
-          <nav class="console fx-in" aria-label="功能入口">
-            <a class="mod mod-main" href="#work">
-              <span class="mod-head">
-                <b>WORKS</b><em>作品档案</em>
-                <span class="mod-state is-active">ACTIVE</span>
-              </span>
-              <span class="mod-meta">04 FILES · KOTLIN / C# / WEB</span>
-              <span class="mod-body">Wenku8Reader · FuckETS · 个人档案站 · OPEN SLOT</span>
-              <span class="mod-foot">
-                <span class="mod-coord">FILE NO.001–004</span>
-                <span class="mod-go">进入 →</span>
-              </span>
-            </a>
-
-            <a class="mod" href="#profile">
-              <span class="mod-head"><b>PROFILE</b><em>档案</em><span class="mod-state is-active">ACTIVE</span></span>
-              <span class="mod-meta">ROLE / FOCUS / TOOLS</span>
-              <span class="mod-foot"><span class="mod-coord">RECORD 02</span><span class="mod-go">→</span></span>
-            </a>
-
-            <a class="mod" href="#log">
-              <span class="mod-head"><b>LOG</b><em>日志</em><span class="mod-state is-active">ACTIVE</span></span>
-              <span class="mod-meta">05 ENTRIES · 2022 – 2026</span>
-              <span class="mod-foot"><span class="mod-coord">RECORD 03</span><span class="mod-go">→</span></span>
-            </a>
-
-            <div class="mod">
-              <span class="mod-head"><b>NOW</b><em>当前进行中</em><span class="mod-state is-progress">IN PROGRESS</span></span>
-              <span class="mod-meta">LAST COMMIT 2026.10.01</span>
-              <span class="mod-body">Wenku8Reader 持续迭代中</span>
-              <span class="mod-foot"><span class="mod-coord">CASE W-001</span><span class="mod-go is-quiet">维护中</span></span>
+          <!-- 右：坐标标记与身份节点 -->
+          <div class="hero-rail">
+            <div class="rail-mark rail-mark-alpha">
+              <span class="rail-label">[01] LAYER_ALPHA</span>
+              <span class="rail-dash"></span>
+              <span class="rail-circle"></span>
             </div>
 
-            <a class="mod" href="#contact">
-              <span class="mod-head"><b>CONTACT</b><em>联络</em><span class="mod-state is-active">ACTIVE</span></span>
-              <span class="mod-meta">MAIL / GITHUB</span>
-              <span class="mod-foot"><span class="mod-coord">CHANNEL 04</span><span class="mod-go">→</span></span>
-            </a>
+            <span class="rail-square" aria-hidden="true"></span>
 
-            <div class="mod mod-locked">
-              <span class="lock" aria-hidden="true"></span>
-              <span class="mod-head"><b>NOTES</b><em>文章</em><span class="mod-state is-locked">LOCKED</span></span>
-              <span class="mod-meta">开放条件：有值得写下来的东西</span>
+            <figure class="rail-node">
+              <span class="rail-label">[02] NODE_ACTIVE</span>
+              <div class="rail-portrait">
+                <img src="assets/img/avatar.jpg"
+                     alt="Hoshino 的头像" width="420" height="420" decoding="async" />
+                <div class="rail-ring">
+                  <svg viewBox="0 0 100 100" aria-hidden="true">
+                    <circle class="rail-ring-bg" cx="50" cy="50" r="42" />
+                    <circle class="rail-ring-fg" cx="50" cy="50" r="42" />
+                  </svg>
+                  <span class="rail-ring-num">04<em>YRS</em></span>
+                </div>
+              </div>
+              <figcaption class="rail-node-cap">
+                <b>HOSHINO</b>
+                <span>星野 · ID 103877289</span>
+              </figcaption>
+            </figure>
+
+            <div class="rail-mark rail-mark-coord">
+              <span class="rail-label">[03] X:031 / Y:204</span>
+              <span class="rail-cross"></span>
             </div>
-          </nav>
 
+            <span class="rail-label rail-label-render">[04] RENDER_OK</span>
+            <span class="rail-label rail-label-frame">SYS.V2 // FRAME_001</span>
+          </div>
         </div>
 
+        <!-- 系统索引：功能入口 + 状态 -->
+        <nav class="hero-index" aria-label="功能入口">
+          <a class="index-item" href="#work">
+            <span class="index-no">01</span>
+            <span class="index-body"><b>WORKS</b><em>作品档案</em></span>
+            <span class="index-meta">04 FILES</span>
+            <span class="index-state is-active">ACTIVE</span>
+          </a>
+          <a class="index-item" href="#profile">
+            <span class="index-no">02</span>
+            <span class="index-body"><b>PROFILE</b><em>档案</em></span>
+            <span class="index-meta">RECORD 02</span>
+            <span class="index-state is-active">ACTIVE</span>
+          </a>
+          <a class="index-item" href="#log">
+            <span class="index-no">03</span>
+            <span class="index-body"><b>LOG</b><em>日志</em></span>
+            <span class="index-meta">05 ENTRIES</span>
+            <span class="index-state is-active">ACTIVE</span>
+          </a>
+          <div class="index-item">
+            <span class="index-no">04</span>
+            <span class="index-body"><b>NOW</b><em>进行中</em></span>
+            <span class="index-meta">2026.10.01</span>
+            <span class="index-state is-progress">IN PROGRESS</span>
+          </div>
+          <a class="index-item" href="#contact">
+            <span class="index-no">05</span>
+            <span class="index-body"><b>CONTACT</b><em>联络</em></span>
+            <span class="index-meta">MAIL / GITHUB</span>
+            <span class="index-state is-active">ACTIVE</span>
+          </a>
+          <div class="index-item is-locked">
+            <span class="index-no">06</span>
+            <span class="index-body"><b>NOTES</b><em>文章</em></span>
+            <span class="index-meta">有值得写下的东西时开放</span>
+            <span class="index-state is-locked">LOCKED</span>
+          </div>
+        </nav>
+
         <!-- 底部系统状态条 -->
-        <div class="statusbar fx-in">
+        <div class="statusbar">
           <span class="statusbar-item"><b>FOCUS</b>Android · Windows 桌面</span>
           <span class="statusbar-item"><b>LAST UPDATE</b>2026.10.01</span>
           <span class="statusbar-item"><b>STATUS</b><i class="live-dot"></i>接受交流与合作</span>
@@ -270,28 +261,22 @@
           <span class="sec-rule" aria-hidden="true"></span>
         </header>
 
-        <div class="sec-fx" aria-hidden="true">
-          <span class="sec-bar sec-bar-a"></span>
-          <span class="sec-bar sec-bar-b"></span>
-        </div>
-
-        <div class="work-grid">
+        <div class="case-grid">
           <!-- W-001 -->
-          <article class="work-card work-card-lg glass corners fx-in">
-            <header class="work-head">
-              <span class="work-no">W-001</span>
-              <span class="work-type">ANDROID APP</span>
-              <span class="work-year">2026</span>
+          <article class="case case-wide fx-in">
+            <header class="case-head">
+              <span class="case-no">W-001</span>
+              <span class="case-type">ANDROID APP</span>
+              <span class="case-year">2026</span>
             </header>
-            <div class="work-thumb thumb-a" aria-hidden="true">
-              <span class="thumb-bar"></span>
-              <span class="thumb-bar"></span>
-              <span class="thumb-bar"></span>
-              <span class="thumb-block"></span>
+            <div class="case-media case-media-a" aria-hidden="true">
+              <span class="case-big">01</span>
+              <span class="case-bars"><i></i><i></i><i></i><i></i></span>
+              <span class="case-block"></span>
             </div>
-            <div class="work-body">
-              <h3 class="work-title">Wenku8Reader</h3>
-              <p class="work-desc">
+            <div class="case-body">
+              <h3 class="case-title">Wenku8Reader</h3>
+              <p class="case-desc">
                 基于 wenku8.net 的 Android 轻小说阅读客户端。原生 Kotlin + Jetpack Compose + Material 3，
                 支持沉浸式阅读、书架收藏、离线下载（TXT / EPUB）与简繁转换。
               </p>
@@ -301,31 +286,31 @@
                 <li class="chip">Material 3</li>
               </ul>
             </div>
-            <footer class="work-foot">
-              <span class="work-state"><i></i>ACTIVE</span>
-              <span class="work-stat">★ 11</span>
-              <a class="work-link" href="wenku8reader/">
+            <footer class="case-foot">
+              <span class="case-state"><i></i>ACTIVE</span>
+              <span class="case-stat">★ 11</span>
+              <a class="case-link" href="wenku8reader/">
                 项目页 <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
               </a>
             </footer>
           </article>
 
           <!-- W-002 -->
-          <article class="work-card glass corners fx-in">
-            <header class="work-head">
-              <span class="work-no">W-002</span>
-              <span class="work-type">DESKTOP TOOL</span>
-              <span class="work-year">2026</span>
+          <article class="case fx-in">
+            <header class="case-head">
+              <span class="case-no">W-002</span>
+              <span class="case-type">DESKTOP TOOL</span>
+              <span class="case-year">2026</span>
             </header>
-            <div class="work-thumb thumb-b" aria-hidden="true">
-              <span class="thumb-pane"></span>
-              <span class="thumb-pane"></span>
-              <span class="thumb-pane"></span>
-              <span class="thumb-pane"></span>
+            <div class="case-media case-media-b" aria-hidden="true">
+              <span class="case-big">02</span>
+              <span class="case-pane"></span>
+              <span class="case-pane"></span>
+              <span class="case-pane"></span>
             </div>
-            <div class="work-body">
-              <h3 class="work-title">FuckETS</h3>
-              <p class="work-desc">
+            <div class="case-body">
+              <h3 class="case-title">FuckETS</h3>
+              <p class="case-desc">
                 Windows 桌面工具，基于 C# / .NET 8 / WPF。支持作业扫描、Part 自动识别、
                 答案着色展示、PDF 导出，以及插件系统与自动更新。
               </p>
@@ -335,29 +320,30 @@
                 <li class="chip">WPF</li>
               </ul>
             </div>
-            <footer class="work-foot">
-              <span class="work-state"><i></i>ACTIVE</span>
-              <span class="work-stat">★ 2</span>
-              <a class="work-link" href="fuckets/">
+            <footer class="case-foot">
+              <span class="case-state"><i></i>ACTIVE</span>
+              <span class="case-stat">★ 2</span>
+              <a class="case-link" href="fuckets/">
                 项目页 <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
               </a>
             </footer>
           </article>
 
           <!-- W-003 -->
-          <article class="work-card glass corners fx-in">
-            <header class="work-head">
-              <span class="work-no">W-003</span>
-              <span class="work-type">WEB</span>
-              <span class="work-year">2026</span>
+          <article class="case fx-in">
+            <header class="case-head">
+              <span class="case-no">W-003</span>
+              <span class="case-type">WEB</span>
+              <span class="case-year">2026</span>
             </header>
-            <div class="work-thumb thumb-c" aria-hidden="true">
-              <span class="thumb-ring"></span>
-              <span class="thumb-cross"></span>
+            <div class="case-media case-media-c" aria-hidden="true">
+              <span class="case-big">03</span>
+              <span class="case-ring"></span>
+              <span class="case-cross"></span>
             </div>
-            <div class="work-body">
-              <h3 class="work-title">个人档案站</h3>
-              <p class="work-desc">
+            <div class="case-body">
+              <h3 class="case-title">个人档案站</h3>
+              <p class="case-desc">
                 你正在浏览的这个页面。纯 HTML / CSS / 原生 JS 手写，零依赖、零构建，
                 由 GitHub Pages 托管。
               </p>
@@ -367,28 +353,29 @@
                 <li class="chip">JavaScript</li>
               </ul>
             </div>
-            <footer class="work-foot">
-              <span class="work-state"><i></i>LIVE</span>
-              <span class="work-stat">SELF</span>
-              <a class="work-link" href="https://github.com/TakaHoshino/takahoshino.github.io" target="_blank" rel="noopener noreferrer">
+            <footer class="case-foot">
+              <span class="case-state"><i></i>LIVE</span>
+              <span class="case-stat">SELF</span>
+              <a class="case-link" href="https://github.com/TakaHoshino/takahoshino.github.io" target="_blank" rel="noopener noreferrer">
                 OPEN <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
               </a>
             </footer>
           </article>
 
           <!-- W-004 -->
-          <article class="work-card work-card-lg work-card-slot corners fx-in">
-            <header class="work-head">
-              <span class="work-no">W-004</span>
-              <span class="work-type">SLOT OPEN</span>
-              <span class="work-year">TBD</span>
+          <article class="case case-wide case-slot fx-in">
+            <header class="case-head">
+              <span class="case-no">W-004</span>
+              <span class="case-type">SLOT OPEN</span>
+              <span class="case-year">TBD</span>
             </header>
-            <div class="work-thumb thumb-d" aria-hidden="true">
-              <span class="thumb-plus"></span>
+            <div class="case-media case-media-d" aria-hidden="true">
+              <span class="case-big">04</span>
+              <span class="case-plus"></span>
             </div>
-            <div class="work-body">
-              <h3 class="work-title">下一个项目</h3>
-              <p class="work-desc">
+            <div class="case-body">
+              <h3 class="case-title">下一个项目</h3>
+              <p class="case-desc">
                 这个位置留给正在构思的下一件作品。有想一起做的事，欢迎从联络面板发来讯息。
               </p>
               <ul class="chips">
@@ -396,10 +383,10 @@
                 <li class="chip">TODO</li>
               </ul>
             </div>
-            <footer class="work-foot">
-              <span class="work-state is-idle"><i></i>IN PROGRESS</span>
-              <span class="work-stat">—</span>
-              <a class="work-link" href="#contact">
+            <footer class="case-foot">
+              <span class="case-state is-idle"><i></i>IN PROGRESS</span>
+              <span class="case-stat">—</span>
+              <a class="case-link" href="#contact">
                 CONTACT <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
               </a>
             </footer>
@@ -419,125 +406,123 @@
           <span class="sec-rule" aria-hidden="true"></span>
         </header>
 
-        <div class="profile-grid">
-          <!-- 参数面板 -->
-          <article class="param-panel glass corners fx-in">
-            <header class="param-head">
+        <div class="dossier-grid">
+          <article class="dossier dossier-params fx-in">
+            <header class="dossier-head">
               <span>SYSTEM PARAMETERS</span>
-              <span class="param-head-code">P.02</span>
+              <span class="dossier-code">P.02</span>
             </header>
-            <dl class="param-list">
-              <div class="param-row">
+            <dl class="dossier-rows">
+              <div class="dossier-row">
                 <dt>ROLE</dt>
                 <dd>独立开发者 / Independent Developer</dd>
               </div>
-              <div class="param-row">
+              <div class="dossier-row">
                 <dt>LOCATION</dt>
-                <dd>中国 / CN <span class="param-dim">UTC+8</span></dd>
+                <dd>中国 / CN <span class="dossier-dim">UTC+8</span></dd>
               </div>
-              <div class="param-row">
+              <div class="dossier-row">
                 <dt>FOCUS</dt>
                 <dd>Android · Windows 桌面 · 效率工具</dd>
               </div>
-              <div class="param-row">
+              <div class="dossier-row">
                 <dt>TOOLS</dt>
                 <dd>Android Studio · Visual Studio · Git · VS Code</dd>
               </div>
-              <div class="param-row">
+              <div class="dossier-row">
                 <dt>LANGUAGES</dt>
                 <dd>中文（母语）· English（阅读为主）</dd>
               </div>
-              <div class="param-row">
+              <div class="dossier-row">
                 <dt>AVAILABILITY</dt>
-                <dd><span class="param-ok">OPEN</span> 可接洽合作与交流</dd>
+                <dd><span class="dossier-ok">OPEN</span> 可接洽合作与交流</dd>
               </div>
             </dl>
 
-            <p class="param-note">
+            <p class="dossier-note">
               项目大多源于自己的真实需求：想看得更舒服的阅读器、想少花点时间的整理工具。
               做出来的东西有人用、有人说好，就是最有成就感的部分。
             </p>
           </article>
 
-          <!-- 能力矩阵：雷达 + 模块阵列 -->
-          <article class="radar-panel glass corners fx-in">
-              <header class="panel-head">
-                <span>CAPABILITY RADAR</span>
-                <span class="panel-head-note">自评 / SELF-ASSESSED</span>
-              </header>
+          <article class="dossier dossier-radar fx-in">
+            <header class="dossier-head">
+              <span>CAPABILITY RADAR</span>
+              <span class="dossier-code">自评 / SELF-ASSESSED</span>
+            </header>
 
-              <div class="radar-wrap">
-                <span class="radar-sweep" aria-hidden="true"></span>
-                <svg class="radar" viewBox="0 0 300 300" role="img" aria-label="能力自评雷达图">
-                  <g class="radar-grid">
-                    <polygon points="150,40 245.3,95 245.3,205 150,260 54.7,205 54.7,95" />
-                    <polygon points="150,62 226.2,106 226.2,194 150,238 73.8,194 73.8,106" />
-                    <polygon points="150,84 207.2,117 207.2,183 150,216 92.8,183 92.8,117" />
-                    <polygon points="150,106 188.1,128 188.1,172 150,194 111.9,172 111.9,128" />
-                    <polygon points="150,128 169.1,139 169.1,161 150,172 130.9,161 130.9,139" />
-                  </g>
-                  <g class="radar-axis">
-                    <line x1="150" y1="150" x2="150" y2="40" />
-                    <line x1="150" y1="150" x2="245.3" y2="95" />
-                    <line x1="150" y1="150" x2="245.3" y2="205" />
-                    <line x1="150" y1="150" x2="150" y2="260" />
-                    <line x1="150" y1="150" x2="54.7" y2="205" />
-                    <line x1="150" y1="150" x2="54.7" y2="95" />
-                  </g>
-                  <polygon class="radar-shape"
-                           points="150,57.6 226.2,106 222.4,191.8 150,229.2 85.2,187.4 71.9,104.9" />
-                  <g class="radar-dots">
-                    <circle cx="150" cy="57.6" r="3" />
-                    <circle cx="226.2" cy="106" r="3" />
-                    <circle cx="222.4" cy="191.8" r="3" />
-                    <circle cx="150" cy="229.2" r="3" />
-                    <circle cx="85.2" cy="187.4" r="3" />
-                    <circle cx="71.9" cy="104.9" r="3" />
-                  </g>
-                  <g class="radar-labels">
-                    <text x="150" y="26" text-anchor="middle">KOTLIN</text>
-                    <text x="262" y="86" text-anchor="start">COMPOSE</text>
-                    <text x="262" y="216" text-anchor="start">C#</text>
-                    <text x="150" y="284" text-anchor="middle">.NET / WPF</text>
-                    <text x="38" y="216" text-anchor="end">UI / UX</text>
-                    <text x="38" y="86" text-anchor="end">TOOLING</text>
-                  </g>
-                </svg>
-              </div>
+            <div class="radar-wrap">
+              <span class="radar-sweep" aria-hidden="true"></span>
+              <svg class="radar" viewBox="0 0 300 300" role="img" aria-label="能力自评雷达图">
+                <g class="radar-grid">
+                  <polygon points="150,40 245.3,95 245.3,205 150,260 54.7,205 54.7,95" />
+                  <polygon points="150,62 226.2,106 226.2,194 150,238 73.8,194 73.8,106" />
+                  <polygon points="150,84 207.2,117 207.2,183 150,216 92.8,183 92.8,117" />
+                  <polygon points="150,106 188.1,128 188.1,172 150,194 111.9,172 111.9,128" />
+                  <polygon points="150,128 169.1,139 169.1,161 150,172 130.9,161 130.9,139" />
+                </g>
+                <g class="radar-axis">
+                  <line x1="150" y1="150" x2="150" y2="40" />
+                  <line x1="150" y1="150" x2="245.3" y2="95" />
+                  <line x1="150" y1="150" x2="245.3" y2="205" />
+                  <line x1="150" y1="150" x2="150" y2="260" />
+                  <line x1="150" y1="150" x2="54.7" y2="205" />
+                  <line x1="150" y1="150" x2="54.7" y2="95" />
+                </g>
+                <polygon class="radar-shape"
+                         points="150,57.6 226.2,106 222.4,191.8 150,229.2 85.2,187.4 71.9,104.9" />
+                <g class="radar-dots">
+                  <circle cx="150" cy="57.6" r="3" />
+                  <circle cx="226.2" cy="106" r="3" />
+                  <circle cx="222.4" cy="191.8" r="3" />
+                  <circle cx="150" cy="229.2" r="3" />
+                  <circle cx="85.2" cy="187.4" r="3" />
+                  <circle cx="71.9" cy="104.9" r="3" />
+                </g>
+                <g class="radar-labels">
+                  <text x="150" y="26" text-anchor="middle">KOTLIN</text>
+                  <text x="262" y="86" text-anchor="start">COMPOSE</text>
+                  <text x="262" y="216" text-anchor="start">C#</text>
+                  <text x="150" y="284" text-anchor="middle">.NET / WPF</text>
+                  <text x="38" y="216" text-anchor="end">UI / UX</text>
+                  <text x="38" y="86" text-anchor="end">TOOLING</text>
+                </g>
+              </svg>
+            </div>
 
-              <ul class="radar-legend">
-                <li><span>KOTLIN</span><i></i><b>84</b></li>
-                <li><span>COMPOSE</span><i></i><b>80</b></li>
-                <li><span>C#</span><i></i><b>76</b></li>
-                <li><span>.NET / WPF</span><i></i><b>72</b></li>
-                <li><span>UI / UX</span><i></i><b>68</b></li>
-                <li><span>TOOLING</span><i></i><b>82</b></li>
-              </ul>
-            </article>
+            <ul class="radar-legend">
+              <li><span>KOTLIN</span><i></i><b>84</b></li>
+              <li><span>COMPOSE</span><i></i><b>80</b></li>
+              <li><span>C#</span><i></i><b>76</b></li>
+              <li><span>.NET / WPF</span><i></i><b>72</b></li>
+              <li><span>UI / UX</span><i></i><b>68</b></li>
+              <li><span>TOOLING</span><i></i><b>82</b></li>
+            </ul>
+          </article>
 
-          <article class="module-panel glass corners fx-in">
-              <header class="panel-head">
-                <span>MODULE ARRAY</span>
-                <span class="panel-head-note">12 UNITS</span>
-              </header>
-              <ul class="modules">
-                <li class="module is-on"><i></i>Kotlin</li>
-                <li class="module is-on"><i></i>Compose</li>
-                <li class="module is-on"><i></i>Material 3</li>
-                <li class="module is-on"><i></i>Coroutines</li>
-                <li class="module is-on"><i></i>Gradle</li>
-                <li class="module is-on"><i></i>Room</li>
-                <li class="module is-on"><i></i>C#</li>
-                <li class="module is-on"><i></i>.NET 8</li>
-                <li class="module is-on"><i></i>WPF</li>
-                <li class="module is-on"><i></i>MVVM</li>
-                <li class="module is-on"><i></i>Python</li>
-                <li class="module is-on"><i></i>Git / CI</li>
-              </ul>
-              <p class="module-note">
-                常用技术模块。其中 <b>Kotlin / Compose</b> 与 <b>C# / .NET / WPF</b> 是日常主力，
-                其余按项目需要选用。
-              </p>
+          <article class="dossier dossier-modules fx-in">
+            <header class="dossier-head">
+              <span>MODULE ARRAY</span>
+              <span class="dossier-code">12 UNITS</span>
+            </header>
+            <ul class="modules">
+              <li class="module is-on"><i></i>Kotlin</li>
+              <li class="module is-on"><i></i>Compose</li>
+              <li class="module is-on"><i></i>Material 3</li>
+              <li class="module is-on"><i></i>Coroutines</li>
+              <li class="module is-on"><i></i>Gradle</li>
+              <li class="module is-on"><i></i>Room</li>
+              <li class="module is-on"><i></i>C#</li>
+              <li class="module is-on"><i></i>.NET 8</li>
+              <li class="module is-on"><i></i>WPF</li>
+              <li class="module is-on"><i></i>MVVM</li>
+              <li class="module is-on"><i></i>Python</li>
+              <li class="module is-on"><i></i>Git / CI</li>
+            </ul>
+            <p class="module-note">
+              常用技术模块。其中 <b>Kotlin / Compose</b> 与 <b>C# / .NET / WPF</b> 是日常主力，
+              其余按项目需要选用。
+            </p>
           </article>
         </div>
       </div>
@@ -625,7 +610,7 @@
         </header>
 
         <div class="contact-grid">
-          <article class="terminal glass corners fx-in">
+          <article class="terminal fx-in">
             <header class="terminal-head">
               <span class="terminal-dot" aria-hidden="true"></span>
               <span class="terminal-path">CHANNEL://CONTACT.DIRECT</span>
@@ -701,7 +686,7 @@
     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" /></svg>
   </button>
 
-  <script src="assets/js/main.js?v=20261002b" defer></script>
+  <script src="assets/js/main.js?v=20261002e" defer></script>
 
   <!-- 首屏 3D 引导：只在宽屏、支持 WebGL 且未开启减少动效时按需拉取 -->
   <script type="module">
@@ -716,7 +701,7 @@
       if (!wide || still || !gl) return;
 
       var start = function () {
-        import("./assets/js/hero3d.js?v=20261002b").catch(function () { /* 兜底：保持 CSS 背景层 */ });
+        import("./assets/js/hero3d.js?v=20261002e").catch(function () { /* 兜底：保持 CSS 背景层 */ });
       };
 
       if ("requestIdleCallback" in window) {

@@ -30,15 +30,15 @@
   --muted: #99a09e;
   --dim: #626966;
 
-  --acc: #d9ff00;          /* 填充用 */
-  --acc-strong: #d9ff00;   /* 文字 / 线条用 */
-  --acc-ink: #0a0b0b;      /* 压在高亮色上的字色 */
-  --acc-soft: rgba(217, 255, 0, 0.12);
-  --acc-line: rgba(217, 255, 0, 0.42);
+  --acc: #53ff18;          /* 填充用 */
+  --acc-strong: #53ff18;   /* 文字 / 线条用 */
+  --acc-ink: #06120a;      /* 压在高亮色上的字色 */
+  --acc-soft: rgba(83, 255, 24, 0.14);
+  --acc-line: rgba(83, 255, 24, 0.45);
 
-  --ok: #d9ff00;
+  --ok: #53ff18;
   --shadow: 0 30px 70px -44px rgba(0, 0, 0, 0.95);
-  --glow: 0 0 34px -8px rgba(217, 255, 0, 0.35);
+  --glow: 0 0 34px -8px rgba(83, 255, 24, 0.35);
   --locked: rgba(20, 20, 20, 0.72);
   --panel-glass: rgba(16, 18, 18, 0.78);
 
@@ -73,15 +73,15 @@ html[data-theme="positive"] {
   --muted: #545b58;
   --dim: #868d8a;
 
-  --acc: #d9ff00;
-  --acc-strong: #63730a;   /* 浅底上用于文字与细线，保证对比度 */
-  --acc-ink: #0a0b0b;
-  --acc-soft: rgba(190, 225, 0, 0.30);
-  --acc-line: rgba(120, 140, 0, 0.55);
+  --acc: #53ff18;
+  --acc-strong: #2f9c09;   /* 浅底上用于文字与细线，保证对比度 */
+  --acc-ink: #06120a;
+  --acc-soft: rgba(83, 255, 24, 0.22);
+  --acc-line: rgba(47, 156, 9, 0.45);
 
-  --ok: #63730a;
-  --shadow: 0 26px 60px -46px rgba(10, 14, 12, 0.55);
-  --glow: 0 0 30px -12px rgba(150, 180, 0, 0.5);
+  --ok: #2f9c09;
+  --shadow: 0 26px 60px -46px rgba(10, 14, 12, 0.35);
+  --glow: 0 0 30px -12px rgba(83, 255, 24, 0.35);
   --locked: rgba(228, 229, 226, 0.8);
   --panel-glass: rgba(255, 255, 255, 0.86);
 }

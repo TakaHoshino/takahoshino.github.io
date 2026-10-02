@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="negative" data-gh-repo="TakaHoshino/FuckETS">
+<html lang="zh-CN" data-theme="positive" data-gh-repo="TakaHoshino/FuckETS">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -21,15 +21,16 @@
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="../favicon.svg" />
   <!-- 资源版本号：改动 assets 下的 CSS / JS 后同步递增，避免浏览器缓存旧文件与新页面混用 -->
-  <link rel="stylesheet" href="../assets/css/style.css?v=20261002b" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=20261002e" />
 
   <script>
     (function () {
       try {
         var saved = localStorage.getItem("theme");
-        var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-        document.documentElement.setAttribute("data-theme", saved || (prefersLight ? "positive" : "negative"));
-      } catch (e) { /* 保持默认 negative */ }
+        if (saved === "negative" || saved === "positive") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) { /* 保持默认 positive */ }
     })();
   </script>
 
