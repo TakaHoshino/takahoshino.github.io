@@ -79,6 +79,16 @@
     });
   }
 
+  /* 与页面上的「下载安装包」按钮保持同一口径：releases/latest 指向的正式版。
+     仓库还没发布过正式版时（接口 404），退回最新一条 release（可能是预发布）。 */
+  function getLatestRelease() {
+    return getJSON(API + "/releases/latest").catch(function () {
+      return getJSON(API + "/releases?per_page=1").then(function (list) {
+        return Array.isArray(list) && list[0] ? list[0] : null;
+      });
+    });
+  }
+
   function readCache() {
     try {
       var raw = window.sessionStorage.getItem(CACHE_KEY);
@@ -110,6 +120,7 @@
   function apply(data) {
     if (!data) return;
     setText("version", data.version);
+    setText("channel", data.channel);
     setText("date", data.date);
     setText("size", data.size);
     setText("downloads", typeof data.downloads === "number" ? String(data.downloads) : "");
@@ -124,12 +135,11 @@
   if (cached) { apply(cached); return; }
 
   Promise.all([
-    getJSON(API + "/releases?per_page=1").catch(function () { return null; }),
+    getLatestRelease().catch(function () { return null; }),
     getJSON(API).catch(function () { return null; })
   ]).then(function (res) {
-    var releases = res[0];
+    var rel = res[0];
     var repo = res[1];
-    var rel = Array.isArray(releases) && releases[0] ? releases[0] : null;
 
     var apk = null;
     if (rel && Array.isArray(rel.assets)) {
@@ -141,6 +151,7 @@
 
     var data = {
       version: rel && rel.tag_name ? String(rel.tag_name) : "",
+      channel: rel ? (rel.prerelease ? "（测试版）" : "（正式版）") : "",
       date: rel ? formatDate(rel.published_at) : "",
       size: apk ? formatSize(apk.size) : "",
       downloads: apk && typeof apk.download_count === "number" ? apk.download_count : null,

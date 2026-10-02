@@ -43,7 +43,7 @@
     "image": "https://takahoshino.github.io/assets/img/wenku8reader.png",
     "applicationCategory": "BookReaderApplication",
     "operatingSystem": "Android 8.0+",
-    "softwareVersion": "v0.8.0-dev.111",
+    "softwareVersion": "v0.7.0",
     "license": "https://www.gnu.org/licenses/gpl-3.0.html",
     "codeRepository": "https://github.com/TakaHoshino/Wenku8Reader",
     "author": { "@type": "Person", "name": "Hoshino", "url": "https://takahoshino.github.io/" },
@@ -185,14 +185,15 @@
           <div class="proj-media fx-in">
             <dl class="param-list proj-spec">
               <div class="param-row"><dt>STATUS</dt><dd><span class="param-ok">ACTIVE</span> 持续维护</dd></div>
-              <div class="param-row"><dt>VERSION</dt><dd><span data-gh="version">v0.8.0-dev.111</span>（测试版）</dd></div>
+              <div class="param-row"><dt>VERSION</dt><dd><span data-gh="version">v0.7.0</span><span data-gh="channel">（正式版）</span></dd></div>
               <div class="param-row"><dt>PLATFORM</dt><dd>Android 8.0+ <span class="param-dim">API 26</span></dd></div>
               <div class="param-row"><dt>LICENSE</dt><dd>GNU GPL-3.0</dd></div>
-              <div class="param-row"><dt>CHANNEL</dt><dd>测试版 · 自动构建 <span class="param-dim">Actions</span></dd></div>
+              <div class="param-row"><dt>CHANNEL</dt><dd>正式版 · GitHub Releases</dd></div>
+              <div class="param-row"><dt>DEV BUILD</dt><dd>测试版 · 自动构建 <span class="param-dim">Actions</span></dd></div>
               <div class="param-row"><dt>SOURCE</dt><dd>TakaHoshino/Wenku8Reader</dd></div>
               <div class="param-row"><dt>DATA</dt><dd>wenku8.net 轻小说文库</dd></div>
               <div class="param-row"><dt>MODULES</dt><dd>07 功能模块 <span class="param-dim">05 界面</span></dd></div>
-              <div class="param-row"><dt>UPDATED</dt><dd><span data-gh="date">2026.10.01</span></dd></div>
+              <div class="param-row"><dt>UPDATED</dt><dd><span data-gh="date">2026.09.25</span></dd></div>
             </dl>
 
             <article class="mod">
@@ -205,10 +206,10 @@
         </div>
 
         <div class="statusbar fx-in">
-          <span class="statusbar-item"><b>LATEST</b><span data-gh="version">v0.8.0-dev.111</span></span>
+          <span class="statusbar-item"><b>LATEST</b><span data-gh="version">v0.7.0</span></span>
           <span class="statusbar-item"><b>APK</b><span data-gh="size">16.8 MB</span></span>
           <span class="statusbar-item"><b>MIN ANDROID</b>8.0 / API 26</span>
-          <span class="statusbar-item"><b>DOWNLOADS</b><span data-gh="downloads">11</span></span>
+          <span class="statusbar-item"><b>DOWNLOADS</b><span data-gh="downloads">59</span></span>
           <span class="statusbar-item"><b>LICENSE</b>GPL-3.0</span>
         </div>
       </div>
@@ -484,18 +485,18 @@
           <li class="log-item fx-in">
             <span class="log-node" aria-hidden="true"></span>
             <span class="log-date">2026.09.26</span>
-            <span class="log-no">RL-005</span>
+            <span class="log-no">RL-006</span>
             <div class="log-body">
               <h3 class="log-title">v0.8.0-dev.111 测试版</h3>
               <p class="log-note">自动构建发布，APK 16.8 MB · 已下载 11 次。可在「设置 → 更新 → 更新通道」切换测试版。</p>
             </div>
-            <span class="log-state is-live">LATEST</span>
+            <span class="log-state is-active">DEV</span>
           </li>
 
           <li class="log-item fx-in">
             <span class="log-node" aria-hidden="true"></span>
             <span class="log-date">2026.09.26</span>
-            <span class="log-no">RL-004</span>
+            <span class="log-no">RL-005</span>
             <div class="log-body">
               <h3 class="log-title">v0.8.0-dev.110 测试版</h3>
               <p class="log-note">自动构建发布，含 SHA256SUMS 校验文件。</p>
@@ -506,12 +507,23 @@
           <li class="log-item fx-in">
             <span class="log-node" aria-hidden="true"></span>
             <span class="log-date">2026.09.25</span>
-            <span class="log-no">RL-003</span>
+            <span class="log-no">RL-004</span>
             <div class="log-body">
               <h3 class="log-title">v0.8.0-dev.109 测试版</h3>
               <p class="log-note">自动构建发布，已下载 8 次。</p>
             </div>
             <span class="log-state is-active">TEST</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.25</span>
+            <span class="log-no">RL-003</span>
+            <div class="log-body">
+              <h3 class="log-title">v0.7.0 正式版</h3>
+              <p class="log-note">首个正式版：液态玻璃底栏（移植自 SukiSU）、段落懒加载、长按选字、插图预览与保存，详情页收藏改为五角星。</p>
+            </div>
+            <span class="log-state is-live">STABLE</span>
           </li>
 
           <li class="log-item fx-in">
@@ -559,8 +571,8 @@
             </header>
 
             <div class="terminal-body">
-              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 安装包通过 GitHub Releases 发布。</p>
-              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 当前均为<strong>测试版</strong>（自动构建），可在应用内切换更新通道。</p>
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 正式版通过 GitHub Releases 发布，「下载安装包」始终指向<strong>最新正式版</strong>。</p>
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 测试版由 GitHub Actions <strong>自动构建</strong>，可在应用内切换更新通道。</p>
 
               <pre class="codeblock"># 本地构建 Debug 包
 ./gradlew :app:assembleDebug
@@ -587,7 +599,7 @@
             <li class="contact-item">
               <span class="contact-key">RELEASES</span>
               <a class="contact-val" data-gh="release-url" href="https://github.com/TakaHoshino/Wenku8Reader/releases" target="_blank" rel="noopener noreferrer">
-                <span data-gh="version">v0.8.0-dev.111</span>
+                <span data-gh="version">v0.7.0</span>
                 <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
               </a>
             </li>
