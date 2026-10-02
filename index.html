@@ -22,7 +22,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <!-- 资源版本号：改动 assets 下的 CSS / JS 后同步递增，避免浏览器缓存旧文件与新页面混用 -->
-  <link rel="stylesheet" href="assets/css/style.css?v=20261002" />
+  <link rel="stylesheet" href="assets/css/style.css?v=20261002b" />
 
   <script>
     (function () {
@@ -338,8 +338,8 @@
             <footer class="work-foot">
               <span class="work-state"><i></i>ACTIVE</span>
               <span class="work-stat">★ 2</span>
-              <a class="work-link" href="https://github.com/TakaHoshino/FuckETS" target="_blank" rel="noopener noreferrer">
-                OPEN <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              <a class="work-link" href="fuckets/">
+                项目页 <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
               </a>
             </footer>
           </article>
@@ -701,7 +701,7 @@
     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" /></svg>
   </button>
 
-  <script src="assets/js/main.js?v=20261002" defer></script>
+  <script src="assets/js/main.js?v=20261002b" defer></script>
 
   <!-- 首屏 3D 引导：只在宽屏、支持 WebGL 且未开启减少动效时按需拉取 -->
   <script type="module">
@@ -716,7 +716,7 @@
       if (!wide || still || !gl) return;
 
       var start = function () {
-        import("./assets/js/hero3d.js?v=20261002").catch(function () { /* 兜底：保持 CSS 背景层 */ });
+        import("./assets/js/hero3d.js?v=20261002b").catch(function () { /* 兜底：保持 CSS 背景层 */ });
       };
 
       if ("requestIdleCallback" in window) {

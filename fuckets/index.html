@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="negative" data-gh-repo="TakaHoshino/FuckETS">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>FuckETS // 讯飞 E 听说 · 项目档案</title>
+  <meta name="description" content="FuckETS（去他妈的讯飞 E 听说）—— 提取「E听说」英语试题参考答案的 Windows 桌面工具。C# / .NET 8 / WPF，支持作业扫描、Part 自动识别、答案着色展示、PDF 导出、插件系统与自动更新。" />
+  <meta name="author" content="Hoshino" />
+  <meta name="keywords" content="FuckETS, 讯飞E听说, ETS, 英语试题, 参考答案, 答案提取, C#, .NET, WPF, PDF 导出, 插件系统, 开源, Hoshino" />
+  <meta name="theme-color" content="#0a0b0b" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f5f3" media="(prefers-color-scheme: light)" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="FuckETS // 讯飞 E 听说 · 项目档案" />
+  <meta property="og:description" content="Windows 桌面工具：解析本机 E听说 已下载的试题，还原 PartA / PartB / PartC 参考答案，支持着色展示与 PDF 导出。" />
+  <meta property="og:url" content="https://takahoshino.github.io/fuckets/" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="canonical" href="https://takahoshino.github.io/fuckets/" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="../favicon.svg" />
+  <!-- 资源版本号：改动 assets 下的 CSS / JS 后同步递增，避免浏览器缓存旧文件与新页面混用 -->
+  <link rel="stylesheet" href="../assets/css/style.css?v=20261002b" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        document.documentElement.setAttribute("data-theme", saved || (prefersLight ? "positive" : "negative"));
+      } catch (e) { /* 保持默认 negative */ }
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "FuckETS",
+    "alternateName": "去他妈的讯飞 E 听说",
+    "url": "https://takahoshino.github.io/fuckets/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Windows 10 / 11 (x64)",
+    "softwareVersion": "v2.3.1",
+    "license": "https://opensource.org/license/mit",
+    "codeRepository": "https://github.com/TakaHoshino/FuckETS",
+    "author": { "@type": "Person", "name": "Hoshino", "url": "https://takahoshino.github.io/" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+  }
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#overview">跳到主要内容</a>
+
+  <div class="fx" aria-hidden="true">
+    <span class="fx-grid"></span>
+    <span class="fx-lines"></span>
+    <span class="fx-drift fx-drift-a"></span>
+    <span class="fx-drift fx-drift-b"></span>
+    <span class="fx-noise"></span>
+    <span class="fx-scan"></span>
+    <span class="fx-sweep"></span>
+  </div>
+
+  <!-- ============================ 顶部状态栏 ============================ -->
+  <header class="nav" id="nav">
+    <span class="nav-progress" aria-hidden="true"><i id="navProgress"></i></span>
+
+    <div class="nav-inner">
+      <a class="nav-brand" href="../" aria-label="返回个人档案首页">
+        <span class="nav-mark" aria-hidden="true">HS</span>
+        <span class="nav-brand-text">
+          <b>HOSHINO</b>
+          <small>← BACK TO ARCHIVE</small>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="页内导航">
+        <a class="nav-link is-active" href="#top"><i>00</i>TOP<em>顶部</em></a>
+        <a class="nav-link" href="#overview"><i>01</i>OVERVIEW<em>概览</em></a>
+        <a class="nav-link" href="#features"><i>02</i>FEATURES<em>特性</em></a>
+        <a class="nav-link" href="#stack"><i>03</i>STACK<em>技术</em></a>
+        <a class="nav-link" href="#changelog"><i>04</i>LOG<em>版本</em></a>
+        <a class="nav-link" href="#download"><i>05</i>DOWNLOAD<em>下载</em></a>
+      </nav>
+
+      <div class="nav-status">
+        <span class="nav-clock">
+          <small>LOCAL</small>
+          <b id="navClock">--:--:--</b>
+        </span>
+        <span class="nav-live"><i></i>ONLINE</span>
+        <button class="nav-toggle" id="themeToggle" type="button" aria-label="切换配色模式" title="切换配色模式">
+          <span aria-hidden="true">◐</span><b id="themeLabel">NEGATIVE</b>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============================== HERO ============================== -->
+    <section class="hero proj-hero" id="top">
+      <div class="shell hero-shell">
+        <div class="stage" aria-hidden="true">
+          <span class="stage-glow"></span>
+          <span class="stage-wall"></span>
+          <span class="stage-wall stage-wall-inner"></span>
+        </div>
+
+        <span class="edge-label" aria-hidden="true">FUCKETS // FILE NO.002 — DESKTOP TOOL</span>
+
+        <div class="hero-fx" aria-hidden="true">
+          <span class="reg-mark reg-a"></span>
+          <span class="reg-mark reg-b"></span>
+        </div>
+
+        <div class="axis axis-x" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">X:002</span>
+          <span class="axis-tick"></span>
+        </div>
+
+        <div class="axis axis-y" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">Y:118</span>
+          <span class="axis-tick"></span>
+        </div>
+
+        <div class="console-grid">
+          <!-- 左：项目身份 -->
+          <div class="identity">
+            <ul class="hud-strip fx-in">
+              <li class="hud-item is-live"><i></i>ACTIVE</li>
+              <li class="hud-item">FILE NO.002</li>
+              <li class="hud-item">WINDOWS · X64</li>
+              <li class="hud-item">MIT</li>
+            </ul>
+
+            <p class="crumbs fx-in"><a href="../">← 返回作品档案</a></p>
+
+            <h1 class="hero-title fx-in">
+              <span class="hero-title-line">
+                <span class="tri-field" aria-hidden="true"></span>
+                <span class="hero-slice" aria-hidden="true"></span>
+                <span class="hero-title-en"><span>FUCK</span><span>ETS</span></span>
+              </span>
+              <span class="hero-plate">
+                <b class="plate-code">W-002</b>
+                <span class="plate-text">讯飞 E 听说 · 答案提取工具</span>
+              </span>
+            </h1>
+
+            <p class="hero-lead fx-in">
+              扫描，解析，导出<span class="sep">/</span>把参考答案装进口袋。
+            </p>
+            <p class="hero-desc fx-in">
+              Windows 桌面工具：读取本机 E听说 已下载的试题数据，还原
+              PartA 模仿朗读 / PartB 角色扮演 / PartC 故事复述的参考答案，
+              支持分级着色展示与一键导出 PDF —— 不破解、不联网获取题目。
+            </p>
+
+            <div class="hero-actions fx-in">
+              <a class="btn btn-primary" href="https://github.com/TakaHoshino/FuckETS/releases/latest" target="_blank" rel="noopener noreferrer">
+                <span class="btn-num">01</span>
+                下载安装包
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+              </a>
+              <a class="btn btn-ghost" href="https://github.com/TakaHoshino/FuckETS" target="_blank" rel="noopener noreferrer">
+                <span class="btn-num">02</span>
+                查看源码
+              </a>
+            </div>
+
+            <dl class="hero-readout fx-in">
+              <div><dt>STARS</dt><dd><b data-count="2" data-gh="stars">2</b></dd></div>
+              <div><dt>FORKS</dt><dd><b data-count="1" data-gh="forks">1</b></dd></div>
+              <div><dt>ISSUES</dt><dd><b data-count="0" data-gh="issues">0</b></dd></div>
+              <div><dt>LANG</dt><dd><b>C#</b></dd></div>
+            </dl>
+          </div>
+
+          <!-- 右：参数 + 进行中 -->
+          <div class="proj-media fx-in">
+            <dl class="param-list proj-spec">
+              <div class="param-row"><dt>STATUS</dt><dd><span class="param-ok">ACTIVE</span> 持续维护</dd></div>
+              <div class="param-row"><dt>VERSION</dt><dd><span data-gh="version">v2.3.1</span><span data-gh="channel">（正式版）</span></dd></div>
+              <div class="param-row"><dt>PLATFORM</dt><dd>Windows 10 / 11 <span class="param-dim">x64</span></dd></div>
+              <div class="param-row"><dt>LICENSE</dt><dd>MIT License</dd></div>
+              <div class="param-row"><dt>PACKAGE</dt><dd>自包含版 / 框架依赖版</dd></div>
+              <div class="param-row"><dt>RUNTIME</dt><dd>.NET 8 <span class="param-dim">WPF</span></dd></div>
+              <div class="param-row"><dt>SOURCE</dt><dd>TakaHoshino/FuckETS</dd></div>
+              <div class="param-row"><dt>DATA</dt><dd>%APPDATA%\ETS 本地试题</dd></div>
+              <div class="param-row"><dt>MODULES</dt><dd>07 功能模块 <span class="param-dim">10 钩子点</span></dd></div>
+              <div class="param-row"><dt>UPDATED</dt><dd><span data-gh="date">2026.09.25</span></dd></div>
+            </dl>
+
+            <article class="mod">
+              <span class="mod-head"><b>NOW</b><em>当前进行中</em><span class="mod-state is-progress">IN PROGRESS</span></span>
+              <span class="mod-meta">LAST COMMIT 2026.09.30</span>
+              <span class="mod-body">解析插件与地区适配持续迭代中。</span>
+              <span class="mod-foot"><span class="mod-coord">CASE F-002</span><span class="mod-go is-quiet">维护中</span></span>
+            </article>
+          </div>
+        </div>
+
+        <div class="statusbar fx-in">
+          <span class="statusbar-item"><b>LATEST</b><span data-gh="version">v2.3.1</span></span>
+          <span class="statusbar-item"><b>SIZE</b><span data-gh="size" data-gh-asset="framework-dependent">13.8 MB</span></span>
+          <span class="statusbar-item"><b>PLATFORM</b>win-x64</span>
+          <span class="statusbar-item"><b>DOWNLOADS</b><span data-gh="downloads" data-gh-asset="framework-dependent">2</span></span>
+          <span class="statusbar-item"><b>LICENSE</b>MIT</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 01 OVERVIEW ============================ -->
+    <section class="section" id="overview">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">OVERVIEW</span>
+          <span class="sec-index">01</span>
+          <h2 class="sec-title">项目概览<em>OVERVIEW</em></h2>
+          <span class="sec-meta">RECORD 02 / DESKTOP</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="profile-grid">
+          <article class="param-panel glass corners fx-in">
+            <header class="param-head">
+              <span>WHAT IT IS</span>
+              <span class="param-head-code">P.01</span>
+            </header>
+
+            <p class="proj-p">
+              <strong>FuckETS</strong>是一款 Windows 桌面小工具，用来把已经在电脑版「E听说」上
+              下载过的英语试题，快速解析出参考答案：读取本机
+              <code>%APPDATA%\ETS\</code> 中的试题数据，还原
+              <strong>PartA 模仿朗读 / PartB 角色扮演 / PartC 故事复述</strong>，
+              并支持一键导出适合手机阅读与分享的 PDF。
+            </p>
+            <p class="proj-p">
+              客户端只能在线做题、不方便查看答案，手机复习也麻烦 —— 工具把已下载的题目解析出来，
+              给你一份干净、可导出、可存档的答案。试题解析逻辑已从主程序<strong>完全剥离为插件</strong>，
+              其他地区可通过插件接入。
+            </p>
+
+            <header class="param-head proj-head-2">
+              <span>SYSTEM REQUIREMENTS</span>
+              <span class="param-head-code">SYS</span>
+            </header>
+            <dl class="param-list">
+              <div class="param-row"><dt>OS</dt><dd>Windows 10 / 11 <span class="param-dim">x64</span></dd></div>
+              <div class="param-row"><dt>SELF-CONTAINED</dt><dd>内置 .NET 8 运行时 <span class="param-dim">解压即用，推荐</span></dd></div>
+              <div class="param-row"><dt>FRAMEWORK</dt><dd>需预装 .NET 8 桌面运行时 <span class="param-dim">体积小</span></dd></div>
+              <div class="param-row"><dt>BUILD</dt><dd>Windows + .NET 8 SDK <span class="param-dim">dotnet build</span></dd></div>
+            </dl>
+
+            <p class="param-note">
+              项目以 MIT 许可发布，仅供个人学习与研究，请遵守当地法律与学校规定（详见软件内免责声明）。
+              部分文件使用了 AI 生成。
+            </p>
+          </article>
+
+          <article class="panel fx-in">
+            <header class="panel-head">
+              <span>WORKFLOW</span>
+              <span class="panel-head-note">07 STEPS</span>
+            </header>
+            <table class="tbl">
+              <thead>
+                <tr><th>步骤</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><b>下载试题</b></td><td>在电脑版 E听说 中下载要解析的试题</td></tr>
+                <tr><td><b>启动扫描</b></td><td>自动扫描 <code>%APPDATA%\ETS\</code> 作业文件夹，并从客户端日志还原作业标题</td></tr>
+                <tr><td><b>选择作业</b></td><td>在列表中选中目标作业（一般越新越靠下）</td></tr>
+                <tr><td><b>选解析器</b></td><td>顶部「解析插件」下拉框，默认内置广东高中解析</td></tr>
+                <tr><td><b>解析</b></td><td>点击「解析所选文件夹」，查看分级着色的答案</td></tr>
+                <tr><td><b>导出 PDF</b></td><td>「保存为 PDF」按作业标题自动预填文件名</td></tr>
+                <tr><td><b>导出设置</b></td><td>调整字号 / 页边距 / 行距，设置持久化保存</td></tr>
+              </tbody>
+            </table>
+
+            <p class="panel-foot">
+              <span class="barcode barcode-sm" aria-hidden="true"></span>
+              插件开发见 docs/PLUGIN_SDK.md，示例见 examples/
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 02 FEATURES ============================ -->
+    <section class="section" id="features">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">FEATURES</span>
+          <span class="sec-index">02</span>
+          <h2 class="sec-title">功能特性<em>FEATURES</em></h2>
+          <span class="sec-meta">07 MODULES</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="cap-grid">
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M4 6.4h6.2l1.8 2.2H20v9.8H4Z" /><path d="M4 9.4h16" /></svg>
+              </span>
+              <span class="cap-head-text"><b>作业扫描</b><small>MODULE 01</small></span>
+            </header>
+            <p class="cap-desc">一键扫描 <code>%APPDATA%\ETS\</code> 下所有作业文件夹，并从客户端日志还原<strong>作业标题</strong>。</p>
+            <ul class="chips"><li class="chip">一键扫描</li><li class="chip">日志还原标题</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M4.4 7.6h15.2M4.4 12h15.2M4.4 16.4h9.6" /></svg>
+              </span>
+              <span class="cap-head-text"><b>题型识别</b><small>MODULE 02</small></span>
+            </header>
+            <p class="cap-desc">依据 <code>structure_type</code> 与内容特征，自动判定 PartA 模仿朗读 / PartB 角色扮演 / PartC 故事复述。</p>
+            <ul class="chips"><li class="chip">PartA</li><li class="chip">PartB</li><li class="chip">PartC</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M4.6 5.4h14.8v13.2H4.6Z" /><path d="M7.6 9.2h8.8M7.6 12.4h6.4M7.6 15.6h4.4" /></svg>
+              </span>
+              <span class="cap-head-text"><b>着色展示</b><small>MODULE 03</small></span>
+            </header>
+            <p class="cap-desc">Part 标题、问题与候选答案分级着色，长文本也能一眼看清结构。</p>
+            <ul class="chips"><li class="chip">分级着色</li><li class="chip">清晰排版</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M6 3.6h8.4L18.6 8v12H6Z" /><path d="M14 3.8V8.4h4.4M9 12.6h6M9 15.8h6" /></svg>
+              </span>
+              <span class="cap-head-text"><b>PDF 导出</b><small>MODULE 04</small></span>
+            </header>
+            <p class="cap-desc">基于 QuestPDF 生成 A4 文档，正文用时代罗马体（中文自动回退），导出前可调字号 / 页边距 / 行距。</p>
+            <ul class="chips"><li class="chip">QuestPDF</li><li class="chip">A4</li><li class="chip">样式可调</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3.4 19.4 7.8v8.4L12 20.6 4.6 16.2V7.8Z" /><path d="M12 12v8.6M12 12l7.4-4.2M12 12 4.6 7.8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>插件系统</b><small>MODULE 05</small></span>
+            </header>
+            <p class="cap-desc">解析插件适配不同地区，行为插件通过 10 个钩子干预扫描 / 解析 / 展示 / 导出，甚至注入主界面按钮。</p>
+            <ul class="chips"><li class="chip">.fep 包</li><li class="chip">10 钩子</li><li class="chip">启停 / 移除</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4" /><path d="M12 7.6v4.8l3.2 2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>首次向导</b><small>MODULE 06</small></span>
+            </header>
+            <p class="cap-desc">OOBE 引导：免责声明 + 自动 / 手动获取 E听说 安装目录，未完成配置无法进入主界面。</p>
+            <ul class="chips"><li class="chip">OOBE</li><li class="chip">免责声明</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3.6v9.6M8.4 9.6 12 13.2l3.6-3.6M4.6 16.4v2.2c0 .9.7 1.6 1.6 1.6h11.6c.9 0 1.6-.7 1.6-1.6v-2.2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>更新与日志</b><small>MODULE 07</small></span>
+            </header>
+            <p class="cap-desc">启动检查 GitHub Releases，自包含 / 框架依赖双包可选，支持官方直连与 gh-proxy 镜像下载；从启动到导出全程记录日志。</p>
+            <ul class="chips"><li class="chip">自动更新</li><li class="chip">gh-proxy</li><li class="chip">完整日志</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= 03 STACK ============================= -->
+    <section class="section" id="stack">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">STACK</span>
+          <span class="sec-index">03</span>
+          <h2 class="sec-title">技术实现<em>STACK</em></h2>
+          <span class="sec-meta">100% C# / .NET</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="cap-grid cap-grid-2">
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3.4" y="4.6" width="17.2" height="14.8" rx="2" /><path d="M8 9.4 5.6 12 8 14.6M16 9.4 18.4 12 16 14.6" /></svg>
+              </span>
+              <span class="cap-head-text"><b>客户端</b><small>CLIENT</small></span>
+            </header>
+            <p class="cap-desc">
+              原生 <strong>C# / .NET 8 / WPF</strong> 桌面应用，无 WebView 外壳，
+              async/await 后台任务，UI 线程不阻塞。
+            </p>
+            <ul class="chips"><li class="chip">C#</li><li class="chip">.NET 8</li><li class="chip">WPF</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3.6" y="3.6" width="7" height="7" rx="1.4" /><rect x="13.4" y="3.6" width="7" height="7" rx="1.4" /><rect x="3.6" y="13.4" width="7" height="7" rx="1.4" /><rect x="13.4" y="13.4" width="7" height="7" rx="1.4" /></svg>
+              </span>
+              <span class="cap-head-text"><b>插件运行时</b><small>PLUGIN</small></span>
+            </header>
+            <p class="cap-desc">
+              <strong>FuckETS.PluginSdk</strong> 契约类库 + <code>.fep</code> 插件包
+              + 钩子引擎，插件通过可卸载 <code>AssemblyLoadContext</code> 加载。
+            </p>
+            <ul class="chips"><li class="chip">PluginSdk</li><li class="chip">.fep</li><li class="chip">AssemblyLoadContext</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M6 3.6h8.4L18.6 8v12H6Z" /><path d="M14 3.8V8.4h4.4" /><path d="M9 13.4h6M9 16.6h4" /></svg>
+              </span>
+              <span class="cap-head-text"><b>文档生成</b><small>PDF</small></span>
+            </header>
+            <p class="cap-desc">
+              用 <strong>QuestPDF</strong>（MIT，无 COM 依赖）生成 A4 文档，
+              标题 / 问题 / 答案分类排版，中文缺字自动回退。
+            </p>
+            <ul class="chips"><li class="chip">QuestPDF</li><li class="chip">MIT</li><li class="chip">A4</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><ellipse cx="12" cy="6.6" rx="7.4" ry="2.8" /><path d="M4.6 6.6v10.8c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8V6.6M4.6 12c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>数据与发布</b><small>DATA / CI</small></span>
+            </header>
+            <p class="cap-desc">
+              OOBE 配置写注册表 <code>HKCU\Software\FuckETS</code>，设置 / 插件 / 更新写
+              <code>%APPDATA%\FuckETS\*.json</code>；打标签后由 GitHub Actions 打包 win-x64 双包。
+            </p>
+            <ul class="chips"><li class="chip">注册表</li><li class="chip">JSON</li><li class="chip">GitHub Actions</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 04 CHANGELOG ============================ -->
+    <section class="section" id="changelog">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">RELEASES</span>
+          <span class="sec-index">04</span>
+          <h2 class="sec-title">版本记录<em>RELEASES</em></h2>
+          <span class="sec-meta">TAGS / RELEASES</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <ol class="log">
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.25</span>
+            <span class="log-no">RL-007</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.3.1 解析修复版</h3>
+              <p class="log-note">修复部分作业 PartA / PartC 解析结尾缺失：试题数据末段 &lt;p&gt; 缺少闭合标签时会被静默丢弃，现已兼容。</p>
+            </div>
+            <span class="log-state is-live">STABLE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.25</span>
+            <span class="log-no">RL-006</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.3.0 检查更新版</h3>
+              <p class="log-note">启动时查询 GitHub Releases，自包含 / 框架依赖双包可选，支持官方直连与 gh-proxy 镜像、下载进度与覆盖重启。</p>
+            </div>
+            <span class="log-state is-active">RELEASE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.25</span>
+            <span class="log-no">RL-005</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.2.0 工具栏扩展版</h3>
+              <p class="log-note">新增 <code>ui.mainWindow.toolbar</code> 钩子，行为插件可直接向主界面注入按钮，随插件启停实时增删。</p>
+            </div>
+            <span class="log-state is-active">RELEASE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.25</span>
+            <span class="log-no">RL-004</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.1.0 插件系统版</h3>
+              <p class="log-note">试题解析剥离为插件：<code>.fep</code> 插件包、解析插件下拉框、可卸载加载上下文；内置广东高中解析插件。</p>
+            </div>
+            <span class="log-state is-active">RELEASE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.24</span>
+            <span class="log-no">RL-003</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.0.0 重构版</h3>
+              <p class="log-note">基于 .NET 8 + WPF 完整重构，主版本号 1.x → 2.x；同时提供自包含与框架依赖两种打包方式。</p>
+            </div>
+            <span class="log-state is-active">RELEASE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.07.30</span>
+            <span class="log-no">RL-002</span>
+            <div class="log-body">
+              <h3 class="log-title">v1.0.3（Python 版）</h3>
+              <p class="log-note">修复 PDF 中文字体回退乱码与段落换行丢失；构建脚本自动打包 FuckETS.zip。</p>
+            </div>
+            <span class="log-state">DONE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.04.18</span>
+            <span class="log-no">RL-001</span>
+            <div class="log-body">
+              <h3 class="log-title">v1.0.0 首个版本</h3>
+              <p class="log-note">解析本机 E听说 试题并导出参考答案，Python + ReportLab 实现。</p>
+            </div>
+            <span class="log-state">DONE</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================ 05 DOWNLOAD ============================ -->
+    <section class="section" id="download">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">DOWNLOAD</span>
+          <span class="sec-index">05</span>
+          <h2 class="sec-title">下载与构建<em>DOWNLOAD</em></h2>
+          <span class="sec-meta">CHANNEL OPEN</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="contact-grid">
+          <article class="terminal glass corners fx-in">
+            <header class="terminal-head">
+              <span class="terminal-dot" aria-hidden="true"></span>
+              <span class="terminal-path">CHANNEL://RELEASES.FUCKETS</span>
+              <span class="terminal-code">P.05</span>
+            </header>
+
+            <div class="terminal-body">
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 安装包通过 GitHub Releases 发布，「下载安装包」始终指向<strong>最新正式版</strong>。</p>
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 自包含版内置 .NET 8 运行时（约 86 MB，解压即用）；框架依赖版约 14 MB，需预装 .NET 8 桌面运行时。</p>
+
+              <pre class="codeblock"># 源码构建（Windows + .NET 8 SDK）
+dotnet build
+dotnet run
+
+# 发布 win-x64
+dotnet publish -c Release -r win-x64
+dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true</pre>
+
+              <div class="terminal-actions">
+                <a class="btn btn-primary" data-gh="release-url" href="https://github.com/TakaHoshino/FuckETS/releases" target="_blank" rel="noopener noreferrer">
+                  <span class="btn-num">A</span>
+                  前往 Releases
+                  <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+                </a>
+                <a class="btn btn-ghost" href="https://github.com/TakaHoshino/FuckETS" target="_blank" rel="noopener noreferrer">
+                  <span class="btn-num">B</span>
+                  浏览仓库
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <ul class="contact-list fx-in">
+            <li class="contact-item">
+              <span class="contact-key">RELEASES</span>
+              <a class="contact-val" data-gh="release-url" href="https://github.com/TakaHoshino/FuckETS/releases" target="_blank" rel="noopener noreferrer">
+                <span data-gh="version">v2.3.1</span>
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">SOURCE</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/FuckETS" target="_blank" rel="noopener noreferrer">
+                TakaHoshino/FuckETS
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">插件文档</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/FuckETS/blob/main/docs/PLUGIN_SDK.md" target="_blank" rel="noopener noreferrer">
+                PLUGIN_SDK.md
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">示例插件</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/FuckETS/tree/main/examples" target="_blank" rel="noopener noreferrer">
+                examples/
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">许可</span>
+              <span class="contact-val is-text">MIT License</span>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">反馈</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/FuckETS/issues" target="_blank" rel="noopener noreferrer">
+                Issues
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <p class="proj-note fx-in">
+          本项目不破解、不联网获取题目，只解析本机 E听说 客户端已下载的试题数据，
+          仅供个人学习与研究，请遵守当地法律与学校规定并支持正版。
+          插件契约与钩子说明见仓库
+          <a href="https://github.com/TakaHoshino/FuckETS/blob/main/docs/PLUGIN_SDK.md" target="_blank" rel="noopener noreferrer">docs/PLUGIN_SDK.md</a>。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="shell foot-inner">
+      <div class="foot-left">
+        <span class="barcode barcode-sm" aria-hidden="true"></span>
+        <p>© <span id="year">2026</span> HOSHINO · FILE NO.002 / FUCKETS</p>
+      </div>
+      <p class="foot-right">
+        <a href="../">← 返回个人档案</a>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" type="button" aria-label="回到顶部" title="回到顶部">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" /></svg>
+  </button>
+
+  <script src="../assets/js/main.js?v=20261002b" defer></script>
+  <script src="../assets/js/version-sync.js?v=20261002b" defer></script>
+</body>
+</html>

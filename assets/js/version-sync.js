@@ -10,7 +10,10 @@
 (function () {
   "use strict";
 
-  var REPO = "TakaHoshino/Wenku8Reader";
+  /* 仓库由页面声明：<html data-gh-repo="owner/name">，未声明则不做任何请求 */
+  var REPO = document.documentElement.getAttribute("data-gh-repo") || "";
+  if (!REPO) return;
+
   var API = "https://api.github.com/repos/" + REPO;
   var CACHE_KEY = "gh-data:" + REPO;
   var CACHE_TTL = 10 * 60 * 1000;   /* 10 分钟 */
@@ -43,6 +46,21 @@
       /* 主页脚本的数字跳变动画可能仍在进行，结束后再落一次最终值 */
       window.setTimeout(function () { el.textContent = String(value); }, 1200);
     });
+  }
+
+  /* 选择一个 assets：优先 .apk，其次按 data-gh-asset 提示匹配，最后取第一个 */
+  function pickAsset(rel, hint) {
+    var assets = rel && Array.isArray(rel.assets) ? rel.assets : [];
+    var i;
+    for (i = 0; i < assets.length; i++) {
+      if (/\.apk$/i.test(String(assets[i].name))) return assets[i];
+    }
+    if (hint) {
+      for (i = 0; i < assets.length; i++) {
+        if (String(assets[i].name).indexOf(hint) >= 0) return assets[i];
+      }
+    }
+    return assets.length ? assets[0] : null;
   }
 
   function formatDate(iso) {
@@ -117,22 +135,37 @@
     } catch (e) { /* 保持原样 */ }
   }
 
-  function apply(data) {
-    if (!data) return;
-    setText("version", data.version);
-    setText("channel", data.channel);
-    setText("date", data.date);
-    setText("size", data.size);
-    setText("downloads", typeof data.downloads === "number" ? String(data.downloads) : "");
-    setCount("stars", data.stars);
-    setCount("forks", data.forks);
-    setCount("issues", data.issues);
-    setHref("release-url", data.url);
-    patchJsonLd(data.version);
+  function apply(rel, repo) {
+    if (rel) {
+      setText("version", rel.tag_name ? String(rel.tag_name) : "");
+      setText("channel", rel.prerelease ? "（测试版）" : "（正式版）");
+      setText("date", formatDate(rel.published_at));
+      setHref("release-url", rel.html_url ? String(rel.html_url) : "");
+      patchJsonLd(rel.tag_name ? String(rel.tag_name) : "");
+
+      /* 体积 / 下载量可按 data-gh-asset 指定取哪一个安装包 */
+      each("size", function (el) {
+        var asset = pickAsset(rel, el.getAttribute("data-gh-asset"));
+        if (asset) el.textContent = formatSize(asset.size);
+      });
+
+      each("downloads", function (el) {
+        var asset = pickAsset(rel, el.getAttribute("data-gh-asset"));
+        if (asset && typeof asset.download_count === "number") {
+          el.textContent = String(asset.download_count);
+        }
+      });
+    }
+
+    if (repo) {
+      setCount("stars", repo.stargazers_count);
+      setCount("forks", repo.forks_count);
+      setCount("issues", repo.open_issues_count);
+    }
   }
 
   var cached = readCache();
-  if (cached) { apply(cached); return; }
+  if (cached) { apply(cached.rel, cached.repo); return; }
 
   Promise.all([
     getLatestRelease().catch(function () { return null; }),
@@ -140,28 +173,8 @@
   ]).then(function (res) {
     var rel = res[0];
     var repo = res[1];
-
-    var apk = null;
-    if (rel && Array.isArray(rel.assets)) {
-      for (var i = 0; i < rel.assets.length; i++) {
-        if (/\.apk$/i.test(String(rel.assets[i].name))) { apk = rel.assets[i]; break; }
-      }
-      if (!apk && rel.assets.length) apk = rel.assets[0];
-    }
-
-    var data = {
-      version: rel && rel.tag_name ? String(rel.tag_name) : "",
-      channel: rel ? (rel.prerelease ? "（测试版）" : "（正式版）") : "",
-      date: rel ? formatDate(rel.published_at) : "",
-      size: apk ? formatSize(apk.size) : "",
-      downloads: apk && typeof apk.download_count === "number" ? apk.download_count : null,
-      url: rel && rel.html_url ? String(rel.html_url) : "",
-      stars: repo && typeof repo.stargazers_count === "number" ? repo.stargazers_count : null,
-      forks: repo && typeof repo.forks_count === "number" ? repo.forks_count : null,
-      issues: repo && typeof repo.open_issues_count === "number" ? repo.open_issues_count : null
-    };
-
-    writeCache(data);
-    apply(data);
+    var payload = { rel: rel || null, repo: repo || null };
+    writeCache(payload);
+    apply(payload.rel, payload.repo);
   }).catch(function () { /* 保留静态文案 */ });
 })();
