@@ -1,15 +1,15 @@
 /* ============================================================================
    HOSHINO // PERSONAL ARCHIVE
-   交互脚本：主题切换、HUD 时钟、滚动进度、导航高亮、入场动画、数字滚动、
-   复制邮箱、回到顶部。无任何第三方依赖。
+   交互：配色切换、状态栏时钟、滚动进度、导航高亮、分层入场、数字跳变、
+   复制邮箱、回到顶部。纯原生实现，无任何依赖。
    ============================================================================ */
 (function () {
   "use strict";
 
   var root = document.documentElement;
-  var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------------------------------------------- 主题：NEGATIVE / POSITIVE */
+  /* -------------------------------------------- 配色：NEGATIVE / POSITIVE */
   var themeToggle = document.getElementById("themeToggle");
   var themeLabel = document.getElementById("themeLabel");
 
@@ -29,15 +29,12 @@
       syncThemeLabel();
     });
   }
-
   syncThemeLabel();
 
-  /* ------------------------------------------------------------ HUD 时钟 */
-  var clock = document.getElementById("hudClock");
+  /* --------------------------------------------------------- 状态栏时钟 */
+  var clock = document.getElementById("navClock");
 
-  function pad(value) {
-    return value < 10 ? "0" + value : String(value);
-  }
+  function pad(n) { return n < 10 ? "0" + n : String(n); }
 
   function tick() {
     if (!clock) return;
@@ -50,17 +47,15 @@
     window.setInterval(tick, 1000);
   }
 
-  /* ------------------------------------------- 滚动进度 / 页头 / 回到顶部 */
-  var hudProgress = document.getElementById("hudProgress");
+  /* ------------------------------------- 滚动进度 / 回到顶部 / 扫掠动效 */
+  var progress = document.getElementById("navProgress");
   var toTop = document.getElementById("toTop");
 
   function onScroll() {
-    var scrolled = window.scrollY || window.pageYOffset;
+    var y = window.scrollY || window.pageYOffset;
     var total = document.documentElement.scrollHeight - window.innerHeight;
-    var ratio = total > 0 ? Math.min(scrolled / total, 1) : 0;
-
-    if (hudProgress) hudProgress.style.width = (ratio * 100).toFixed(2) + "%";
-    if (toTop) toTop.classList.toggle("is-visible", scrolled > 620);
+    if (progress) progress.style.width = (total > 0 ? Math.min(y / total, 1) * 100 : 0).toFixed(2) + "%";
+    if (toTop) toTop.classList.toggle("is-visible", y > 640);
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -69,19 +64,18 @@
 
   if (toTop) {
     toTop.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
     });
   }
 
-  /* --------------------------------------------------- 载入时的扫掠动效 */
   var fx = document.querySelector(".fx");
-  if (fx && !prefersReducedMotion) {
+  if (fx && !reduceMotion) {
     fx.classList.add("is-running");
-    window.setTimeout(function () { fx.classList.remove("is-running"); }, 1600);
+    window.setTimeout(function () { fx.classList.remove("is-running"); }, 1700);
   }
 
-  /* ------------------------------------------------------- 导航滚动高亮 */
-  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".hud-link"));
+  /* --------------------------------------------------------- 导航高亮 */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav-link"));
   var sections = navLinks
     .map(function (link) {
       var href = link.getAttribute("href");
@@ -103,69 +97,70 @@
           .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
         if (visible.length) setActive(visible[0].target.id);
       },
-      { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.2, 0.5, 1] }
+      { rootMargin: "-42% 0px -50% 0px", threshold: [0, 0.2, 0.5, 1] }
     );
     sections.forEach(function (section) { spy.observe(section); });
   }
 
-  /* --------------------------------------------------------- 入场动画 */
-  var fxItems = Array.prototype.slice.call(document.querySelectorAll(".fx-in"));
+  /* ------------------------------------- 分层入场（标题带遮罩揭示） */
+  var reveals = Array.prototype.slice.call(document.querySelectorAll(".fx-in"));
 
-  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-    fxItems.forEach(function (el) { el.classList.add("is-visible"); });
+  function showAll() {
+    reveals.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    showAll();
   } else {
-    var revealObserver = new IntersectionObserver(
-      function (entries, observer) {
+    var observer = new IntersectionObserver(
+      function (entries, obs) {
         entries.forEach(function (entry, index) {
           if (!entry.isIntersecting) return;
           window.setTimeout(function () {
             entry.target.classList.add("is-visible");
           }, Math.min(index * 70, 210));
-          observer.unobserve(entry.target);
+          obs.unobserve(entry.target);
         });
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.12 }
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
     );
-    fxItems.forEach(function (el) { revealObserver.observe(el); });
+    reveals.forEach(function (el) { observer.observe(el); });
   }
 
-  /* --------------------------------------------------------- 数字滚动 */
+  /* --------------------------------------------------------- 数字跳变 */
   var counters = Array.prototype.slice.call(document.querySelectorAll("[data-count]"));
 
-  function animateNumber(el) {
+  function animate(el) {
     var target = parseInt(el.getAttribute("data-count"), 10);
     if (isNaN(target)) return;
 
-    var isYear = target > 1900;
-    el.textContent = isYear ? String(target) : "0";
-    if (isYear) return;
+    if (reduceMotion) { el.textContent = String(target); return; }
 
-    var duration = 850;
     var start = null;
+    var duration = 800;
+    el.textContent = "0";
 
     function step(timestamp) {
       if (start === null) start = timestamp;
-      var progress = Math.min((timestamp - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = String(Math.round(target * eased));
-      if (progress < 1) window.requestAnimationFrame(step);
+      var p = Math.min((timestamp - start) / duration, 1);
+      el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) window.requestAnimationFrame(step);
     }
-
     window.requestAnimationFrame(step);
   }
 
-  if (counters.length && "IntersectionObserver" in window && !prefersReducedMotion) {
-    var counterObserver = new IntersectionObserver(
-      function (entries, observer) {
+  if (counters.length && "IntersectionObserver" in window && !reduceMotion) {
+    var counterObs = new IntersectionObserver(
+      function (entries, obs) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
-          animateNumber(entry.target);
-          observer.unobserve(entry.target);
+          animate(entry.target);
+          obs.unobserve(entry.target);
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.5 }
     );
-    counters.forEach(function (el) { counterObserver.observe(el); });
+    counters.forEach(function (el) { counterObs.observe(el); });
   }
 
   /* --------------------------------------------------------- 复制邮箱 */
@@ -180,13 +175,13 @@
         function () {
           if (!label) return;
           copyBtn.classList.add("is-done");
-          label.textContent = "已复制";
+          label.textContent = "已复制地址";
           window.setTimeout(function () {
             copyBtn.classList.remove("is-done");
-            label.textContent = "复制邮箱";
+            label.textContent = "复制地址";
           }, 1800);
         },
-        function () { /* 复制失败时保留邮件按钮 */ }
+        function () { /* 失败时保留邮件按钮可用 */ }
       );
     });
   } else if (copyBtn) {

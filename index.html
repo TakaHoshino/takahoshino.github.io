@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <title>HOSHINO // 个人档案</title>
-  <meta name="description" content="Hoshino 的个人主页 —— 独立开发者，专注 Android（Kotlin / Jetpack Compose）与 Windows 桌面（C# / .NET / WPF）应用开发。" />
+  <meta name="description" content="Hoshino 的个人档案 —— 独立开发者，专注 Android（Kotlin / Jetpack Compose）与 Windows 桌面（C# / .NET / WPF）应用开发。" />
   <meta name="author" content="Hoshino" />
-  <meta name="keywords" content="Hoshino, TakaHoshino, 个人主页, Android 开发, Kotlin, Jetpack Compose, C#, .NET, WPF" />
-  <meta name="theme-color" content="#08090a" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#f4f4f2" media="(prefers-color-scheme: light)" />
+  <meta name="keywords" content="Hoshino, TakaHoshino, 个人主页, 作品集, Android 开发, Kotlin, Jetpack Compose, C#, .NET, WPF" />
+  <meta name="theme-color" content="#0a0b0b" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f5f3" media="(prefers-color-scheme: light)" />
 
-  <!-- 社交分享 -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="HOSHINO // 个人档案" />
   <meta property="og:description" content="独立开发者，专注 Android 与 Windows 桌面应用开发。" />
@@ -24,15 +23,13 @@
   <link rel="apple-touch-icon" href="favicon.svg" />
   <link rel="stylesheet" href="assets/css/style.css" />
 
-  <!-- 在首帧之前确定主题，避免闪烁 -->
   <script>
     (function () {
       try {
         var saved = localStorage.getItem("theme");
         var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-        var theme = saved || (prefersLight ? "positive" : "negative");
-        document.documentElement.setAttribute("data-theme", theme);
-      } catch (e) { /* 忽略：保持默认的 negative 主题 */ }
+        document.documentElement.setAttribute("data-theme", saved || (prefersLight ? "positive" : "negative"));
+      } catch (e) { /* 保持默认 negative */ }
     })();
   </script>
 
@@ -52,487 +49,591 @@
 </head>
 
 <body>
-  <a class="skip-link" href="#main">跳到主要内容</a>
+  <a class="skip-link" href="#work">跳到主要内容</a>
 
-  <!-- 全局特效层 -->
+  <!-- 背景图层：网格 / 噪点 / 扫描线 / 缓慢漂移的几何体 -->
   <div class="fx" aria-hidden="true">
     <span class="fx-grid"></span>
+    <span class="fx-lines"></span>
+    <span class="fx-drift fx-drift-a"></span>
+    <span class="fx-drift fx-drift-b"></span>
+    <span class="fx-drift fx-drift-c"></span>
     <span class="fx-noise"></span>
     <span class="fx-scan"></span>
     <span class="fx-sweep"></span>
   </div>
 
-  <!-- 顶部 HUD -->
-  <header class="hud" id="hud">
-    <span class="hud-progress" aria-hidden="true"><i id="hudProgress"></i></span>
+  <!-- ============================ 顶部状态栏 ============================ -->
+  <header class="nav" id="nav">
+    <span class="nav-progress" aria-hidden="true"><i id="navProgress"></i></span>
 
-    <div class="container hud-inner">
-      <a class="hud-brand" href="#top" aria-label="返回顶部">
-        <span class="hud-logo" aria-hidden="true">
-          <svg viewBox="0 0 32 32">
-            <path d="M4 8h9l-5 8h9" />
-            <path d="M13 24h13" />
-          </svg>
-        </span>
-        <span class="hud-brand-text">
-          <strong>HOSHINO</strong>
-          <small>PERSONAL ARCHIVE</small>
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top" aria-label="返回顶部">
+        <span class="nav-mark" aria-hidden="true">HS</span>
+        <span class="nav-brand-text">
+          <b>HOSHINO</b>
+          <small>SYS.ID 103877289</small>
         </span>
       </a>
 
-      <nav class="hud-nav" id="hudNav" aria-label="主导航">
-        <a class="hud-link is-active" href="#top"><i>00</i>首页</a>
-        <a class="hud-link" href="#profile"><i>01</i>档案</a>
-        <a class="hud-link" href="#capability"><i>02</i>能力</a>
-        <a class="hud-link" href="#archive"><i>03</i>作品</a>
-        <a class="hud-link" href="#transmission"><i>04</i>通讯</a>
+      <nav class="nav-links" id="navLinks" aria-label="主导航">
+        <a class="nav-link is-active" href="#work"><i>01</i>WORK<em>作品</em></a>
+        <a class="nav-link" href="#profile"><i>02</i>PROFILE<em>档案</em></a>
+        <a class="nav-link" href="#log"><i>03</i>LOG<em>日志</em></a>
+        <a class="nav-link" href="#contact"><i>04</i>CONTACT<em>联络</em></a>
       </nav>
 
-      <div class="hud-side">
-        <span class="hud-clock">
-          <small>SYS.TIME</small>
-          <b id="hudClock">--:--:--</b>
+      <div class="nav-status">
+        <span class="nav-clock">
+          <small>LOCAL</small>
+          <b id="navClock">--:--:--</b>
         </span>
-        <button class="hud-toggle" id="themeToggle" type="button"
-                aria-label="切换配色模式" title="切换配色模式">
-          <span class="hud-toggle-glyph" aria-hidden="true">◐</span>
-          <span class="hud-toggle-text" id="themeLabel">NEGATIVE</span>
+        <span class="nav-live"><i></i>ONLINE</span>
+        <button class="nav-toggle" id="themeToggle" type="button" aria-label="切换配色模式" title="切换配色模式">
+          <span aria-hidden="true">◐</span><b id="themeLabel">NEGATIVE</b>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- 滚动信息条 -->
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-track">
-      <span class="ticker-group">
-        <em>///</em> SYSTEM ONLINE <em>///</em> 个人档案已载入
-        <em>///</em> KOTLIN · JETPACK COMPOSE · C# · .NET · WPF
-        <em>///</em> WELCOME TO HOSHINO'S PERSONAL ARCHIVE <em>///</em>
-      </span>
-      <span class="ticker-group">
-        <em>///</em> SYSTEM ONLINE <em>///</em> 个人档案已载入
-        <em>///</em> KOTLIN · JETPACK COMPOSE · C# · .NET · WPF
-        <em>///</em> WELCOME TO HOSHINO'S PERSONAL ARCHIVE <em>///</em>
-      </span>
-    </div>
-  </div>
-
-  <main id="main">
-    <!-- ===================== 00 / 首屏 ===================== -->
-    <section class="section hero" id="top">
-      <div class="container hero-grid">
-        <div class="hero-main">
-          <p class="eyebrow fx-in">
-            <span class="eyebrow-tag">OPERATOR</span>
-            <span class="eyebrow-line" aria-hidden="true"></span>
-            <span class="eyebrow-id">NO.103877289</span>
-          </p>
-
-          <h1 class="hero-name fx-in">
-            <span class="hero-name-main">HOSHINO</span>
-            <span class="hero-name-tail" aria-hidden="true">///</span>
-          </h1>
-
-          <p class="hero-role fx-in">
-            <span class="accent">独立开发者</span>
-            <span class="slash">//</span>
-            ANDROID &amp; WINDOWS DESKTOP
-          </p>
-
-          <p class="hero-desc fx-in">
-            喜欢用 Kotlin 和 C# 把「用得上」的小工具做出来 ——
-            从轻小说阅读器到桌面效率软件，享受把想法变成能跑起来的程序的过程。
-          </p>
-
-          <div class="hero-actions fx-in">
-            <a class="btn btn-primary" href="#archive">
-              查看作品档案
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" />
-              </svg>
-            </a>
-            <a class="btn btn-ghost" href="#transmission">建立通讯</a>
-          </div>
-
-          <ul class="hero-stats fx-in">
-            <li>
-              <b data-count="10">10</b>
-              <span>公开仓库 / REPO</span>
-            </li>
-            <li>
-              <b data-count="2">2</b>
-              <span>原创作品 / ORIGINAL</span>
-            </li>
-            <li>
-              <b data-count="11">11</b>
-              <span>最高星标 / MAX ★</span>
-            </li>
-          </ul>
+  <main>
+    <!-- ============================== HERO ============================== -->
+    <section class="hero" id="top">
+      <div class="shell hero-shell">
+        <!-- 坐标刻度 -->
+        <div class="axis axis-x" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">X:031</span>
+          <span class="axis-tick"></span>
+        </div>
+        <div class="axis axis-y" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">Y:204</span>
+          <span class="axis-tick"></span>
         </div>
 
-        <!-- 干员式档案卡 -->
-        <aside class="op-card corners fx-in" aria-label="个人信息卡">
-          <div class="op-card-head">
-            <span class="op-card-label">ID CARD</span>
-            <span class="op-card-status"><i></i>ONLINE</span>
+        <div class="hero-grid">
+          <div class="hero-main">
+            <ul class="tag-row fx-in">
+              <li class="tag tag-solid">OPERATOR</li>
+              <li class="tag">ID 103877289</li>
+              <li class="tag">ORIGIN CN</li>
+              <li class="tag">UPDATED 2026.10</li>
+            </ul>
+
+            <h1 class="hero-title fx-in">
+              <span class="hero-title-en" data-text="HOSHINO">HOSHINO</span>
+              <span class="hero-title-cn">个人档案<span class="hero-title-slash" aria-hidden="true">///</span><em>PERSONAL ARCHIVE</em></span>
+            </h1>
+
+            <p class="hero-lead fx-in">
+              独立开发者<span class="sep">/</span>Android &amp; Windows 桌面应用
+            </p>
+            <p class="hero-motto fx-in">
+              <span class="hero-motto-mark" aria-hidden="true">“</span>
+              把想法变成能跑起来的程序。<span class="hero-motto-mark" aria-hidden="true">”</span>
+            </p>
+
+            <div class="hero-actions fx-in">
+              <a class="btn btn-primary" href="#work">
+                <span class="btn-num">01</span>
+                查看作品
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+              </a>
+              <a class="btn btn-ghost" href="#contact">
+                <span class="btn-num">02</span>
+                建立联络
+              </a>
+            </div>
+
+            <dl class="hero-readout fx-in">
+              <div>
+                <dt>REPOSITORY</dt>
+                <dd><b data-count="10">10</b></dd>
+              </div>
+              <div>
+                <dt>ORIGINAL</dt>
+                <dd><b data-count="2">2</b></dd>
+              </div>
+              <div>
+                <dt>MAX STARS</dt>
+                <dd><b data-count="11">11</b></dd>
+              </div>
+              <div>
+                <dt>SIGNAL</dt>
+                <dd><b>ACTIVE</b></dd>
+              </div>
+            </dl>
           </div>
 
-          <div class="op-portrait">
-            <span class="op-portrait-frame" aria-hidden="true"></span>
-            <img src="https://avatars.githubusercontent.com/u/103877289?v=4"
-                 alt="Hoshino 的头像" width="220" height="220" decoding="async" />
+          <!-- 右侧：多层档案板（2D UI 与线框体穿插） -->
+          <div class="hero-deck">
+            <span class="deck-layer deck-layer-back" aria-hidden="true"></span>
+
+            <div class="wire-cube" aria-hidden="true">
+              <span class="cube-face cube-top"></span>
+              <span class="cube-face cube-left"></span>
+              <span class="cube-face cube-right"></span>
+              <span class="cube-ring"></span>
+            </div>
+
+            <aside class="id-card glass corners fx-in" aria-label="个人身份卡">
+              <header class="id-head">
+                <span class="id-head-label">ID CARD</span>
+                <span class="id-head-status"><i></i>ONLINE</span>
+              </header>
+
+              <div class="id-portrait">
+                <img src="https://avatars.githubusercontent.com/u/103877289?v=4"
+                     alt="Hoshino 的头像" width="240" height="240" decoding="async" />
+                <span class="id-portrait-tag">IMG.001</span>
+              </div>
+
+              <dl class="id-rows">
+                <div class="id-row"><dt>CLASS</dt><dd>DEVELOPER</dd></div>
+                <div class="id-row"><dt>ROLE</dt><dd>独立开发者</dd></div>
+                <div class="id-row"><dt>BRANCH</dt><dd>KOTLIN · C#</dd></div>
+                <div class="id-row"><dt>SINCE</dt><dd>2022.04</dd></div>
+              </dl>
+
+              <div class="barcode" aria-hidden="true"></div>
+            </aside>
           </div>
-
-          <dl class="op-rows">
-            <div class="op-row">
-              <dt>CLASS</dt>
-              <dd>Developer / 开发者</dd>
-            </div>
-            <div class="op-row">
-              <dt>BRANCH</dt>
-              <dd>Kotlin · C# · Web</dd>
-            </div>
-            <div class="op-row">
-              <dt>ORIGIN</dt>
-              <dd>CN</dd>
-            </div>
-            <div class="op-row">
-              <dt>SINCE</dt>
-              <dd>2022.04</dd>
-            </div>
-          </dl>
-
-          <div class="barcode" aria-hidden="true"></div>
-        </aside>
+        </div>
       </div>
     </section>
 
-    <!-- ===================== 01 / 档案 ===================== -->
-    <section class="section" id="profile">
-      <div class="container">
+    <!-- ============================== WORK ============================== -->
+    <section class="section" id="work">
+      <div class="shell">
         <header class="sec-head fx-in">
           <span class="sec-index">01</span>
-          <h2 class="sec-title">档案</h2>
-          <span class="sec-latin">PROFILE</span>
+          <h2 class="sec-title">作品档案<em>SELECTED WORKS</em></h2>
+          <span class="sec-meta">N = 4 / UPDATED 2026.10</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="work-grid">
+          <!-- W-001 -->
+          <article class="work-card work-card-lg glass corners fx-in">
+            <header class="work-head">
+              <span class="work-no">W-001</span>
+              <span class="work-type">ANDROID APP</span>
+              <span class="work-year">2026</span>
+            </header>
+            <div class="work-thumb thumb-a" aria-hidden="true">
+              <span class="thumb-bar"></span>
+              <span class="thumb-bar"></span>
+              <span class="thumb-bar"></span>
+              <span class="thumb-block"></span>
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">Wenku8Reader</h3>
+              <p class="work-desc">
+                基于 wenku8.net 的 Android 轻小说阅读客户端。原生 Kotlin + Jetpack Compose + Material 3，
+                支持沉浸式阅读、书架收藏、离线下载（TXT / EPUB）与简繁转换。
+              </p>
+              <ul class="chips">
+                <li class="chip">Kotlin</li>
+                <li class="chip">Compose</li>
+                <li class="chip">Material 3</li>
+              </ul>
+            </div>
+            <footer class="work-foot">
+              <span class="work-state"><i></i>ACTIVE</span>
+              <span class="work-stat">★ 11</span>
+              <a class="work-link" href="https://github.com/TakaHoshino/Wenku8Reader" target="_blank" rel="noopener noreferrer">
+                OPEN <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </footer>
+          </article>
+
+          <!-- W-002 -->
+          <article class="work-card glass corners fx-in">
+            <header class="work-head">
+              <span class="work-no">W-002</span>
+              <span class="work-type">DESKTOP TOOL</span>
+              <span class="work-year">2026</span>
+            </header>
+            <div class="work-thumb thumb-b" aria-hidden="true">
+              <span class="thumb-pane"></span>
+              <span class="thumb-pane"></span>
+              <span class="thumb-pane"></span>
+              <span class="thumb-pane"></span>
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">FuckETS</h3>
+              <p class="work-desc">
+                Windows 桌面工具，基于 C# / .NET 8 / WPF。支持作业扫描、Part 自动识别、
+                答案着色展示、PDF 导出，以及插件系统与自动更新。
+              </p>
+              <ul class="chips">
+                <li class="chip">C#</li>
+                <li class="chip">.NET 8</li>
+                <li class="chip">WPF</li>
+              </ul>
+            </div>
+            <footer class="work-foot">
+              <span class="work-state"><i></i>ACTIVE</span>
+              <span class="work-stat">★ 2</span>
+              <a class="work-link" href="https://github.com/TakaHoshino/FuckETS" target="_blank" rel="noopener noreferrer">
+                OPEN <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </footer>
+          </article>
+
+          <!-- W-003 -->
+          <article class="work-card glass corners fx-in">
+            <header class="work-head">
+              <span class="work-no">W-003</span>
+              <span class="work-type">WEB</span>
+              <span class="work-year">2026</span>
+            </header>
+            <div class="work-thumb thumb-c" aria-hidden="true">
+              <span class="thumb-ring"></span>
+              <span class="thumb-cross"></span>
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">个人档案站</h3>
+              <p class="work-desc">
+                你正在浏览的这个页面。纯 HTML / CSS / 原生 JS 手写，零依赖、零构建，
+                由 GitHub Pages 托管。
+              </p>
+              <ul class="chips">
+                <li class="chip">HTML</li>
+                <li class="chip">CSS</li>
+                <li class="chip">JavaScript</li>
+              </ul>
+            </div>
+            <footer class="work-foot">
+              <span class="work-state"><i></i>LIVE</span>
+              <span class="work-stat">SELF</span>
+              <a class="work-link" href="https://github.com/TakaHoshino/takahoshino.github.io" target="_blank" rel="noopener noreferrer">
+                OPEN <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </footer>
+          </article>
+
+          <!-- W-004 -->
+          <article class="work-card work-card-lg work-card-slot corners fx-in">
+            <header class="work-head">
+              <span class="work-no">W-004</span>
+              <span class="work-type">SLOT OPEN</span>
+              <span class="work-year">TBD</span>
+            </header>
+            <div class="work-thumb thumb-d" aria-hidden="true">
+              <span class="thumb-plus"></span>
+            </div>
+            <div class="work-body">
+              <h3 class="work-title">下一个项目</h3>
+              <p class="work-desc">
+                这个位置留给正在构思的下一件作品。有想一起做的事，欢迎从联络面板发来讯息。
+              </p>
+              <ul class="chips">
+                <li class="chip">IDEA</li>
+                <li class="chip">TODO</li>
+              </ul>
+            </div>
+            <footer class="work-foot">
+              <span class="work-state is-idle"><i></i>IN PROGRESS</span>
+              <span class="work-stat">—</span>
+              <a class="work-link" href="#contact">
+                CONTACT <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+              </a>
+            </footer>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= PROFILE ============================= -->
+    <section class="section" id="profile">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="sec-index">02</span>
+          <h2 class="sec-title">个人档案<em>PROFILE</em></h2>
+          <span class="sec-meta">RECORD 02 / VERIFIED</span>
           <span class="sec-rule" aria-hidden="true"></span>
         </header>
 
         <div class="profile-grid">
-          <article class="panel profile-text fx-in">
-            <span class="panel-tag">BIOGRAPHY</span>
-            <p>
-              我在两个平台上折腾程序：移动端用
-              <strong>Kotlin + Jetpack Compose</strong>，桌面端用
-              <strong>C# / .NET / WPF</strong>，偶尔也写点网页和脚本。
-            </p>
-            <p>
-              项目大多源于自己的真实需求 —— 想看得更舒服的小说阅读器、
-              想少花点时间整理资料的小工具。做出来的东西有人用、有人说好，
-              就是最有成就感的部分。
-            </p>
-            <p>
-              除了写应用，也关注界面细节、动效与交互体验，
-              希望每一行代码最终都落在一个「好用」的产品上。
+          <!-- 参数面板 -->
+          <article class="param-panel glass corners fx-in">
+            <header class="param-head">
+              <span>SYSTEM PARAMETERS</span>
+              <span class="param-head-code">P.02</span>
+            </header>
+            <dl class="param-list">
+              <div class="param-row">
+                <dt>ROLE</dt>
+                <dd>独立开发者 / Independent Developer</dd>
+              </div>
+              <div class="param-row">
+                <dt>LOCATION</dt>
+                <dd>中国 / CN <span class="param-dim">UTC+8</span></dd>
+              </div>
+              <div class="param-row">
+                <dt>FOCUS</dt>
+                <dd>Android · Windows 桌面 · 效率工具</dd>
+              </div>
+              <div class="param-row">
+                <dt>TOOLS</dt>
+                <dd>Android Studio · Visual Studio · Git · VS Code</dd>
+              </div>
+              <div class="param-row">
+                <dt>LANGUAGES</dt>
+                <dd>中文（母语）· English（阅读为主）</dd>
+              </div>
+              <div class="param-row">
+                <dt>AVAILABILITY</dt>
+                <dd><span class="param-ok">OPEN</span> 可接洽合作与交流</dd>
+              </div>
+            </dl>
+
+            <p class="param-note">
+              项目大多源于自己的真实需求：想看得更舒服的阅读器、想少花点时间的整理工具。
+              做出来的东西有人用、有人说好，就是最有成就感的部分。
             </p>
           </article>
 
-          <ul class="profile-stats">
-            <li class="stat-tile fx-in">
-              <span class="stat-key">REPOSITORY</span>
-              <span class="stat-val" data-count="10">10</span>
-              <span class="stat-bar" aria-hidden="true"><i style="width:100%"></i></span>
-              <span class="stat-note">公开仓库</span>
-            </li>
-            <li class="stat-tile fx-in">
-              <span class="stat-key">ORIGINAL</span>
-              <span class="stat-val" data-count="2">2</span>
-              <span class="stat-bar" aria-hidden="true"><i style="width:22%"></i></span>
-              <span class="stat-note">原创作品</span>
-            </li>
-            <li class="stat-tile fx-in">
-              <span class="stat-key">MAX STARS</span>
-              <span class="stat-val" data-count="11">11</span>
-              <span class="stat-bar" aria-hidden="true"><i style="width:100%"></i></span>
-              <span class="stat-note">最高星标</span>
-            </li>
-            <li class="stat-tile fx-in">
-              <span class="stat-key">SINCE</span>
-              <span class="stat-val" data-count="2022">2022</span>
-              <span class="stat-bar" aria-hidden="true"><i style="width:100%"></i></span>
-              <span class="stat-note">开始写开源</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
+          <!-- 能力矩阵：雷达 + 模块阵列 -->
+          <article class="radar-panel glass corners fx-in">
+              <header class="panel-head">
+                <span>CAPABILITY RADAR</span>
+                <span class="panel-head-note">自评 / SELF-ASSESSED</span>
+              </header>
 
-    <!-- ===================== 02 / 能力 ===================== -->
-    <section class="section" id="capability">
-      <div class="container">
-        <header class="sec-head fx-in">
-          <span class="sec-index">02</span>
-          <h2 class="sec-title">能力</h2>
-          <span class="sec-latin">CAPABILITY</span>
-          <span class="sec-rule" aria-hidden="true"></span>
-        </header>
-
-        <div class="cap-grid">
-          <article class="panel cap-card fx-in">
-            <header class="cap-head">
-              <span class="cap-icon" aria-hidden="true">
-                <svg class="ico" viewBox="0 0 24 24">
-                  <rect x="6.4" y="2.6" width="11.2" height="18.8" rx="2.6" />
-                  <path d="M10.4 5.6h3.2M11 18.6h2" />
+              <div class="radar-wrap">
+                <span class="radar-sweep" aria-hidden="true"></span>
+                <svg class="radar" viewBox="0 0 300 300" role="img" aria-label="能力自评雷达图">
+                  <g class="radar-grid">
+                    <polygon points="150,40 245.3,95 245.3,205 150,260 54.7,205 54.7,95" />
+                    <polygon points="150,62 226.2,106 226.2,194 150,238 73.8,194 73.8,106" />
+                    <polygon points="150,84 207.2,117 207.2,183 150,216 92.8,183 92.8,117" />
+                    <polygon points="150,106 188.1,128 188.1,172 150,194 111.9,172 111.9,128" />
+                    <polygon points="150,128 169.1,139 169.1,161 150,172 130.9,161 130.9,139" />
+                  </g>
+                  <g class="radar-axis">
+                    <line x1="150" y1="150" x2="150" y2="40" />
+                    <line x1="150" y1="150" x2="245.3" y2="95" />
+                    <line x1="150" y1="150" x2="245.3" y2="205" />
+                    <line x1="150" y1="150" x2="150" y2="260" />
+                    <line x1="150" y1="150" x2="54.7" y2="205" />
+                    <line x1="150" y1="150" x2="54.7" y2="95" />
+                  </g>
+                  <polygon class="radar-shape"
+                           points="150,57.6 226.2,106 222.4,191.8 150,229.2 85.2,187.4 71.9,104.9" />
+                  <g class="radar-dots">
+                    <circle cx="150" cy="57.6" r="3" />
+                    <circle cx="226.2" cy="106" r="3" />
+                    <circle cx="222.4" cy="191.8" r="3" />
+                    <circle cx="150" cy="229.2" r="3" />
+                    <circle cx="85.2" cy="187.4" r="3" />
+                    <circle cx="71.9" cy="104.9" r="3" />
+                  </g>
+                  <g class="radar-labels">
+                    <text x="150" y="26" text-anchor="middle">KOTLIN</text>
+                    <text x="262" y="86" text-anchor="start">COMPOSE</text>
+                    <text x="262" y="216" text-anchor="start">C#</text>
+                    <text x="150" y="284" text-anchor="middle">.NET / WPF</text>
+                    <text x="38" y="216" text-anchor="end">UI / UX</text>
+                    <text x="38" y="86" text-anchor="end">TOOLING</text>
+                  </g>
                 </svg>
-              </span>
-              <span class="cap-head-text">
-                <b>ANDROID 开发</b>
-                <small>MODULE 01</small>
-              </span>
-            </header>
-            <div class="segments" aria-hidden="true">
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            </div>
-            <p class="cap-desc">用现代 Android 技术栈构建流畅、好看的移动应用。</p>
-            <ul class="chips">
-              <li class="chip">Kotlin</li>
-              <li class="chip">Jetpack Compose</li>
-              <li class="chip">Material 3</li>
-              <li class="chip">Coroutines</li>
-              <li class="chip">Gradle</li>
-            </ul>
-          </article>
+              </div>
 
-          <article class="panel cap-card fx-in">
-            <header class="cap-head">
-              <span class="cap-icon" aria-hidden="true">
-                <svg class="ico" viewBox="0 0 24 24">
-                  <rect x="2.8" y="4.2" width="18.4" height="12.6" rx="2.2" />
-                  <path d="M2.8 8.2h18.4M8.4 20.2h7.2" />
-                </svg>
-              </span>
-              <span class="cap-head-text">
-                <b>WINDOWS 桌面</b>
-                <small>MODULE 02</small>
-              </span>
-            </header>
-            <div class="segments" aria-hidden="true">
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            </div>
-            <p class="cap-desc">基于 .NET 与 WPF 打造功能完整、可扩展的桌面软件。</p>
-            <ul class="chips">
-              <li class="chip">C#</li>
-              <li class="chip">.NET 8</li>
-              <li class="chip">WPF</li>
-              <li class="chip">MVVM</li>
-              <li class="chip">插件系统</li>
-            </ul>
-          </article>
+              <ul class="radar-legend">
+                <li><span>KOTLIN</span><i></i><b>84</b></li>
+                <li><span>COMPOSE</span><i></i><b>80</b></li>
+                <li><span>C#</span><i></i><b>76</b></li>
+                <li><span>.NET / WPF</span><i></i><b>72</b></li>
+                <li><span>UI / UX</span><i></i><b>68</b></li>
+                <li><span>TOOLING</span><i></i><b>82</b></li>
+              </ul>
+            </article>
 
-          <article class="panel cap-card fx-in">
-            <header class="cap-head">
-              <span class="cap-icon" aria-hidden="true">
-                <svg class="ico" viewBox="0 0 24 24">
-                  <path d="M8.6 8.2 4.4 12l4.2 3.8M15.4 8.2 19.6 12l-4.2 3.8M13.6 4.8l-3.2 14.4" />
-                </svg>
-              </span>
-              <span class="cap-head-text">
-                <b>WEB 与脚本</b>
-                <small>MODULE 03</small>
-              </span>
-            </header>
-            <div class="segments" aria-hidden="true">
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            </div>
-            <p class="cap-desc">写页面、写脚本，把重复的事情交给程序去做。</p>
-            <ul class="chips">
-              <li class="chip">HTML / CSS</li>
-              <li class="chip">JavaScript</li>
-              <li class="chip">Python</li>
-              <li class="chip">Git</li>
-              <li class="chip">GitHub Actions</li>
-            </ul>
+          <article class="module-panel glass corners fx-in">
+              <header class="panel-head">
+                <span>MODULE ARRAY</span>
+                <span class="panel-head-note">12 UNITS</span>
+              </header>
+              <ul class="modules">
+                <li class="module is-on"><i></i>Kotlin</li>
+                <li class="module is-on"><i></i>Compose</li>
+                <li class="module is-on"><i></i>Material 3</li>
+                <li class="module is-on"><i></i>Coroutines</li>
+                <li class="module is-on"><i></i>Gradle</li>
+                <li class="module is-on"><i></i>Room</li>
+                <li class="module is-on"><i></i>C#</li>
+                <li class="module is-on"><i></i>.NET 8</li>
+                <li class="module is-on"><i></i>WPF</li>
+                <li class="module is-on"><i></i>MVVM</li>
+                <li class="module is-on"><i></i>Python</li>
+                <li class="module is-on"><i></i>Git / CI</li>
+              </ul>
+              <p class="module-note">
+                常用技术模块。其中 <b>Kotlin / Compose</b> 与 <b>C# / .NET / WPF</b> 是日常主力，
+                其余按项目需要选用。
+              </p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ===================== 03 / 作品 ===================== -->
-    <section class="section" id="archive">
-      <div class="container">
+    <!-- =============================== LOG =============================== -->
+    <section class="section" id="log">
+      <div class="shell">
         <header class="sec-head fx-in">
           <span class="sec-index">03</span>
-          <h2 class="sec-title">作品</h2>
-          <span class="sec-latin">ARCHIVE</span>
+          <h2 class="sec-title">活动日志<em>ACTIVITY LOG</em></h2>
+          <span class="sec-meta">5 ENTRIES / ASC</span>
           <span class="sec-rule" aria-hidden="true"></span>
         </header>
 
-        <div class="file-grid">
-          <article class="file-card corners fx-in">
-            <header class="file-head">
-              <span class="file-no">FILE NO.001</span>
-              <span class="file-flag">PRIORITY</span>
-            </header>
-            <h3 class="file-title">Wenku8Reader</h3>
-            <p class="file-type">ANDROID NOVEL READER</p>
-            <p class="file-desc">
-              基于 wenku8.net 的 Android 轻小说阅读客户端。原生 Kotlin + Jetpack Compose + Material 3 构建，
-              支持沉浸式阅读、书架收藏、离线下载（TXT / EPUB）、简繁转换与个性化外观定制。
-            </p>
-            <ul class="chips">
-              <li class="chip">Kotlin</li>
-              <li class="chip">Jetpack Compose</li>
-              <li class="chip">Android</li>
-            </ul>
-            <footer class="file-foot">
-              <span class="file-meta"><i class="dot dot-kotlin" aria-hidden="true"></i>Kotlin</span>
-              <span class="file-meta">★ 11</span>
-              <a class="file-link" href="https://github.com/TakaHoshino/Wenku8Reader"
-                 target="_blank" rel="noopener noreferrer">
-                查看源码
-                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" />
-                </svg>
-              </a>
-            </footer>
-          </article>
+        <ol class="log">
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2022.04</span>
+            <span class="log-no">LOG-001</span>
+            <div class="log-body">
+              <h3 class="log-title">建立 GitHub 账号</h3>
+              <p class="log-note">开始接触开源，把学习过程中的代码沉淀下来。</p>
+            </div>
+            <span class="log-state">ARCHIVED</span>
+          </li>
 
-          <article class="file-card corners fx-in">
-            <header class="file-head">
-              <span class="file-no">FILE NO.002</span>
-              <span class="file-flag">PRIORITY</span>
-            </header>
-            <h3 class="file-title">FuckETS</h3>
-            <p class="file-type">WINDOWS DESKTOP TOOL</p>
-            <p class="file-desc">
-              提取「讯飞 E 听说」英语试题参考答案的 Windows 桌面工具。基于 C# / .NET 8 / WPF 开发，
-              支持作业扫描、Part 自动识别、答案着色展示、PDF 导出，以及插件系统与自动更新。
-            </p>
-            <ul class="chips">
-              <li class="chip">C#</li>
-              <li class="chip">.NET 8</li>
-              <li class="chip">WPF</li>
-            </ul>
-            <footer class="file-foot">
-              <span class="file-meta"><i class="dot dot-csharp" aria-hidden="true"></i>C#</span>
-              <span class="file-meta">★ 2</span>
-              <a class="file-link" href="https://github.com/TakaHoshino/FuckETS"
-                 target="_blank" rel="noopener noreferrer">
-                查看源码
-                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" />
-                </svg>
-              </a>
-            </footer>
-          </article>
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2025.08</span>
+            <span class="log-no">LOG-002</span>
+            <div class="log-body">
+              <h3 class="log-title">建立个人 Profile 仓库</h3>
+              <p class="log-note">TakaHoshino/TakaHoshino，用来整理个人介绍与常用入口。</p>
+            </div>
+            <span class="log-state">DONE</span>
+          </li>
 
-          <article class="file-card file-card-more fx-in">
-            <header class="file-head">
-              <span class="file-no">FILE NO.003+</span>
-              <span class="file-flag">CLASSIFIED</span>
-            </header>
-            <h3 class="file-title">更多记录</h3>
-            <p class="file-type">EXPERIMENTS &amp; NOTES</p>
-            <p class="file-desc">
-              仓库里还有若干实验性项目、脚本与学习笔记。
-              欢迎到 GitHub 上随便逛逛，也欢迎提 Issue 或 PR。
-            </p>
-            <a class="btn btn-ghost btn-sm" href="https://github.com/TakaHoshino?tab=repositories"
-               target="_blank" rel="noopener noreferrer">
-              浏览全部仓库
-              <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" />
-              </svg>
-            </a>
-          </article>
-        </div>
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.04</span>
+            <span class="log-no">LOG-003</span>
+            <div class="log-body">
+              <h3 class="log-title">FuckETS 立项</h3>
+              <p class="log-note">用 C# / .NET 8 / WPF 做一款桌面工具，从需求到插件系统全部自己实现。</p>
+            </div>
+            <span class="log-state is-active">ACTIVE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.08</span>
+            <span class="log-no">LOG-004</span>
+            <div class="log-body">
+              <h3 class="log-title">Wenku8Reader 立项</h3>
+              <p class="log-note">转向 Kotlin + Jetpack Compose，做一个自己每天都在用的阅读器。</p>
+            </div>
+            <span class="log-state is-active">ACTIVE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.10</span>
+            <span class="log-no">LOG-005</span>
+            <div class="log-body">
+              <h3 class="log-title">个人档案站上线</h3>
+              <p class="log-note">把作品、能力与日志收进一套自制的信息公开界面。</p>
+            </div>
+            <span class="log-state is-live">LIVE</span>
+          </li>
+        </ol>
       </div>
     </section>
 
-    <!-- ===================== 04 / 通讯 ===================== -->
-    <section class="section" id="transmission">
-      <div class="container">
+    <!-- ============================= CONTACT ============================= -->
+    <section class="section" id="contact">
+      <div class="shell">
         <header class="sec-head fx-in">
           <span class="sec-index">04</span>
-          <h2 class="sec-title">通讯</h2>
-          <span class="sec-latin">TRANSMISSION</span>
+          <h2 class="sec-title">联络通道<em>CONTACT</em></h2>
+          <span class="sec-meta">CHANNEL OPEN</span>
           <span class="sec-rule" aria-hidden="true"></span>
         </header>
 
-        <div class="panel contact-panel fx-in">
-          <div class="contact-main">
-            <span class="panel-tag">OPEN CHANNEL</span>
-            <h3 class="contact-title">一起做点有意思的东西</h3>
-            <p class="contact-desc">
-              无论是项目合作、技术交流，还是发现了我代码里的 Bug，都可以直接找我。
-            </p>
+        <div class="contact-grid">
+          <article class="terminal glass corners fx-in">
+            <header class="terminal-head">
+              <span class="terminal-dot" aria-hidden="true"></span>
+              <span class="terminal-path">CHANNEL://CONTACT.DIRECT</span>
+              <span class="terminal-code">P.04</span>
+            </header>
 
-            <div class="contact-actions">
-              <a class="btn btn-primary" href="mailto:a3451894191@163.com">
-                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="2.8" y="4.8" width="18.4" height="14.4" rx="2.6" />
-                  <path d="m3.6 7.4 7.3 5.1c.7.5 1.5.5 2.2 0l7.3-5.1" />
-                </svg>
-                发送邮件
-              </a>
-              <button class="btn btn-ghost copy-btn" id="copyEmail" type="button"
-                      data-email="a3451894191@163.com">
-                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="8.6" y="8.6" width="11.2" height="11.2" rx="2.2" />
-                  <path d="M15.4 8.6V6.2a2.2 2.2 0 0 0-2.2-2.2H6.4a2.2 2.2 0 0 0-2.2 2.2v6.8a2.2 2.2 0 0 0 2.2 2.2h2.2" />
-                </svg>
-                <span class="copy-label">复制邮箱</span>
-              </button>
+            <div class="terminal-body">
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 通道已开启。项目合作、技术交流、Bug 反馈都欢迎。</p>
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> TARGET <b>a3451894191@163.com</b></p>
+              <p class="terminal-line terminal-line-dim">
+                <span class="terminal-prompt">&gt;</span> 通常会在 1–2 天内回复。
+                <span class="caret" aria-hidden="true"></span>
+              </p>
+
+              <div class="terminal-actions">
+                <a class="btn btn-primary" href="mailto:a3451894191@163.com">
+                  <span class="btn-num">A</span>
+                  发送邮件
+                  <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+                </a>
+                <button class="btn btn-ghost copy-btn" id="copyEmail" type="button" data-email="a3451894191@163.com">
+                  <span class="btn-num">B</span>
+                  <span class="copy-label">复制地址</span>
+                </button>
+              </div>
             </div>
-            <p class="contact-mail">a3451894191@163.com</p>
-          </div>
+          </article>
 
-          <div class="contact-side">
-            <a class="contact-row" href="https://github.com/TakaHoshino" target="_blank" rel="noopener noreferrer">
+          <ul class="contact-list fx-in">
+            <li class="contact-item">
               <span class="contact-key">GITHUB</span>
-              <span class="contact-val">@TakaHoshino</span>
-              <svg class="ico ico-sm contact-arrow" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" />
-              </svg>
-            </a>
-            <a class="contact-row" href="https://takahoshino.github.io/" target="_blank" rel="noopener noreferrer">
+              <a class="contact-val" href="https://github.com/TakaHoshino" target="_blank" rel="noopener noreferrer">
+                @TakaHoshino
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">EMAIL</span>
+              <span class="contact-val is-text">a3451894191@163.com</span>
+            </li>
+            <li class="contact-item">
               <span class="contact-key">SITE</span>
-              <span class="contact-val">takahoshino.github.io</span>
-              <svg class="ico ico-sm contact-arrow" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" />
-              </svg>
-            </a>
-            <div class="contact-row is-static">
+              <a class="contact-val" href="https://takahoshino.github.io/" target="_blank" rel="noopener noreferrer">
+                takahoshino.github.io
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
               <span class="contact-key">ORIGIN</span>
-              <span class="contact-val">中国 / CN</span>
-              <span class="contact-sig" aria-hidden="true"></span>
-            </div>
-            <div class="contact-row is-static">
+              <span class="contact-val is-text">中国 / CN · UTC+8</span>
+            </li>
+            <li class="contact-item">
               <span class="contact-key">STATUS</span>
-              <span class="contact-val">在线 / ONLINE</span>
-              <span class="contact-sig ok" aria-hidden="true"></span>
-            </div>
-          </div>
+              <span class="contact-val is-text"><i class="live-dot"></i>接受交流与合作</span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-left">
+  <footer class="foot">
+    <div class="shell foot-inner">
+      <div class="foot-left">
         <span class="barcode barcode-sm" aria-hidden="true"></span>
-        <p>© <span id="year">2026</span> HOSHINO // PERSONAL ARCHIVE</p>
+        <p>© <span id="year">2026</span> HOSHINO · PERSONAL ARCHIVE · ALL RIGHTS RESERVED</p>
       </div>
-      <p class="footer-right">HOSTED ON GITHUB PAGES</p>
+      <p class="foot-right">HANDCRAFTED HTML / CSS / JS — HOSTED ON GITHUB PAGES</p>
     </div>
   </footer>
 
   <button class="to-top" id="toTop" type="button" aria-label="回到顶部" title="回到顶部">
-    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" />
-    </svg>
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" /></svg>
   </button>
 
   <script src="assets/js/main.js" defer></script>

@@ -1,13 +1,14 @@
 # takahoshino.github.io
 
-个人主页源码。纯静态实现（HTML + CSS + 原生 JavaScript），没有构建步骤、没有依赖，
+个人主页源码。纯静态实现（HTML + CSS + 原生 JavaScript），零依赖、零构建，
 推送到 `main` 分支后由 GitHub Pages 直接发布。
 
 - 线上地址：https://takahoshino.github.io/
-- 视觉风格：黑 / 白 / 高亮黄的工业感 HUD —— 切角面板、扫描线、等宽字母标签、
-  顶部状态栏与滚动信息条，灵感来自《明日方舟》的 UI 语言。
-- 两套配色：`NEGATIVE`（黑底，默认）与 `POSITIVE`（白底），右上角按钮切换，
-  选择会记在 localStorage 里。
+- 设计方向：高密度信息图层 / 工业战术 UI / 编辑化海报排版
+- 骨架色：白 · 近黑 · 冷灰；系统色：单一高亮 `#d9ff00`（只用于编号、状态、
+  线条、图形标记和激活态，不做大面积铺色）
+- 两套模式：`NEGATIVE`（黑底，默认）与 `POSITIVE`（白底），右上角切换并记忆选择
+- **所有图形都由 CSS / SVG 手绘**，没有引用任何游戏素材、Logo、角色或图标
 
 ## 目录结构
 
@@ -19,42 +20,54 @@
 ├── robots.txt / sitemap.xml # 搜索引擎相关
 ├── .nojekyll                # 让 GitHub Pages 跳过 Jekyll 处理
 └── assets
-    ├── css/style.css        # 全部样式：主题变量 + 面板 / HUD / 卡片组件
-    └── js/main.js           # 主题切换、时钟、滚动进度、导航高亮、入场动画、复制邮箱
+    ├── css/style.css        # 样式系统：主题变量 + 网格 + 各区块组件
+    └── js/main.js           # 配色切换、时钟、滚动进度、导航高亮、入场动画、复制邮箱
 ```
 
 ## 本地预览
 
-直接双击 `index.html` 就能看（用的都是相对路径），也可以起一个本地服务器：
+直接双击 `index.html` 即可（全部使用相对路径），也可以起本地服务器：
 
 ```bash
-python -m http.server 8000     # 然后访问 http://localhost:8000
+python -m http.server 8000     # 访问 http://localhost:8000
 ```
 
-## 页面对应关系
+## 页面结构
 
-| 区块 | 锚点 | 内容 |
-| --- | --- | --- |
-| 00 首页 | `#top` | 名字、简介、两个按钮、三个数字 |
-| 01 档案 | `#profile` | 自我介绍 + 四格数据 |
-| 02 能力 | `#capability` | 三张技术能力面板 |
-| 03 作品 | `#archive` | 项目卡片（FILE NO.xxx） |
-| 04 通讯 | `#transmission` | 邮箱按钮与联系方式列表 |
+| 编号 | 区块 | 锚点 | 内容 |
+| --- | --- | --- | --- |
+| — | 首屏 | `#top` | 超大代号标题、状态标签、坐标刻度、命令键按钮、4 格读数、线框立方体 + 身份卡 |
+| 01 | WORK 作品 | `#work` | 4 个项目卡（编号 / 类型 / 年份 / 技术栈 / 状态条 / 生成式缩略图） |
+| 02 | PROFILE 档案 | `#profile` | 系统参数面板 + 能力雷达（含数值图例）+ 12 格模块阵列 |
+| 03 | LOG 日志 | `#log` | 5 条时间线记录（真实日期，取自 GitHub 仓库） |
+| 04 | CONTACT 联络 | `#contact` | 终端式提交面板 + 联系方式列表 |
 
 ## 常见修改
 
 | 想改什么 | 改哪里 |
 | --- | --- |
-| 名字 / UID / 简介 | `index.html` 的 `<section id="top">`；右侧档案卡的 `op-rows` |
-| 顶部信息条文字 | `index.html` 里 `.ticker` 的两段 `.ticker-group`（两段要改成一样） |
-| 数字统计 | `data-count="10"` 这类属性，改完记得同步显示的数字 |
-| 技能标签 | `.cap-card` 里的 `li.chip` |
-| 新增项目 | 复制一个 `<article class="file-card corners">`，改 `FILE NO.` 与内容 |
-| 邮箱 / 社交链接 | 全局搜索 `a3451894191@163.com` 与 `github.com/TakaHoshino` |
-| 头像 | 当前用 GitHub 头像地址，可换成本地图片（如 `assets/img/avatar.png`） |
-| 配色 | `assets/css/style.css` 顶部的 `:root`（NEGATIVE）与 `[data-theme="positive"]` |
-| 切角大小 | CSS 变量 `--cut`（大面板）与 `--cut-sm`（小方块） |
-| 强制默认黑底 | `index.html` 头部的小脚本里，把 `var theme = saved \|\| (...)` 改成 `var theme = saved \|\| "negative"` |
+| 代号 / 身份 / 座右铭 | `index.html` 首屏的 `.hero-title`、`.hero-lead`、`.hero-motto` |
+| 顶部状态标签 | 首屏 `.tag-row` 里的 `li.tag`（ID / ORIGIN / UPDATED） |
+| 读数数字 | `.hero-readout` 中的 `data-count="10"`，改属性同时改显示文本 |
+| 项目卡片 | 复制一个 `<article class="work-card ...">`；`work-card-lg` 控制跨 7 列还是 5 列 |
+| 项目缩略图 | 由 CSS 生成，样式在 `style.css` 的 `.thumb-a` ~ `.thumb-d` |
+| 参数面板字段 | `.param-list` 里的 `.param-row`（`dt` 是字段名，`dd` 是内容） |
+| 能力雷达数值 | `index.html` 里 `.radar-shape` 的 `points` 与 `.radar-legend` 的数字（**自评数值，按需修改**） |
+| 模块阵列 | `.modules` 里的 `li.module`，`is-on` 控制指示灯亮起 |
+| 日志条目 | `.log` 里的 `li.log-item`（日期 / 编号 / 标题 / 说明 / 状态） |
+| 邮箱与社交链接 | 全局搜索 `a3451894191@163.com` 与 `github.com/TakaHoshino` |
+| 头像 | 默认用 GitHub 头像地址，可换成本地图片（如 `assets/img/avatar.png`） |
+| 高亮色 | `style.css` 顶部 `--acc` / `--acc-strong`（`--acc` 是填充色，`--acc-strong` 是浅底上的文字色） |
+| 切角大小 | CSS 变量 `--cut`（大面板）与 `--cut-sm` |
+| 强制默认黑底 | `<head>` 里的小脚本，把 `var theme = saved \|\| (...)` 改成 `var theme = saved \|\| "negative"` |
+
+## 关于雷达图数值
+
+面板上标了「自评 / SELF-ASSESSED」，里面 6 个维度（Kotlin / Compose / C# /
+.NET·WPF / UI·UX / Tooling）的数值是占位用的自评分数，请按自己的实际情况调整：
+
+1. 先改 `.radar-legend` 里的 6 个数字（方便自己对齐）；
+2. 再按比例改 `.radar-shape` 的 `points`（六边形顶点，圆心 150,150，满值半径 110）。
 
 ## 发布
 
