@@ -109,6 +109,9 @@
           <span class="stage-floor"></span>
         </div>
 
+        <!-- WebGL 空间层（宽屏 + 支持 WebGL 时按需加载，CSS 层作为兜底） -->
+        <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+
         <!-- 左边缘竖排标识（参考方舟海报的竖排 Latin 边注） -->
         <span class="edge-label" aria-hidden="true">HOSHINO // PERSONAL ARCHIVE — EST.2022</span>
 
@@ -698,5 +701,29 @@
   </button>
 
   <script src="assets/js/main.js" defer></script>
+
+  <!-- 首屏 3D 引导：只在宽屏、支持 WebGL 且未开启减少动效时按需拉取 -->
+  <script type="module">
+    (function () {
+      var wide = window.matchMedia("(min-width: 1024px)").matches;
+      var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var gl = false;
+      try {
+        var probe = document.createElement("canvas");
+        gl = !!(window.WebGLRenderingContext && (probe.getContext("webgl2") || probe.getContext("webgl")));
+      } catch (e) { gl = false; }
+      if (!wide || still || !gl) return;
+
+      var start = function () {
+        import("./assets/js/hero3d.js").catch(function () { /* 兜底：保持 CSS 背景层 */ });
+      };
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(start, { timeout: 2500 });
+      } else {
+        window.addEventListener("load", function () { window.setTimeout(start, 250); }, { once: true });
+      }
+    })();
+  </script>
 </body>
 </html>

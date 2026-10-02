@@ -1981,6 +1981,24 @@ a.contact-val:hover .ico { transform: translate(2px, -2px); }
    ============================================================================ */
 .hero { padding: 62px 0 0; }
 
+/* ---------------------------------------------------------- WebGL 空间层 */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-out);
+}
+
+.hero.has-3d .hero-canvas { opacity: 1; }
+
+/* 3D 接管后隐去 CSS 版的等距地面与平台，避免两套空间重叠 */
+.hero.has-3d .stage-floor,
+.hero.has-3d .stage-platform { opacity: 0; }
+
 /* ---------------------------------------------------------- 背景空间层 */
 .stage {
   position: absolute;

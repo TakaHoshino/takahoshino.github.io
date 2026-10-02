@@ -41,7 +41,10 @@
 ├── .nojekyll                # 让 GitHub Pages 跳过 Jekyll 处理
 └── assets
     ├── css/style.css        # 样式系统：主题变量 + 网格 + 各区块组件
-    └── js/main.js           # 配色切换、时钟、滚动进度、导航高亮、入场动画、复制邮箱
+    ├── img/avatar.jpg       # 头像（已本地化，不依赖 GitHub CDN）
+    ├── js/main.js           # 配色切换、时钟、滚动进度、导航高亮、入场动画、复制邮箱
+    ├── js/hero3d.js         # 首屏 Three.js 场景（按需加载）
+    └── vendor/three.module.min.js   # Three.js 本体（本地内置，不走 CDN）
 ```
 
 ## 本地预览
@@ -72,6 +75,16 @@ python -m http.server 8000     # 访问 http://localhost:8000
 | 中景层 | HUD 状态条、代号标题、身份舱（头像 + 年限圆环 + 档案字段）、读数 | `.hud-strip` / `.hero-title` / `.pod` / `.hero-readout` |
 | 前景层 | 6 块错落悬浮的功能面板 | `.console` 内 `.mod`，整组 `rotateY(-9deg) rotateX(3deg)`，单块用 `--z` / `--y` 做前后错落 |
 | 底栏 | 系统状态条：焦点 / 最近更新 / 合作状态 / 邮箱 | `.statusbar` |
+
+#### WebGL 空间层
+
+首屏另有一层 Three.js 场景叠在 CSS 背景层之上：透视地面网格、粒子尘、右侧的悬浮线框核心（自转 + 轻微漂浮）。
+
+- **按需加载**：只有「视口 ≥ 1024px + 支持 WebGL + 未开启减少动效」时，页面空闲后才动态 `import()`，不会拖慢首屏。
+- **兜底**：不满足条件、加载失败或禁用 JS 时，CSS 的等距地面与平台照常显示（`.hero.has-3d` 控制两者切换）。
+- **交互**：鼠标移动产生视差，滚动时相机后退，切换配色时线条颜色跟随主题，页面不可见或离屏时暂停渲染。
+- **想关掉 3D**：删掉 `index.html` 末尾的「首屏 3D 引导」`<script type="module">` 即可，其余部分不受影响。
+- 依赖只有 Three.js 本体，已内置在 `assets/vendor/`，不请求任何外部 CDN。
 
 功能面板自带系统状态，映射关系：
 
