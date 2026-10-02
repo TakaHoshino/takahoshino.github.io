@@ -10,6 +10,22 @@
 - 两套模式：`NEGATIVE`（黑底，默认）与 `POSITIVE`（白底），右上角切换并记忆选择
 - **所有图形都由 CSS / SVG 手绘**，没有引用任何游戏素材、Logo、角色或图标
 
+## 设计手法参考
+
+视觉语言参考自方舟系列平面设计的公开设计分析
+（<https://www.ignoredone.space/index.php/arknights_design/>），只借鉴方法、不使用素材：
+
+| 手法 | 在本站的落地 |
+| --- | --- |
+| 巨型粗体标题 + 横向饱和色带穿过文字 | 首屏 `.hero-slice`，色带从标题下方穿过并在卡片后消失 |
+| 超大字被前景物体遮挡 | 线框立方体 `.wire-cube` 压在身份卡上、色带穿过卡片后方 |
+| 左边缘竖排 Latin 边注 | `.edge-label`（`HOSHINO // PERSONAL ARCHIVE — EST.2022`） |
+| `[代号] 拉丁副标题` 细框铭牌 | `.hero-plate`（`[HS-001] 个人档案 · PERSONAL ARCHIVE`） |
+| 巨型幽灵字水印 | 每个区块标题后的 `.ghost`（WORKS / PROFILE / LOG / CONTACT） |
+| 重复几何形 / V 形斜纹填充 | `.sec-rule` 的斜纹刻度线、`.corners` 的角标括号 |
+| 高频小字标签与坐标读数 | 标签行、坐标轴、`.radar-legend` 的点线引导 |
+| 色差描边（RGB 分离） | `.hero-title-en` 的 `text-shadow` 偏移 |
+
 ## 目录结构
 
 ```

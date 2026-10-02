@@ -654,6 +654,20 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
 
 .hero-shell { position: relative; }
 
+/* 左边缘竖排边注 */
+.edge-label {
+  position: absolute;
+  left: 2px;
+  top: 300px;
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  color: var(--acc-strong);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
 /* 坐标刻度 */
 .axis {
   position: absolute;
@@ -706,15 +720,37 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
   margin-top: 20px;
 }
 
+.hero-title-line {
+  position: relative;
+  display: block;
+}
+
 .hero-title-en {
+  position: relative;
+  z-index: 1;
   display: block;
   font-size: clamp(3.4rem, 10.4vw, 8.2rem);
   font-weight: 800;
   line-height: 0.9;
   letter-spacing: -0.035em;
   text-transform: uppercase;
+  /* 参考方舟海报的色差描边 */
+  text-shadow: 0.02em 0 0 rgba(0, 190, 255, 0.30), -0.02em 0 0 rgba(255, 70, 100, 0.22);
   /* 遮罩揭示：纯 CSS 动画，不依赖 JS，保证任何情况下都能完全显示 */
-  animation: title-reveal 1.15s var(--ease-out) 0.25s 1 both;
+  animation: title-reveal 0.8s var(--ease-out) 0.1s 1 both;
+}
+
+/* 横向饱和色带穿过标题（文字压住色带） */
+.hero-slice {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 46%;
+  width: 100vw;
+  height: 15px;
+  transform: translateX(-50%);
+  background: var(--acc);
+  pointer-events: none;
 }
 
 @keyframes title-reveal {
@@ -722,31 +758,33 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
   to   { clip-path: inset(0 0 0 0); }
 }
 
-.hero-title-cn {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-top: 12px;
-  font-size: clamp(0.95rem, 2vw, 1.15rem);
+/* [代号] 细框铭牌 */
+.hero-plate {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 5px;
+  border: 1px solid var(--line-2);
+  background: var(--glass);
+}
+
+.plate-code {
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.14em;
+  color: var(--acc-ink);
+  background: var(--acc);
+}
+
+.plate-text {
+  padding-right: 9px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   color: var(--text);
-}
-
-.hero-title-slash {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: -0.08em;
-  color: var(--acc-strong);
-}
-
-.hero-title-cn em {
-  font-family: var(--font-mono);
-  font-style: normal;
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  color: var(--dim);
 }
 
 .hero-lead {
@@ -815,7 +853,7 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
 .hero-deck {
   grid-column: 8 / -1;
   position: relative;
-  z-index: 3;
+  z-index: 5;           /* 高于标题层：横向色带从卡片后方穿过 */
   justify-self: end;
   width: 100%;
   max-width: 400px;
@@ -871,6 +909,7 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
   position: relative;
   z-index: 2;
   padding: 18px;
+  background: var(--panel-solid);   /* 卡片做实，挡住穿过的色带 */
 }
 
 .id-head {
@@ -967,10 +1006,28 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
 
 /* ------------------------------------------------------------- 07 区块标题 */
 .sec-head {
+  position: relative;
   display: flex;
   align-items: baseline;
   gap: 16px;
   margin-bottom: 36px;
+}
+
+/* 巨型幽灵字水印 */
+.ghost {
+  position: absolute;
+  right: 0;
+  top: -0.36em;
+  z-index: -1;
+  font-size: clamp(3.6rem, 11vw, 9rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--text);
+  opacity: 0.03;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .sec-index {
@@ -1012,9 +1069,12 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
 
 .sec-rule {
   flex: 1;
-  height: 1px;
+  height: 6px;
   min-width: 24px;
-  background: linear-gradient(to right, var(--line-2), transparent);
+  /* V 形斜纹：参考游戏内进度条的重复几何填充 */
+  background: repeating-linear-gradient(115deg, var(--line-2) 0 4px, transparent 4px 10px);
+  -webkit-mask-image: linear-gradient(to right, #000 20%, transparent);
+  mask-image: linear-gradient(to right, #000 20%, transparent);
 }
 
 /* ------------------------------------------------------------- 08 作品区 */
@@ -1712,6 +1772,7 @@ a.contact-val:hover .ico { transform: translate(2px, -2px); }
 @media (max-width: 1024px) {
   :root { --gap: 18px; }
 
+  .edge-label { display: none; }
   .hero-main { grid-column: 1 / span 6; }
   .hero-deck { grid-column: 7 / -1; }
   .work-card,
@@ -1778,6 +1839,7 @@ a.contact-val:hover .ico { transform: translate(2px, -2px); }
   .work-card-lg { grid-column: span 12; }
 
   .sec-head { flex-wrap: wrap; gap: 10px; }
+  .ghost { display: none; }
   .sec-meta { order: 4; }
   .sec-rule { display: none; }
 
