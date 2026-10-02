@@ -1,0 +1,7 @@
+# 本地预览 / 截图脚本产生的临时文件
+.preview/
+
+# 系统垃圾文件
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="negative">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 // 记录不存在</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        document.documentElement.setAttribute("data-theme", saved || (prefersLight ? "positive" : "negative"));
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="fx" aria-hidden="true">
+    <span class="fx-grid"></span>
+    <span class="fx-noise"></span>
+    <span class="fx-scan"></span>
+  </div>
+
+  <main class="section" style="min-height: 100vh; display: grid; place-items: center;">
+    <div class="container">
+      <div class="panel" style="max-width: 560px;">
+        <span class="panel-tag">ERROR 404</span>
+        <h1 style="font-family: var(--font-mono); font-size: clamp(3rem, 14vw, 6rem); font-weight: 800; line-height: 1;">
+          404
+        </h1>
+        <p style="margin-top: 12px; color: var(--muted);">
+          该档案不存在，或已被转移至其他位置。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/">返回首页</a>
+          <a class="btn btn-ghost" href="https://github.com/TakaHoshino" target="_blank" rel="noopener noreferrer">
+            前往 GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
