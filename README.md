@@ -56,11 +56,30 @@ python -m http.server 8000     # 访问 http://localhost:8000
 
 | 编号 | 区块 | 锚点 | 内容 |
 | --- | --- | --- | --- |
-| — | 首屏 | `#top` | 超大代号标题、状态标签、坐标刻度、命令键按钮、4 格读数、线框立方体 + 身份卡 |
+| — | 首屏主控台 | `#top` | 空间化三层结构，见下方 |
 | 01 | WORK 作品 | `#work` | 4 个项目卡（编号 / 类型 / 年份 / 技术栈 / 状态条 / 生成式缩略图） |
 | 02 | PROFILE 档案 | `#profile` | 系统参数面板 + 能力雷达（含数值图例）+ 12 格模块阵列 |
 | 03 | LOG 日志 | `#log` | 5 条时间线记录（真实日期，取自 GitHub 仓库） |
 | 04 | CONTACT 联络 | `#contact` | 终端式提交面板 + 联系方式列表 |
+
+### 首屏：空间化主控台
+
+首屏不是卡片列表，而是一个分层的可操作空间：
+
+| 层 | 元素 | 实现 |
+| --- | --- | --- |
+| 背景层 | 弧形巨幕、凸起平台、透视地面网格 | `.stage` 内的 `.stage-wall` / `.stage-platform` / `.stage-floor`，用 `perspective` + `rotateX` 做等距视角 |
+| 中景层 | HUD 状态条、代号标题、身份舱（头像 + 年限圆环 + 档案字段）、读数 | `.hud-strip` / `.hero-title` / `.pod` / `.hero-readout` |
+| 前景层 | 6 块错落悬浮的功能面板 | `.console` 内 `.mod`，整组 `rotateY(-9deg) rotateX(3deg)`，单块用 `--z` / `--y` 做前后错落 |
+| 底栏 | 系统状态条：焦点 / 最近更新 / 合作状态 / 邮箱 | `.statusbar` |
+
+功能面板自带系统状态，映射关系：
+
+- `ACTIVE` — WORKS / PROFILE / LOG / CONTACT，可点击进入
+- `IN PROGRESS` — NOW，正在维护的项目
+- `LOCKED` — NOTES，尚未开放的内容（虚线边框 + 锁图标，不隐藏）
+
+滚动时首屏会轻微后退并淡出（`.console-grid` 上的 `transform`，由 `main.js` 按滚动比例驱动）。
 
 ## 常见修改
 

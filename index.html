@@ -100,6 +100,15 @@
     <!-- ============================== HERO ============================== -->
     <section class="hero" id="top">
       <div class="shell hero-shell">
+        <!-- 空间背景层：展厅弧墙 / 凸起平台 / 透视地面 -->
+        <div class="stage" aria-hidden="true">
+          <span class="stage-glow"></span>
+          <span class="stage-wall"></span>
+          <span class="stage-wall stage-wall-inner"></span>
+          <span class="stage-platform"></span>
+          <span class="stage-floor"></span>
+        </div>
+
         <!-- 左边缘竖排标识（参考方舟海报的竖排 Latin 边注） -->
         <span class="edge-label" aria-hidden="true">HOSHINO // PERSONAL ARCHIVE — EST.2022</span>
 
@@ -122,13 +131,14 @@
           <span class="axis-tick"></span>
         </div>
 
-        <div class="hero-grid">
-          <div class="hero-main">
-            <ul class="tag-row fx-in">
-              <li class="tag tag-solid">OPERATOR</li>
-              <li class="tag">ID 103877289</li>
-              <li class="tag">ORIGIN CN</li>
-              <li class="tag">UPDATED 2026.10</li>
+        <!-- 中景：身份核心 ｜ 前景：悬浮功能面板群 ｜ 底部：系统状态条 -->
+        <div class="console-grid">
+          <div class="identity">
+            <ul class="hud-strip fx-in">
+              <li class="hud-item is-live"><i></i>AVAILABLE</li>
+              <li class="hud-item">UPDATED 2026.10</li>
+              <li class="hud-item">PROJECTS 04</li>
+              <li class="hud-item">CN · UTC+8</li>
             </ul>
 
             <h1 class="hero-title fx-in">
@@ -146,76 +156,101 @@
             <p class="hero-lead fx-in">
               独立开发者<span class="sep">/</span>Android &amp; Windows 桌面应用
             </p>
+
+            <!-- 身份舱：头像 + 年限圆环 + 档案字段 -->
+            <div class="pod fx-in">
+              <div class="pod-avatar">
+                <img src="https://avatars.githubusercontent.com/u/103877289?v=4"
+                     alt="Hoshino 的头像" width="208" height="208" decoding="async" />
+                <span class="pod-id">ID 103877289</span>
+              </div>
+
+              <div class="pod-data">
+                <div class="ring">
+                  <svg viewBox="0 0 100 100" aria-hidden="true">
+                    <circle class="ring-bg" cx="50" cy="50" r="42" />
+                    <circle class="ring-fg" cx="50" cy="50" r="42" />
+                  </svg>
+                  <span class="ring-num">04<em>YRS</em></span>
+                </div>
+
+                <dl class="id-rows">
+                  <div class="id-row"><dt>CLASS</dt><dd>DEVELOPER</dd></div>
+                  <div class="id-row"><dt>ROLE</dt><dd>独立开发者</dd></div>
+                  <div class="id-row"><dt>BRANCH</dt><dd>KOTLIN · C#</dd></div>
+                  <div class="id-row"><dt>SINCE</dt><dd>2022.04</dd></div>
+                </dl>
+              </div>
+            </div>
+
             <p class="hero-motto fx-in">
               <span class="hero-motto-mark" aria-hidden="true">“</span>
               把想法变成能跑起来的程序。<span class="hero-motto-mark" aria-hidden="true">”</span>
             </p>
 
-            <div class="hero-actions fx-in">
-              <a class="btn btn-primary" href="#work">
-                <span class="btn-num">01</span>
-                查看作品
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
-              </a>
-              <a class="btn btn-ghost" href="#contact">
-                <span class="btn-num">02</span>
-                建立联络
-              </a>
-            </div>
-
             <dl class="hero-readout fx-in">
-              <div>
-                <dt>REPOSITORY</dt>
-                <dd><b data-count="10">10</b></dd>
-              </div>
-              <div>
-                <dt>ORIGINAL</dt>
-                <dd><b data-count="2">2</b></dd>
-              </div>
-              <div>
-                <dt>MAX STARS</dt>
-                <dd><b data-count="11">11</b></dd>
-              </div>
-              <div>
-                <dt>SIGNAL</dt>
-                <dd><b>ACTIVE</b></dd>
-              </div>
+              <div><dt>REPOSITORY</dt><dd><b data-count="10">10</b></dd></div>
+              <div><dt>ORIGINAL</dt><dd><b data-count="2">2</b></dd></div>
+              <div><dt>MAX STARS</dt><dd><b data-count="11">11</b></dd></div>
+              <div><dt>SINCE</dt><dd><b>2022</b></dd></div>
             </dl>
           </div>
 
-          <!-- 右侧：多层档案板（2D UI 与线框体穿插） -->
-          <div class="hero-deck">
-            <span class="deck-layer deck-layer-back" aria-hidden="true"></span>
+          <!-- 前景：错落排列的功能面板，带系统状态 -->
+          <nav class="console fx-in" aria-label="功能入口">
+            <a class="mod mod-main" href="#work">
+              <span class="mod-head">
+                <b>WORKS</b><em>作品档案</em>
+                <span class="mod-state is-active">ACTIVE</span>
+              </span>
+              <span class="mod-meta">04 FILES · KOTLIN / C# / WEB</span>
+              <span class="mod-body">Wenku8Reader · FuckETS · 个人档案站 · OPEN SLOT</span>
+              <span class="mod-foot">
+                <span class="mod-coord">FILE NO.001–004</span>
+                <span class="mod-go">进入 →</span>
+              </span>
+            </a>
 
-            <div class="wire-cube" aria-hidden="true">
-              <span class="cube-face cube-top"></span>
-              <span class="cube-face cube-left"></span>
-              <span class="cube-face cube-right"></span>
-              <span class="cube-ring"></span>
+            <a class="mod" href="#profile">
+              <span class="mod-head"><b>PROFILE</b><em>档案</em><span class="mod-state is-active">ACTIVE</span></span>
+              <span class="mod-meta">ROLE / FOCUS / TOOLS</span>
+              <span class="mod-foot"><span class="mod-coord">RECORD 02</span><span class="mod-go">→</span></span>
+            </a>
+
+            <a class="mod" href="#log">
+              <span class="mod-head"><b>LOG</b><em>日志</em><span class="mod-state is-active">ACTIVE</span></span>
+              <span class="mod-meta">05 ENTRIES · 2022 – 2026</span>
+              <span class="mod-foot"><span class="mod-coord">RECORD 03</span><span class="mod-go">→</span></span>
+            </a>
+
+            <div class="mod">
+              <span class="mod-head"><b>NOW</b><em>当前进行中</em><span class="mod-state is-progress">IN PROGRESS</span></span>
+              <span class="mod-meta">LAST COMMIT 2026.10.01</span>
+              <span class="mod-body">Wenku8Reader 持续迭代中</span>
+              <span class="mod-foot"><span class="mod-coord">CASE W-001</span><span class="mod-go is-quiet">维护中</span></span>
             </div>
 
-            <aside class="id-card glass corners fx-in" aria-label="个人身份卡">
-              <header class="id-head">
-                <span class="id-head-label">ID CARD</span>
-                <span class="id-head-status"><i></i>ONLINE</span>
-              </header>
+            <a class="mod" href="#contact">
+              <span class="mod-head"><b>CONTACT</b><em>联络</em><span class="mod-state is-active">ACTIVE</span></span>
+              <span class="mod-meta">MAIL / GITHUB</span>
+              <span class="mod-foot"><span class="mod-coord">CHANNEL 04</span><span class="mod-go">→</span></span>
+            </a>
 
-              <div class="id-portrait">
-                <img src="https://avatars.githubusercontent.com/u/103877289?v=4"
-                     alt="Hoshino 的头像" width="240" height="240" decoding="async" />
-                <span class="id-portrait-tag">IMG.001</span>
-              </div>
+            <div class="mod mod-locked">
+              <span class="lock" aria-hidden="true"></span>
+              <span class="mod-head"><b>NOTES</b><em>文章</em><span class="mod-state is-locked">LOCKED</span></span>
+              <span class="mod-meta">开放条件：有值得写下来的东西</span>
+            </div>
+          </nav>
 
-              <dl class="id-rows">
-                <div class="id-row"><dt>CLASS</dt><dd>DEVELOPER</dd></div>
-                <div class="id-row"><dt>ROLE</dt><dd>独立开发者</dd></div>
-                <div class="id-row"><dt>BRANCH</dt><dd>KOTLIN · C#</dd></div>
-                <div class="id-row"><dt>SINCE</dt><dd>2022.04</dd></div>
-              </dl>
+        </div>
 
-              <div class="barcode" aria-hidden="true"></div>
-            </aside>
-          </div>
+        <!-- 底部系统状态条 -->
+        <div class="statusbar fx-in">
+          <span class="statusbar-item"><b>FOCUS</b>Android · Windows 桌面</span>
+          <span class="statusbar-item"><b>LAST UPDATE</b>2026.10.01</span>
+          <span class="statusbar-item"><b>STATUS</b><i class="live-dot"></i>接受交流与合作</span>
+          <span class="statusbar-item"><b>MAIL</b><a href="mailto:a3451894191@163.com">a3451894191@163.com</a></span>
         </div>
       </div>
     </section>

@@ -50,12 +50,21 @@
   /* ------------------------------------- 滚动进度 / 回到顶部 / 扫掠动效 */
   var progress = document.getElementById("navProgress");
   var toTop = document.getElementById("toTop");
+  var consoleGrid = document.querySelector(".console-grid");
 
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;
     var total = document.documentElement.scrollHeight - window.innerHeight;
     if (progress) progress.style.width = (total > 0 ? Math.min(y / total, 1) * 100 : 0).toFixed(2) + "%";
     if (toTop) toTop.classList.toggle("is-visible", y > 640);
+
+    // 相机推进：首屏控制台随滚动后退并淡出
+    if (consoleGrid && !reduceMotion) {
+      var p = Math.min(y / Math.max(window.innerHeight, 1), 1);
+      consoleGrid.style.transform =
+        "translateY(" + (p * -20).toFixed(1) + "px) scale(" + (1 - p * 0.04).toFixed(3) + ")";
+      consoleGrid.style.opacity = (1 - p * 0.4).toFixed(3);
+    }
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });

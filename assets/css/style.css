@@ -39,6 +39,8 @@
   --ok: #d9ff00;
   --shadow: 0 30px 70px -44px rgba(0, 0, 0, 0.95);
   --glow: 0 0 34px -8px rgba(217, 255, 0, 0.35);
+  --locked: rgba(20, 20, 20, 0.72);
+  --panel-glass: rgba(16, 18, 18, 0.78);
 
   --cut: 16px;
   --cut-sm: 10px;
@@ -80,6 +82,8 @@ html[data-theme="positive"] {
   --ok: #63730a;
   --shadow: 0 26px 60px -46px rgba(10, 14, 12, 0.55);
   --glow: 0 0 30px -12px rgba(150, 180, 0, 0.5);
+  --locked: rgba(228, 229, 226, 0.8);
+  --panel-glass: rgba(255, 255, 255, 0.86);
 }
 
 /* ------------------------------------------------------------- 02 基础重置 */
@@ -818,11 +822,11 @@ html[data-theme="positive"] .tri-field { opacity: 0.3; }
 .hero-slice {
   position: absolute;
   z-index: 0;
-  left: 50%;
+  left: -50vw;
+  right: -40px;
   top: 46%;
-  width: 100vw;
+  width: auto;
   height: 15px;
-  transform: translateX(-50%);
   background: var(--acc);
   pointer-events: none;
 }
@@ -1965,4 +1969,442 @@ a.contact-val:hover .ico { transform: translate(2px, -2px); }
   .nav, .fx, .to-top { display: none !important; }
   body { background: #fff; color: #000; }
   .glass { box-shadow: none; border-color: #ccc; backdrop-filter: none; }
+}
+
+/* ============================================================================
+   14 主控台首屏（空间化 UI）
+   ----------------------------------------------------------------------------
+   背景层 = 展厅弧墙 / 凸起平台 / 透视地面
+   中景层 = 身份核心（HUD 条 + 代号 + 头像舱 + 年限圆环）
+   前景层 = 错落悬浮的功能面板（ACTIVE / IN PROGRESS / LOCKED）
+   底栏   = 系统状态条
+   ============================================================================ */
+.hero { padding: 62px 0 0; }
+
+/* ---------------------------------------------------------- 背景空间层 */
+.stage {
+  position: absolute;
+  top: -150px;
+  bottom: -70px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.hero-shell:hover .stage { transform: translateX(-50%) translateY(-5px); }
+
+.stage-glow {
+  position: absolute;
+  right: -6%;
+  top: 2%;
+  width: 64%;
+  height: 80%;
+  background: radial-gradient(closest-side, var(--acc-soft), transparent 72%);
+  opacity: 0.8;
+}
+
+/* 弧形巨幕 */
+.stage-wall {
+  position: absolute;
+  left: 50%;
+  top: -32%;
+  width: 158%;
+  height: 94%;
+  transform: translateX(-50%);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.stage-wall-inner {
+  top: -22%;
+  width: 118%;
+  height: 80%;
+  border-color: var(--acc-line);
+  opacity: 0.22;
+}
+
+/* 凸起平台（等距视角） */
+.stage-platform {
+  position: absolute;
+  right: 3%;
+  bottom: 2%;
+  width: 44%;
+  height: 220px;
+  transform: perspective(900px) rotateX(58deg) rotateZ(-9deg);
+  border: 1px solid var(--acc-line);
+  background: linear-gradient(180deg, var(--acc-soft), transparent 78%);
+  opacity: 0.5;
+}
+
+/* 透视地面网格 */
+.stage-floor {
+  position: absolute;
+  left: 50%;
+  bottom: -16%;
+  width: 190%;
+  height: 56%;
+  transform: translateX(-50%) perspective(620px) rotateX(74deg);
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 78px 78px;
+  opacity: 0.6;
+  mask-image: linear-gradient(to top, #000 0%, transparent 78%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 78%);
+}
+
+/* -------------------------------------------------------- 主控台栅格 */
+.console-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gap);
+  align-items: start;
+  padding-top: 10px;
+  transition: transform 0.5s var(--ease-out), opacity 0.5s var(--ease-out);
+}
+
+.identity {
+  grid-column: 1 / span 5;
+  position: relative;
+  z-index: 3;
+}
+
+.console {
+  grid-column: 6 / -1;
+  position: relative;
+  z-index: 4;
+}
+
+/* ------------------------------------------------------------- HUD 条 */
+.hud-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.hud-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  background: var(--glass);
+  border: 1px solid var(--line);
+}
+
+.hud-item i {
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  animation: pulse 2.6s steps(1, end) infinite;
+}
+
+.hud-item.is-live {
+  color: var(--acc-ink);
+  background: var(--acc);
+  border-color: var(--acc);
+  font-weight: 700;
+}
+
+/* 标题收窄到身份列宽度 */
+.hero-title-en { font-size: clamp(2.5rem, 6.2vw, 4.9rem); }
+
+/* ---------------------------------------------------------- 身份舱 */
+.pod {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 26px;
+  padding: 14px;
+  background: var(--glass);
+  border: 1px solid var(--line);
+}
+
+.pod-avatar { position: relative; }
+
+.pod-avatar img {
+  width: 104px;
+  height: 104px;
+  object-fit: cover;
+  border: 1px solid var(--line-2);
+}
+
+.pod-id {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 3px 2px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  color: var(--acc-ink);
+  background: var(--acc);
+}
+
+.pod-data {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.ring { position: relative; width: 76px; height: 76px; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--line); stroke-width: 2.5; }
+.ring-fg {
+  fill: none;
+  stroke: var(--acc-strong);
+  stroke-width: 2.5;
+  stroke-dasharray: 264;
+  stroke-dashoffset: 158;
+}
+
+.ring-num {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--acc-strong);
+}
+
+.ring-num em {
+  display: block;
+  margin-top: 3px;
+  font-style: normal;
+  font-size: 0.46rem;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+
+/* -------------------------------------------------- 悬浮功能面板群 */
+.console {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  transform: perspective(1500px) rotateY(-9deg) rotateX(3deg);
+  transform-style: preserve-3d;
+}
+
+.mod {
+  position: relative;
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 15px 16px;
+  background: var(--panel-glass);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: translate3d(0, var(--y, 0px), var(--z, 0px));
+  transition: transform 0.4s var(--ease-out), border-color 0.25s var(--ease),
+    background-color 0.25s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+.mod-main { grid-column: span 6; --z: 30px; padding: 20px; }
+.mod-main::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 72px;
+  height: 2px;
+  background: var(--acc);
+}
+
+/* 错落：不同深度与位移，制造前后关系 */
+.mod:nth-child(2) { --z: -26px; --y: 14px; }
+.mod:nth-child(3) { --z: 20px; }
+.mod:nth-child(4) { --z: -12px; --y: 10px; }
+.mod:nth-child(5) { --z: 10px; }
+.mod:nth-child(6) { --z: -42px; }
+
+.mod:hover {
+  --z: 56px;
+  border-color: var(--acc-line);
+  background: var(--panel-glass);
+  box-shadow: var(--glow);
+}
+
+.mod-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.mod-head b {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+}
+
+.mod-head em {
+  font-style: normal;
+  font-size: 0.76rem;
+  color: var(--dim);
+}
+
+.mod-state {
+  margin-left: auto;
+  padding: 2px 7px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+  border: 1px solid var(--line);
+}
+
+.mod-state.is-active {
+  color: var(--acc-ink);
+  background: var(--acc);
+  border-color: var(--acc);
+  font-weight: 700;
+}
+
+.mod-state.is-progress {
+  color: var(--acc-strong);
+  background: var(--acc-soft);
+  border-color: var(--acc-line);
+}
+
+.mod-meta {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+
+.mod-body { font-size: 0.88rem; color: var(--muted); }
+
+.mod-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+
+.mod-go { color: var(--acc-strong); font-weight: 700; }
+.mod-go.is-quiet { color: var(--dim); font-weight: 500; }
+
+/* 锁定模块：深灰半透明 + 锁图标 */
+.mod-locked {
+  border-style: dashed;
+  background: var(--locked);
+  opacity: 0.82;
+  box-shadow: none;
+}
+
+.mod-locked:hover {
+  --z: 4px;
+  border-color: var(--line-2);
+  background: var(--locked);
+  box-shadow: none;
+  opacity: 1;
+}
+
+.lock {
+  position: relative;
+  width: 16px;
+  height: 12px;
+  border: 1.5px solid var(--dim);
+  align-self: flex-start;
+}
+
+.lock::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: -7px;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--dim);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+}
+
+/* ------------------------------------------------------- 底部状态条 */
+.statusbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 36px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.statusbar-item { display: inline-flex; align-items: center; gap: 8px; }
+.statusbar-item b { font-weight: 500; color: var(--dim); }
+.statusbar-item a { color: var(--acc-strong); }
+
+/* ------------------------------------------------------- 响应式 */
+@media (max-width: 1180px) {
+  .identity { grid-column: 1 / span 6; }
+  .console { grid-column: 7 / -1; }
+  .console-grid .wire-cube { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .console-grid { grid-template-columns: 1fr; }
+  .identity,
+  .console { grid-column: 1 / -1; }
+
+  .console {
+    margin-top: 28px;
+    transform: none;
+  }
+
+  .stage-platform { width: 62%; height: 170px; }
+}
+
+@media (max-width: 720px) {
+  .hero { padding-top: 44px; }
+
+  .mod,
+  .mod-main { grid-column: span 6; }
+
+  .mod:nth-child(n) { --z: 0px; --y: 0px; }
+
+  .pod { grid-template-columns: 88px minmax(0, 1fr); }
+  .pod-avatar img { width: 88px; height: 88px; }
+  .pod-data { grid-template-columns: 1fr; }
+  .ring { display: none; }
+
+  .statusbar { gap: 12px; font-size: 0.62rem; }
+  .statusbar-item { width: 100%; }
+
+  .stage-platform { display: none; }
 }
