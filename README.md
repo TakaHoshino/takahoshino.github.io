@@ -4,6 +4,8 @@
 推送到 `main` 分支后由 GitHub Pages 直接发布。
 
 - 线上地址：https://takahoshino.github.io/
+- 站点结构：个人主页（`/`）+ 项目详情页（`/wenku8reader/`、`/fuckets/`），
+  共用同一份样式表与设计语言
 - 设计方向：高密度信息图层 / 工业战术 UI / 编辑化海报排版
 - 骨架色：白 · 近黑 · 冷灰；系统色：单一高亮 `#d9ff00`（只用于编号、状态、
   线条、图形标记和激活态，不做大面积铺色）
@@ -34,18 +36,24 @@
 
 ```
 .
-├── index.html               # 页面主体（所有文案都在这里改）
-├── 404.html                 # 404 页面
-├── favicon.svg              # 站点图标
-├── robots.txt / sitemap.xml # 搜索引擎相关
-├── .nojekyll                # 让 GitHub Pages 跳过 Jekyll 处理
+├── index.html                 # 个人主页（所有文案都在这里改）
+├── 404.html                   # 404 页面
+├── wenku8reader/index.html    # 项目详情页：Wenku8Reader（FILE NO.001）
+├── fuckets/index.html         # 项目详情页：FuckETS（FILE NO.002）
+├── favicon.svg                # 站点图标
+├── robots.txt / sitemap.xml   # 搜索引擎相关（新增页面记得补 sitemap）
+├── .nojekyll                  # 让 GitHub Pages 跳过 Jekyll 处理
 └── assets
-    ├── css/style.css        # 样式系统：主题变量 + 网格 + 各区块组件
-    ├── img/avatar.jpg       # 头像（已本地化，不依赖 GitHub CDN）
-    ├── js/main.js           # 配色切换、时钟、滚动进度、导航高亮、入场动画、复制邮箱
-    ├── js/hero3d.js         # 首屏 Three.js 场景（按需加载）
+    ├── css/style.css          # 样式系统：主题变量 + 网格 + 各区块组件 + 项目页
+    ├── img/avatar.jpg         # 头像（已本地化，不依赖 GitHub CDN）
+    ├── img/wenku8reader.png   # 分享图（只给 og:image 用，页面内不展示）
+    ├── js/main.js             # 配色切换、时钟、滚动进度、导航高亮、入场动画、复制邮箱
+    ├── js/hero3d.js           # 首屏 Three.js 场景（按需加载）
+    ├── js/version-sync.js     # 项目页：从 GitHub 拉取版本 / 体积 / 星标等实时数据
     └── vendor/three.module.min.js   # Three.js 本体（本地内置，不走 CDN）
 ```
+
+> `assets/` 下的 CSS / JS 在各页面里都带 `?v=` 版本号，改完记得一起递增（见下）。
 
 ## 本地预览
 
@@ -53,6 +61,27 @@
 
 ```bash
 python -m http.server 8000     # 访问 http://localhost:8000
+```
+
+项目页要走目录地址（`http://localhost:8000/wenku8reader/`、`/fuckets/`），
+它们的数据同步脚本在本地也会正常请求 GitHub 接口。
+
+### 本地调试脚本
+
+`.preview/`（已在 `.gitignore` 里）放了几个基于 DevTools 协议的小脚本，
+用本机装好的 Chrome / Edge 做截图与回归检查：
+
+```bash
+node .preview/shot.mjs  http://localhost:8000/fuckets/ negative out.png 1440 900           # 整页截图
+node .preview/shot.mjs  http://localhost:8000/fuckets/ positive hero.png 1440 900 "#top"   # 只截某个区块
+node .preview/check.mjs http://localhost:8000/fuckets/ 1440                                # 控制台报错 / 加载失败 / 横向溢出
+node .preview/eval.mjs  http://localhost:8000/fuckets/ 1440 expr.js                        # 在页面里执行一段表达式
+```
+
+设置 `PREVIEW_BROWSER` 可以换成别的 Chromium 浏览器，用来复核浏览器之间的渲染差异：
+
+```powershell
+$env:PREVIEW_BROWSER='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 ```
 
 ## 页面结构
@@ -94,6 +123,60 @@ python -m http.server 8000     # 访问 http://localhost:8000
 
 滚动时首屏会轻微后退并淡出（`.console-grid` 上的 `transform`，由 `main.js` 按滚动比例驱动）。
 
+## 项目详情页
+
+`/wenku8reader/`、`/fuckets/` 是结构相同的项目档案页，沿用主页的设计语言
+（HUD 状态条 / 竖排边注 / 横向色带 / 细框卡组 / 幽灵字 / 时间线），一页讲清一个项目：
+
+| 编号 | 区块 | 锚点 | 内容 |
+| --- | --- | --- | --- |
+| — | 首屏 | `#top` | 身份舱（文件号 / 平台 / 许可）+ 参数面板 + NOW 卡 + 底部状态条 |
+| 01 | OVERVIEW 概览 | `#overview` | 项目说明 + 系统要求 + 使用流程表 |
+| 02 | FEATURES 特性 | `#features` | 功能模块卡组（7 张，最后一张整行横向排版） |
+| 03 | STACK 技术 | `#stack` | 技术实现，双列卡组 |
+| 04 | RELEASES 版本 | `#changelog` | 版本记录时间线（内容取自仓库 Releases） |
+| 05 | DOWNLOAD 下载 | `#download` | 终端式下载面板 + 渠道列表 |
+
+样式全部复用同一份 `style.css`：第 14 节是主页首屏，**第 15 节起是项目页**
+（`.proj-hero` / `.proj-media` / `.panel` / `.cap-*` / `.tbl` / `.codeblock`）。
+
+### 加一个新的项目页
+
+1. 复制 `fuckets/index.html` 到新目录（如 `newone/index.html`）；
+2. 改 `<title>` / `meta` / JSON-LD、首屏文案，以及 `<html data-gh-repo="owner/repo">`；
+3. 按需增删 `.cap-card`（功能卡）、`.log-item`（版本记录）、`.contact-item`（渠道）；
+4. 主页 `index.html` 里对应作品卡的 `href` 指向新目录，并补进 `sitemap.xml`。
+
+### 项目页实时数据
+
+`assets/js/version-sync.js` 会读取 GitHub 公开接口，把页面上的版本号、发布日期、
+安装包体积、下载量与仓库星标换成本文实时值：
+
+| 锚点 | 数据 | 说明 |
+| --- | --- | --- |
+| `<html data-gh-repo="owner/repo">` | 仓库 | 页面声明仓库；没声明就完全不发请求（主页因此不受影响） |
+| `data-gh="version"` | `tag_name` | 取自 `releases/latest`（**最新正式版**）；仓库还没发过正式版时退回最新一条 release |
+| `data-gh="channel"` | 预发布标记 | 自动显示「（正式版）」或「（测试版）」 |
+| `data-gh="date"` | `published_at` | 输出 `YYYY.MM.DD` |
+| `data-gh="size"` | 安装包体积 | 默认取 `.apk`；可用 `data-gh-asset="framework-dependent"` 指定包名片段 |
+| `data-gh="downloads"` | 下载次数 | 同上，按 `data-gh-asset` 取对应安装包 |
+| `data-gh="stars" / "forks" / "issues"` | 仓库数据 | 同步写回 `data-count`，与主页的数字跳变动画兼容 |
+| `data-gh="release-url"` | 该 release 页 | 用于「前往 Releases」等链接 |
+
+- 结果按会话缓存 10 分钟（`sessionStorage`），刷新不会重复请求；
+- 任何一步失败（断网 / 限流 / 浏览器不支持 `fetch`）都**静默保留 HTML 里的静态文案**，
+  所以页面里写的默认值应与线上真实值一致（无脚本时降级显示的就是它）；
+- 仓库内文档 / 示例这类链接用 `blob/HEAD/...`、`tree/HEAD/...`，
+  默认分支改名后依然有效。
+
+### 静态资源版本号
+
+各页面引用的 CSS / JS 都带 `?v=` 版本号（当前 `?v=20261002b`）。
+GitHub Pages 的静态资源会被浏览器缓存，如果出现「新版 HTML + 旧版 style.css」的混排，
+页面会整体错乱（首屏标题被裁、参数逐字换行等）；换 URL 能强制重新拉取。
+
+> **改完 `assets/` 下的 CSS / JS，记得把所有页面里的 `?v=` 同步递增**（例如 `20261002c`）。
+
 ## 常见修改
 
 | 想改什么 | 改哪里 |
@@ -109,6 +192,9 @@ python -m http.server 8000     # 访问 http://localhost:8000
 | 日志条目 | `.log` 里的 `li.log-item`（日期 / 编号 / 标题 / 说明 / 状态） |
 | 邮箱与社交链接 | 全局搜索 `a3451894191@163.com` 与 `github.com/TakaHoshino` |
 | 头像 | 已本地化为 `assets/img/avatar.jpg`（460px，约 29KB），不再依赖 GitHub 头像 CDN；换图直接替换该文件即可 |
+| 新增项目页 | 见「项目详情页」一节：复制 `fuckets/index.html` 再改文案与 `data-gh-repo` |
+| 项目页版本号 / 体积 / 星标 | 不用手改，`version-sync.js` 按 `data-gh` 锚点自动填充；静态文案只是降级兜底 |
+| 静态资源版本号 | 各页面的 `style.css?v=` / `main.js?v=` / `version-sync.js?v=`，改完 `assets/` 就递增 |
 | 高亮色 | `style.css` 顶部 `--acc` / `--acc-strong`（`--acc` 是填充色，`--acc-strong` 是浅底上的文字色） |
 | 切角大小 | CSS 变量 `--cut`（大面板）与 `--cut-sm` |
 | 强制默认黑底 | `<head>` 里的小脚本，把 `var theme = saved \|\| (...)` 改成 `var theme = saved \|\| "negative"` |
