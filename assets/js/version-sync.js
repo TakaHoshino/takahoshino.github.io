@@ -97,7 +97,7 @@
     });
   }
 
-  /* 与页面上的「下载安装包」按钮保持同一口径：releases/latest 指向的正式版。
+  /* 与页面上的「下载最新版」按钮保持同一口径：releases/latest 指向的正式版。
      仓库还没发布过正式版时（接口 404），退回最新一条 release（可能是预发布）。 */
   function getLatestRelease() {
     return getJSON(API + "/releases/latest").catch(function () {
