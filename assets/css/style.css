@@ -2426,3 +2426,368 @@ a.contact-val:hover .ico { transform: translate(2px, -2px); }
 
   .stage-platform { display: none; }
 }
+
+/* ============================================================================
+   15 项目详情页（/wenku8reader/）
+   ============================================================================ */
+.proj-hero .identity { grid-column: 1 / span 7; }
+
+.proj-hero .hero-title-en {
+  font-size: clamp(2.4rem, 7vw, 5.4rem);
+  line-height: 0.92;
+}
+
+.proj-hero .hero-title-en span { display: block; }
+
+/* 两行标题时色带穿第一行 */
+.proj-hero .hero-slice { top: 24%; }
+
+.crumbs {
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+}
+
+.crumbs a { color: var(--acc-strong); }
+.crumbs a:hover { color: var(--text); }
+
+/* 右侧：主视觉 + 参数 */
+.proj-media {
+  grid-column: 8 / -1;
+  position: relative;
+  z-index: 4;          /* 高于身份列：横向色带不穿过主视觉 */
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.shot {
+  position: relative;
+  margin: 0;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.shot img { display: block; width: 100%; height: auto; }
+
+.shot figcaption {
+  padding: 8px 12px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+}
+
+.proj-spec { border: 1px solid var(--line); background: var(--glass); }
+.proj-spec .param-row { padding: 10px 14px; }
+
+/* 概览正文 */
+.proj-p { font-size: 0.94rem; color: var(--muted); }
+.proj-p + .proj-p { margin-top: 12px; }
+.proj-head-2 { margin-top: 24px; }
+
+.proj-note {
+  margin-top: 26px;
+  font-size: 0.82rem;
+  line-height: 1.9;
+  color: var(--dim);
+}
+
+.proj-note a {
+  color: var(--acc-strong);
+  border-bottom: 1px solid var(--acc-line);
+}
+
+/* 界面一览表格 */
+.tbl {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.tbl th,
+.tbl td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.tbl th {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  border-bottom-color: var(--line-2);
+}
+
+.tbl td { color: var(--muted); }
+.tbl td b { color: var(--text); font-weight: 650; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr:hover td { background: var(--glass); }
+
+/* 终端里的代码块 */
+.codeblock {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.95;
+  color: var(--muted);
+  white-space: pre;
+}
+
+.cap-grid-2 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+
+/* ============================================================================
+   15.1 项目详情页 · 面板与卡组基座
+   ----------------------------------------------------------------------------
+   .panel 是项目页（及 404）的通用卡片骨架：细框 + 半透明底 + 顶部高亮细线，
+   与主页 .glass / .corners 的工业战术语言保持一致。
+   ============================================================================ */
+.panel {
+  position: relative;
+  padding: 22px 20px;
+  background: var(--panel-glass);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+}
+
+/* 顶部高亮细线：方舟式「面板通电」标记 */
+.panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 96px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--acc-strong), transparent);
+  pointer-events: none;
+}
+
+.panel-tag {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 3px 9px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: var(--acc-ink);
+  background: var(--acc);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+/* ---- 概览右列：界面一览表 ------------------------------------------------ */
+.profile-grid > .panel {
+  grid-column: span 5;
+  display: flex;
+  flex-direction: column;
+}
+
+.tbl th:first-child,
+.tbl td:first-child { width: 1%; white-space: nowrap; }
+
+/* 面板底部注脚：把多出来的纵向空间收口 */
+.panel-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+
+.panel-foot .barcode { opacity: 0.28; }
+
+/* ---- 首屏文案与边注 ------------------------------------------------------ */
+.hero-desc {
+  margin-top: 14px;
+  max-width: 54ch;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: var(--muted);
+}
+
+/* 竖排边注移到右侧留白，避免压住身份列正文 */
+.proj-hero .edge-label {
+  left: auto;
+  right: -30px;
+  top: 150px;
+}
+
+.proj-hero .axis-label { color: var(--dim); }
+
+/* ---- 特性 / 技术：卡组 -------------------------------------------------- */
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.cap-grid > .cap-card { grid-column: span 4; }
+.cap-grid > .cap-card:last-child { grid-column: span 12; }
+
+/* 末张卡整行铺开时改横向排版，避免右侧大片留白 */
+.cap-grid:not(.cap-grid-2) > .cap-card:last-child {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 28px;
+}
+
+.cap-grid:not(.cap-grid-2) > .cap-card:last-child .cap-head {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.cap-grid:not(.cap-grid-2) > .cap-card:last-child .cap-desc {
+  flex: none;
+  margin: 0;
+}
+
+/* 技术实现：两列 */
+.cap-grid.cap-grid-2 > .cap-card,
+.cap-grid.cap-grid-2 > .cap-card:last-child { grid-column: span 6; }
+
+.cap-card {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 18px 20px;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease-out), border-color 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+
+/* 悬浮时左侧点亮一条强调色标尺 */
+.cap-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--acc-strong);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+
+.cap-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--acc-line);
+  background: var(--glass-2);
+}
+
+.cap-card:hover::after { opacity: 1; }
+
+.cap-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cap-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  color: var(--acc-strong);
+  background: var(--acc-soft);
+  border: 1px solid var(--acc-line);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.cap-icon .ico { width: 17px; height: 17px; }
+
+.cap-head-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cap-head-text b {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.cap-head-text small {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+}
+
+.cap-desc {
+  flex: 1;
+  margin: 14px 0 16px;
+  font-size: 0.89rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.cap-desc strong { color: var(--text); }
+
+@media (max-width: 1360px) {
+  .proj-hero .edge-label { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .profile-grid > .panel { grid-column: 1 / -1; }
+  .cap-grid > .cap-card { grid-column: span 6; }
+
+  .cap-grid:not(.cap-grid-2) > .cap-card:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    column-gap: 0;
+  }
+
+  .cap-grid:not(.cap-grid-2) > .cap-card:last-child .cap-head {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cap-grid:not(.cap-grid-2) > .cap-card:last-child .cap-desc { margin: 14px 0 16px; }
+}
+
+@media (max-width: 720px) {
+  .cap-grid > .cap-card,
+  .cap-grid > .cap-card:last-child,
+  .cap-grid.cap-grid-2 > .cap-card,
+  .cap-grid.cap-grid-2 > .cap-card:last-child { grid-column: span 12; }
+  .panel { padding: 18px 16px; }
+}
+
+@media (max-width: 1024px) {
+  .proj-hero .identity,
+  .proj-media { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  .proj-hero .hero-title-en { font-size: clamp(2.2rem, 15vw, 4rem); }
+  .shot figcaption { font-size: 0.54rem; }
+  .tbl { font-size: 0.82rem; }
+  .tbl th, .tbl td { padding: 9px 8px; }
+}

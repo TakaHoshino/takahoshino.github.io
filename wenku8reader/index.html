@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="negative">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>Wenku8Reader // 轻小说文库 · 项目档案</title>
+  <meta name="description" content="Wenku8Reader（轻小说文库）—— 基于 wenku8.net 的 Android 轻小说阅读客户端。Kotlin + Jetpack Compose + Material 3 Expressive，支持沉浸式阅读、书架收藏、离线下载（TXT / EPUB）与简繁转换。" />
+  <meta name="author" content="Hoshino" />
+  <meta name="keywords" content="Wenku8Reader, 轻小说文库, wenku8, Android 阅读器, Kotlin, Jetpack Compose, Material 3, 开源, Hoshino" />
+  <meta name="theme-color" content="#0a0b0b" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f5f3" media="(prefers-color-scheme: light)" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Wenku8Reader // 轻小说文库 · 项目档案" />
+  <meta property="og:description" content="基于 wenku8.net 的 Android 轻小说阅读客户端：沉浸式阅读、离线下载 TXT / EPUB、简繁转换。" />
+  <meta property="og:url" content="https://takahoshino.github.io/wenku8reader/" />
+  <meta property="og:image" content="https://takahoshino.github.io/assets/img/wenku8reader.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="canonical" href="https://takahoshino.github.io/wenku8reader/" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="../favicon.svg" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        var prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        document.documentElement.setAttribute("data-theme", saved || (prefersLight ? "positive" : "negative"));
+      } catch (e) { /* 保持默认 negative */ }
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Wenku8Reader",
+    "alternateName": "轻小说文库",
+    "url": "https://takahoshino.github.io/wenku8reader/",
+    "image": "https://takahoshino.github.io/assets/img/wenku8reader.png",
+    "applicationCategory": "BookReaderApplication",
+    "operatingSystem": "Android 8.0+",
+    "softwareVersion": "v0.8.0-dev.111",
+    "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+    "codeRepository": "https://github.com/TakaHoshino/Wenku8Reader",
+    "author": { "@type": "Person", "name": "Hoshino", "url": "https://takahoshino.github.io/" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+  }
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#overview">跳到主要内容</a>
+
+  <div class="fx" aria-hidden="true">
+    <span class="fx-grid"></span>
+    <span class="fx-lines"></span>
+    <span class="fx-drift fx-drift-a"></span>
+    <span class="fx-drift fx-drift-b"></span>
+    <span class="fx-noise"></span>
+    <span class="fx-scan"></span>
+    <span class="fx-sweep"></span>
+  </div>
+
+  <!-- ============================ 顶部状态栏 ============================ -->
+  <header class="nav" id="nav">
+    <span class="nav-progress" aria-hidden="true"><i id="navProgress"></i></span>
+
+    <div class="nav-inner">
+      <a class="nav-brand" href="../" aria-label="返回个人档案首页">
+        <span class="nav-mark" aria-hidden="true">HS</span>
+        <span class="nav-brand-text">
+          <b>HOSHINO</b>
+          <small>← BACK TO ARCHIVE</small>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="页内导航">
+        <a class="nav-link is-active" href="#top"><i>00</i>TOP<em>顶部</em></a>
+        <a class="nav-link" href="#overview"><i>01</i>OVERVIEW<em>概览</em></a>
+        <a class="nav-link" href="#features"><i>02</i>FEATURES<em>特性</em></a>
+        <a class="nav-link" href="#stack"><i>03</i>STACK<em>技术</em></a>
+        <a class="nav-link" href="#changelog"><i>04</i>LOG<em>版本</em></a>
+        <a class="nav-link" href="#download"><i>05</i>DOWNLOAD<em>下载</em></a>
+      </nav>
+
+      <div class="nav-status">
+        <span class="nav-clock">
+          <small>LOCAL</small>
+          <b id="navClock">--:--:--</b>
+        </span>
+        <span class="nav-live"><i></i>ONLINE</span>
+        <button class="nav-toggle" id="themeToggle" type="button" aria-label="切换配色模式" title="切换配色模式">
+          <span aria-hidden="true">◐</span><b id="themeLabel">NEGATIVE</b>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============================== HERO ============================== -->
+    <section class="hero proj-hero" id="top">
+      <div class="shell hero-shell">
+        <div class="stage" aria-hidden="true">
+          <span class="stage-glow"></span>
+          <span class="stage-wall"></span>
+          <span class="stage-wall stage-wall-inner"></span>
+        </div>
+
+        <span class="edge-label" aria-hidden="true">WENKU8READER // FILE NO.001 — ANDROID READER</span>
+
+        <div class="hero-fx" aria-hidden="true">
+          <span class="reg-mark reg-a"></span>
+          <span class="reg-mark reg-b"></span>
+        </div>
+
+        <div class="axis axis-x" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">X:001</span>
+          <span class="axis-tick"></span>
+        </div>
+
+        <div class="axis axis-y" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">Y:204</span>
+          <span class="axis-tick"></span>
+        </div>
+
+        <div class="console-grid">
+          <!-- 左：项目身份 -->
+          <div class="identity">
+            <ul class="hud-strip fx-in">
+              <li class="hud-item is-live"><i></i>ACTIVE</li>
+              <li class="hud-item">FILE NO.001</li>
+              <li class="hud-item">ANDROID</li>
+              <li class="hud-item">GPL-3.0</li>
+            </ul>
+
+            <p class="crumbs fx-in"><a href="../">← 返回作品档案</a></p>
+
+            <h1 class="hero-title fx-in">
+              <span class="hero-title-line">
+                <span class="tri-field" aria-hidden="true"></span>
+                <span class="hero-slice" aria-hidden="true"></span>
+                <span class="hero-title-en"><span>WENKU8</span><span>READER</span></span>
+              </span>
+              <span class="hero-plate">
+                <b class="plate-code">W-001</b>
+                <span class="plate-text">轻小说文库 · ANDROID READER</span>
+              </span>
+            </h1>
+
+            <p class="hero-lead fx-in">
+              阅读，悦读<span class="sep">/</span>把喜欢的轻小说，装进口袋。
+            </p>
+            <p class="hero-desc fx-in">
+              原生 Android 阅读客户端，数据来自 wenku8.net 轻小说文库：
+              浏览全站栏目、搜索分类找书、一键加入书架，内置沉浸式阅读器与整本离线下载。
+            </p>
+
+            <div class="hero-actions fx-in">
+              <a class="btn btn-primary" href="https://github.com/TakaHoshino/Wenku8Reader/releases/latest" target="_blank" rel="noopener noreferrer">
+                <span class="btn-num">01</span>
+                下载安装包
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+              </a>
+              <a class="btn btn-ghost" href="https://github.com/TakaHoshino/Wenku8Reader" target="_blank" rel="noopener noreferrer">
+                <span class="btn-num">02</span>
+                查看源码
+              </a>
+            </div>
+
+            <dl class="hero-readout fx-in">
+              <div><dt>STARS</dt><dd><b data-count="11" data-gh="stars">11</b></dd></div>
+              <div><dt>FORKS</dt><dd><b data-count="0" data-gh="forks">0</b></dd></div>
+              <div><dt>ISSUES</dt><dd><b data-count="0" data-gh="issues">0</b></dd></div>
+              <div><dt>LANG</dt><dd><b>KOTLIN</b></dd></div>
+            </dl>
+          </div>
+
+          <!-- 右：主视觉 + 参数 -->
+          <div class="proj-media fx-in">
+            <dl class="param-list proj-spec">
+              <div class="param-row"><dt>STATUS</dt><dd><span class="param-ok">ACTIVE</span> 持续维护</dd></div>
+              <div class="param-row"><dt>VERSION</dt><dd><span data-gh="version">v0.8.0-dev.111</span>（测试版）</dd></div>
+              <div class="param-row"><dt>PLATFORM</dt><dd>Android 8.0+ <span class="param-dim">API 26</span></dd></div>
+              <div class="param-row"><dt>LICENSE</dt><dd>GNU GPL-3.0</dd></div>
+              <div class="param-row"><dt>CHANNEL</dt><dd>测试版 · 自动构建 <span class="param-dim">Actions</span></dd></div>
+              <div class="param-row"><dt>SOURCE</dt><dd>TakaHoshino/Wenku8Reader</dd></div>
+              <div class="param-row"><dt>DATA</dt><dd>wenku8.net 轻小说文库</dd></div>
+              <div class="param-row"><dt>MODULES</dt><dd>07 功能模块 <span class="param-dim">05 界面</span></dd></div>
+              <div class="param-row"><dt>UPDATED</dt><dd><span data-gh="date">2026.10.01</span></dd></div>
+            </dl>
+
+            <article class="mod">
+              <span class="mod-head"><b>NOW</b><em>当前进行中</em><span class="mod-state is-progress">IN PROGRESS</span></span>
+              <span class="mod-meta">LAST COMMIT 2026.10.01</span>
+              <span class="mod-body">阅读器排版、缓存策略与网络韧性持续迭代中。</span>
+              <span class="mod-foot"><span class="mod-coord">CASE W-001</span><span class="mod-go is-quiet">维护中</span></span>
+            </article>
+          </div>
+        </div>
+
+        <div class="statusbar fx-in">
+          <span class="statusbar-item"><b>LATEST</b><span data-gh="version">v0.8.0-dev.111</span></span>
+          <span class="statusbar-item"><b>APK</b><span data-gh="size">16.8 MB</span></span>
+          <span class="statusbar-item"><b>MIN ANDROID</b>8.0 / API 26</span>
+          <span class="statusbar-item"><b>DOWNLOADS</b><span data-gh="downloads">11</span></span>
+          <span class="statusbar-item"><b>LICENSE</b>GPL-3.0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 01 OVERVIEW ============================ -->
+    <section class="section" id="overview">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">OVERVIEW</span>
+          <span class="sec-index">01</span>
+          <h2 class="sec-title">项目概览<em>OVERVIEW</em></h2>
+          <span class="sec-meta">RECORD 01 / ANDROID</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="profile-grid">
+          <article class="param-panel glass corners fx-in">
+            <header class="param-head">
+              <span>WHAT IT IS</span>
+              <span class="param-head-code">P.01</span>
+            </header>
+
+            <p class="proj-p">
+              <strong>轻小说文库（Wenku8Reader）</strong>是一款原生 Android 阅读器：
+              浏览 wenku8 全站栏目、搜索与分类找书、一键加入书架，并内置沉浸式在线阅读器 ——
+              支持侧滑翻页、自动翻页、音量键翻页、简繁转换，还可将整本书离线下载为 TXT / EPUB 随时阅读。
+            </p>
+            <p class="proj-p">
+              应用采用 <strong>Material 3 Expressive</strong> 设计语言：卡片化界面、动态取色（跟随系统壁纸生成主题色）、
+              弹性形变与柔性顶栏、波浪进度与形变加载指示器、装饰形状空态、深色 / 纯黑（OLED 省电）模式，
+              并适配 120Hz 高刷新率屏幕，滑动与翻页顺滑跟手。
+            </p>
+
+            <header class="param-head proj-head-2">
+              <span>SYSTEM REQUIREMENTS</span>
+              <span class="param-head-code">SYS</span>
+            </header>
+            <dl class="param-list">
+              <div class="param-row"><dt>MIN SDK</dt><dd>Android 8.0（API 26）</dd></div>
+              <div class="param-row"><dt>RECOMMENDED</dt><dd>Android 12+ <span class="param-dim">完整动态取色与高刷体验</span></dd></div>
+              <div class="param-row"><dt>COMPILE SDK</dt><dd>37 <span class="param-dim">targetSdk 34</span></dd></div>
+              <div class="param-row"><dt>TOOLCHAIN</dt><dd>JDK 21 · AGP 9.4.1 · Gradle 9.7.1 · Kotlin 2.3.21</dd></div>
+            </dl>
+
+            <p class="param-note">
+              本项目以 GNU General Public License v3.0 发布，仅用于个人学习与交流，
+              请遵守 wenku8.net 站点使用条款并支持正版。
+            </p>
+          </article>
+
+          <article class="panel fx-in">
+            <header class="panel-head">
+              <span>SCREENS</span>
+              <span class="panel-head-note">05 PAGES</span>
+            </header>
+            <table class="tbl">
+              <thead>
+                <tr><th>页面</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><b>探索</b></td><td>顶栏 + 圆角搜索条，推荐 / 标签双 Tab（内置 50 个分类），封面卡片流</td></tr>
+                <tr><td><b>书架</b></td><td>卡片化书单，进度一目了然，一键续读</td></tr>
+                <tr><td><b>详情</b></td><td>封面信息卡、标签药丸、开始 / 继续阅读、离线下载卡、内容简介</td></tr>
+                <tr><td><b>阅读器</b></td><td>沉浸式全屏，状态指示器（电量 / 时间 / 章节 / 进度），悬浮章节进度条</td></tr>
+                <tr><td><b>设置</b></td><td>分组卡片：账号、外观（主题 / 纯黑 / 取色）、阅读设置、关于</td></tr>
+              </tbody>
+            </table>
+
+            <p class="panel-foot">
+              <span class="barcode barcode-sm" aria-hidden="true"></span>
+              界面随版本迭代，截图与说明以仓库为准
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 02 FEATURES ============================ -->
+    <section class="section" id="features">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">FEATURES</span>
+          <span class="sec-index">02</span>
+          <h2 class="sec-title">功能特性<em>FEATURES</em></h2>
+          <span class="sec-meta">07 MODULES</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="cap-grid">
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.4" /><path d="m16 16 4.4 4.4" /></svg>
+              </span>
+              <span class="cap-head-text"><b>探索发现</b><small>MODULE 01</small></span>
+            </header>
+            <p class="cap-desc">首页栏目（封面轮播 + 文字榜单）、书名 / 作者搜索、分类标签浏览。</p>
+            <ul class="chips"><li class="chip">发现</li><li class="chip">搜索</li><li class="chip">50 分类</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M4 5.2h5.2a2.4 2.4 0 0 1 2.4 2.4v11a2 2 0 0 0-2-2H4Z" /><path d="M20 5.2h-5.2a2.4 2.4 0 0 0-2.4 2.4v11a2 2 0 0 1 2-2H20Z" /></svg>
+              </span>
+              <span class="cap-head-text"><b>我的书架</b><small>MODULE 02</small></span>
+            </header>
+            <p class="cap-desc">收藏管理、多种排序（默认 / 最近更新 / 书名 / 字数 / 倒序），一键继续阅读。</p>
+            <ul class="chips"><li class="chip">收藏</li><li class="chip">排序</li><li class="chip">续读</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3.4" y="4.6" width="17.2" height="14.8" rx="2" /><path d="M8 9h8M8 12.6h8M8 16.2h5" /></svg>
+              </span>
+              <span class="cap-head-text"><b>沉浸式阅读器</b><small>MODULE 03</small></span>
+            </header>
+            <p class="cap-desc">侧滑 / 滚动双模式翻页、点按翻页、自动翻页（可设间隔）、音量键翻页，章节进度自动记录并续读。</p>
+            <ul class="chips">
+              <li class="chip">侧滑 / 滚动</li>
+              <li class="chip">自动翻页</li>
+              <li class="chip">音量键</li>
+              <li class="chip">进度记忆</li>
+            </ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3.6v12.2M7.4 11.4 12 16l4.6-4.6M4.6 19.4h14.8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>离线下载</b><small>MODULE 04</small></span>
+            </header>
+            <p class="cap-desc">整本下载为 TXT（简 / 繁 / UTF-8）或 EPUB，保存至 Downloads/Wenku8/。</p>
+            <ul class="chips"><li class="chip">TXT</li><li class="chip">EPUB</li><li class="chip">简繁可选</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><ellipse cx="12" cy="6.6" rx="7.4" ry="2.8" /><path d="M4.6 6.6v10.8c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8V6.6M4.6 12c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>本地缓存</b><small>MODULE 05</small></span>
+            </header>
+            <p class="cap-desc">详情 / 目录 / 章节自动落盘缓存，断网也能看已读章节，二次打开不重复联网。</p>
+            <ul class="chips"><li class="chip">离线可读</li><li class="chip">去重请求</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3.4 19.4 7.8v8.4L12 20.6 4.6 16.2V7.8Z" /><path d="M12 12v8.6M12 12l7.4-4.2M12 12 4.6 7.8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>网络韧性</b><small>MODULE 06</small></span>
+            </header>
+            <p class="cap-desc">Cloudflare 自动绕过（多镜像 + cf_clearance 复用），主站域名可在设置中切换。</p>
+            <ul class="chips"><li class="chip">多镜像</li><li class="chip">cf_clearance</li><li class="chip">随机 UA</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.4 5.4 7.1 7.1M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7" /></svg>
+              </span>
+              <span class="cap-head-text"><b>个性化外观</b><small>MODULE 07</small></span>
+            </header>
+            <p class="cap-desc">动态取色 / 手动种子色、深色模式（跟随系统 / 浅色 / 深色）、OLED 纯黑模式，阅读外观可细调。</p>
+            <ul class="chips">
+              <li class="chip">动态取色</li>
+              <li class="chip">OLED 纯黑</li>
+              <li class="chip">字体 / 字号 / 行距 / 边距</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= 03 STACK ============================= -->
+    <section class="section" id="stack">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">STACK</span>
+          <span class="sec-index">03</span>
+          <h2 class="sec-title">技术实现<em>STACK</em></h2>
+          <span class="sec-meta">100% KOTLIN</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="cap-grid cap-grid-2">
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="6.4" y="2.6" width="11.2" height="18.8" rx="2.6" /><path d="M10.4 5.6h3.2M11 18.6h2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>客户端</b><small>CLIENT</small></span>
+            </header>
+            <p class="cap-desc">
+              原生 <strong>Kotlin + Jetpack Compose + Material 3 Expressive</strong> 构建，
+              无 WebView 外壳，界面全部由 Compose 绘制。
+            </p>
+            <ul class="chips">
+              <li class="chip">Kotlin</li>
+              <li class="chip">Jetpack Compose</li>
+              <li class="chip">Material 3</li>
+              <li class="chip">miuix-kmp</li>
+            </ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M3.6 12h16.8M12 3.6a12 12 0 0 1 0 16.8 12 12 0 0 1 0-16.8Z" /><circle cx="12" cy="12" r="8.4" /></svg>
+              </span>
+              <span class="cap-head-text"><b>网络层</b><small>NETWORK</small></span>
+            </header>
+            <p class="cap-desc">
+              基于 <strong>OkHttp + Cronet</strong>，配合多镜像兜底与 cf_clearance 会话复用，
+              在网络受限环境下仍尽量保持可用。
+            </p>
+            <ul class="chips">
+              <li class="chip">OkHttp</li>
+              <li class="chip">Cronet</li>
+              <li class="chip">多镜像</li>
+            </ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3.4" y="4.6" width="17.2" height="14.8" rx="2" /><circle cx="9" cy="10.2" r="1.8" /><path d="m4.6 17.4 5-4.4 3.2 2.8 3-2.6 3.6 4.2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>图像与文本</b><small>MEDIA</small></span>
+            </header>
+            <p class="cap-desc">图片加载使用 <strong>Coil</strong>，简繁转换使用 <strong>opencc4j</strong>，插图章节直接渲染图片。</p>
+            <ul class="chips"><li class="chip">Coil</li><li class="chip">opencc4j</li><li class="chip">插图渲染</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M8.6 8.2 4.4 12l4.2 3.8M15.4 8.2 19.6 12l-4.2 3.8M13.6 4.8l-3.2 14.4" /></svg>
+              </span>
+              <span class="cap-head-text"><b>构建与发布</b><small>BUILD / CI</small></span>
+            </header>
+            <p class="cap-desc">
+              推送后由 GitHub Actions 依据 Conventional Commits 自动升版本、跑单元测试、打包并发布 Release。
+            </p>
+            <ul class="chips">
+              <li class="chip">JDK 21</li>
+              <li class="chip">Gradle 9.7.1</li>
+              <li class="chip">AGP 9.4.1</li>
+              <li class="chip">GitHub Actions</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 04 CHANGELOG ============================ -->
+    <section class="section" id="changelog">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">RELEASES</span>
+          <span class="sec-index">04</span>
+          <h2 class="sec-title">版本记录<em>RELEASES</em></h2>
+          <span class="sec-meta">AUTO BUILD / ACTIONS</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <ol class="log">
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.26</span>
+            <span class="log-no">RL-005</span>
+            <div class="log-body">
+              <h3 class="log-title">v0.8.0-dev.111 测试版</h3>
+              <p class="log-note">自动构建发布，APK 16.8 MB · 已下载 11 次。可在「设置 → 更新 → 更新通道」切换测试版。</p>
+            </div>
+            <span class="log-state is-live">LATEST</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.26</span>
+            <span class="log-no">RL-004</span>
+            <div class="log-body">
+              <h3 class="log-title">v0.8.0-dev.110 测试版</h3>
+              <p class="log-note">自动构建发布，含 SHA256SUMS 校验文件。</p>
+            </div>
+            <span class="log-state is-active">TEST</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.09.25</span>
+            <span class="log-no">RL-003</span>
+            <div class="log-body">
+              <h3 class="log-title">v0.8.0-dev.109 测试版</h3>
+              <p class="log-note">自动构建发布，已下载 8 次。</p>
+            </div>
+            <span class="log-state is-active">TEST</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.08.29</span>
+            <span class="log-no">RL-002</span>
+            <div class="log-body">
+              <h3 class="log-title">仓库建立</h3>
+              <p class="log-note">Wenku8Reader 在 GitHub 上开源，采用 GPL-3.0 许可。</p>
+            </div>
+            <span class="log-state">DONE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.08</span>
+            <span class="log-no">RL-001</span>
+            <div class="log-body">
+              <h3 class="log-title">项目立项</h3>
+              <p class="log-note">确定技术路线：Kotlin + Jetpack Compose 原生实现，不套 WebView。</p>
+            </div>
+            <span class="log-state">DONE</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================ 05 DOWNLOAD ============================ -->
+    <section class="section" id="download">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">DOWNLOAD</span>
+          <span class="sec-index">05</span>
+          <h2 class="sec-title">下载与构建<em>DOWNLOAD</em></h2>
+          <span class="sec-meta">CHANNEL OPEN</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="contact-grid">
+          <article class="terminal glass corners fx-in">
+            <header class="terminal-head">
+              <span class="terminal-dot" aria-hidden="true"></span>
+              <span class="terminal-path">CHANNEL://RELEASES.WENKU8READER</span>
+              <span class="terminal-code">P.05</span>
+            </header>
+
+            <div class="terminal-body">
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 安装包通过 GitHub Releases 发布。</p>
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 当前均为<strong>测试版</strong>（自动构建），可在应用内切换更新通道。</p>
+
+              <pre class="codeblock"># 本地构建 Debug 包
+./gradlew :app:assembleDebug
+# 产物：app/build/outputs/apk/debug/app-debug.apk
+
+# 跑单元测试（纯 JVM，无需模拟器）
+./gradlew :app:testDebugUnitTest</pre>
+
+              <div class="terminal-actions">
+                <a class="btn btn-primary" data-gh="release-url" href="https://github.com/TakaHoshino/Wenku8Reader/releases" target="_blank" rel="noopener noreferrer">
+                  <span class="btn-num">A</span>
+                  前往 Releases
+                  <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+                </a>
+                <a class="btn btn-ghost" href="https://github.com/TakaHoshino/Wenku8Reader" target="_blank" rel="noopener noreferrer">
+                  <span class="btn-num">B</span>
+                  浏览仓库
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <ul class="contact-list fx-in">
+            <li class="contact-item">
+              <span class="contact-key">RELEASES</span>
+              <a class="contact-val" data-gh="release-url" href="https://github.com/TakaHoshino/Wenku8Reader/releases" target="_blank" rel="noopener noreferrer">
+                <span data-gh="version">v0.8.0-dev.111</span>
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">SOURCE</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/Wenku8Reader" target="_blank" rel="noopener noreferrer">
+                TakaHoshino/Wenku8Reader
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">QQ 群</span>
+              <a class="contact-val" href="https://qm.qq.com/q/PeFKgwevG6" target="_blank" rel="noopener noreferrer">
+                1106956143
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">支持作者</span>
+              <a class="contact-val" href="https://www.ifdian.net/a/wenku8reader" target="_blank" rel="noopener noreferrer">
+                爱发电 · 买杯咖啡
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">许可</span>
+              <span class="contact-val is-text">GNU GPL-3.0</span>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">鸣谢</span>
+              <a class="contact-val" href="https://github.com/dmzz-yyhyy/LightNovelReader" target="_blank" rel="noopener noreferrer">
+                LightNovelReader
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <p class="proj-note fx-in">
+          本应用仅用于个人学习与交流，数据来自 wenku8.net，请遵守站点使用条款并支持正版。
+          网络层与 Cloudflare 绕过方案参考并致谢
+          <a href="https://github.com/dmzz-yyhyy/LightNovelReader" target="_blank" rel="noopener noreferrer">LightNovelReader</a>；
+          部分界面实现改编自其他开源项目，逐项来源见仓库 NOTICE。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="shell foot-inner">
+      <div class="foot-left">
+        <span class="barcode barcode-sm" aria-hidden="true"></span>
+        <p>© <span id="year">2026</span> HOSHINO · FILE NO.001 / WENKU8READER</p>
+      </div>
+      <p class="foot-right">
+        <a href="../">← 返回个人档案</a>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" type="button" aria-label="回到顶部" title="回到顶部">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" /></svg>
+  </button>
+
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/version-sync.js" defer></script>
+</body>
+</html>
