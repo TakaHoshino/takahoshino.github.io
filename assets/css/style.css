@@ -654,6 +654,80 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
 
 .hero-shell { position: relative; }
 
+/* ---- 首屏背景图形层 ---- */
+.hero-fx {
+  position: absolute;
+  inset: -60px 0 -40px;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 三角形阵：参考例图里在大字后方铺开并渐隐的重复三角形 */
+.tri-field {
+  position: absolute;
+  z-index: 0;
+  left: -6px;
+  top: -22px;
+  width: calc(100% + 6px);
+  height: calc(100% + 44px);
+  background-image:
+    linear-gradient(135deg, var(--acc) 25%, transparent 25%),
+    linear-gradient(315deg, var(--acc) 25%, transparent 25%);
+  background-size: 14px 14px;
+  opacity: 0.16;
+  mask-image: radial-gradient(125% 135% at 16% 50%, #000 0%, rgba(0, 0, 0, 0.45) 48%, transparent 78%);
+  -webkit-mask-image: radial-gradient(125% 135% at 16% 50%, #000 0%, rgba(0, 0, 0, 0.45) 48%, transparent 78%);
+  pointer-events: none;
+}
+
+html[data-theme="positive"] .tri-field { opacity: 0.3; }
+
+/* 斜向高亮条：穿过版面的速度感（置于卡片之后，从面板间隙透出） */
+.sec-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sec-bar {
+  position: absolute;
+  left: 50%;
+  width: 155%;
+  background: var(--acc);
+  transform: translate(-50%, -50%) rotate(-32deg);
+}
+
+.sec-bar-a { top: 46%; height: 8px; opacity: 0.22; }
+.sec-bar-b { top: 52%; height: 3px; opacity: 0.14; }
+
+/* 定位十字标（方框 + 圆心） */
+.reg-mark {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-2);
+  opacity: 0.55;
+}
+
+.reg-mark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border: 1px solid var(--line-2);
+  border-radius: 50%;
+}
+
+.reg-a { top: 60px; right: 4px; }
+.reg-b { bottom: 20px; left: 44%; }
+.reg-c { top: 250px; left: -46px; width: 24px; height: 24px; }
+
 /* 左边缘竖排边注 */
 .edge-label {
   position: absolute;
@@ -1065,6 +1139,13 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
   letter-spacing: 0.18em;
   color: var(--dim);
   white-space: nowrap;
+}
+
+.sec-meta::before {
+  content: "◆";
+  margin-right: 8px;
+  font-size: 0.72em;
+  color: var(--acc-strong);
 }
 
 .sec-rule {

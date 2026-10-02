@@ -18,11 +18,15 @@
 | 手法 | 在本站的落地 |
 | --- | --- |
 | 巨型粗体标题 + 横向饱和色带穿过文字 | 首屏 `.hero-slice`，色带从标题下方穿过并在卡片后消失 |
+| 大字后方的重复三角阵（半调纹理） | 首屏 `.tri-field`，铺在 `HOSHINO` 字形后方并向右侧渐隐 |
+| 斜向高亮条切割版面 | 作品区 `.sec-bar`，从卡片后方斜穿而过 |
+| 定位十字标（方框 + 圆心） | 首屏 `.reg-mark`，散布在版面边角 |
 | 超大字被前景物体遮挡 | 线框立方体 `.wire-cube` 压在身份卡上、色带穿过卡片后方 |
 | 左边缘竖排 Latin 边注 | `.edge-label`（`HOSHINO // PERSONAL ARCHIVE — EST.2022`） |
 | `[代号] 拉丁副标题` 细框铭牌 | `.hero-plate`（`[HS-001] 个人档案 · PERSONAL ARCHIVE`） |
 | 巨型幽灵字水印 | 每个区块标题后的 `.ghost`（WORKS / PROFILE / LOG / CONTACT） |
 | 重复几何形 / V 形斜纹填充 | `.sec-rule` 的斜纹刻度线、`.corners` 的角标括号 |
+| 装饰性分隔与编号标记 | `.sec-meta` 前的 `◆`、区块编号 `01–04`、`W-001` 文件号 |
 | 高频小字标签与坐标读数 | 标签行、坐标轴、`.radar-legend` 的点线引导 |
 | 色差描边（RGB 分离） | `.hero-title-en` 的 `text-shadow` 偏移 |
 
