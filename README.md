@@ -95,7 +95,7 @@ python -m http.server 8000     # 访问 http://localhost:8000
 | 模块阵列 | `.modules` 里的 `li.module`，`is-on` 控制指示灯亮起 |
 | 日志条目 | `.log` 里的 `li.log-item`（日期 / 编号 / 标题 / 说明 / 状态） |
 | 邮箱与社交链接 | 全局搜索 `a3451894191@163.com` 与 `github.com/TakaHoshino` |
-| 头像 | 默认用 GitHub 头像地址，可换成本地图片（如 `assets/img/avatar.png`） |
+| 头像 | 已本地化为 `assets/img/avatar.jpg`（460px，约 29KB），不再依赖 GitHub 头像 CDN；换图直接替换该文件即可 |
 | 高亮色 | `style.css` 顶部 `--acc` / `--acc-strong`（`--acc` 是填充色，`--acc-strong` 是浅底上的文字色） |
 | 切角大小 | CSS 变量 `--cut`（大面板）与 `--cut-sm` |
 | 强制默认黑底 | `<head>` 里的小脚本，把 `var theme = saved \|\| (...)` 改成 `var theme = saved \|\| "negative"` |
