@@ -654,6 +654,7 @@ html[data-theme="positive"] .fx-grid { opacity: 0.3; }
   position: relative;
   padding: 84px 0 76px;
   z-index: 1;
+  overflow: hidden;
 }
 
 .hero-shell { position: relative; }
@@ -1436,7 +1437,11 @@ html[data-theme="positive"] .tri-field { opacity: 0.3; }
   padding-top: 3px;
 }
 
-.param-row dd { font-size: 0.93rem; }
+.param-row dd {
+  font-size: 0.93rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 
 .param-dim {
   margin-left: 8px;
@@ -2482,7 +2487,19 @@ a.contact-val:hover .ico { transform: translate(2px, -2px); }
 }
 
 .proj-spec { border: 1px solid var(--line); background: var(--glass); }
-.proj-spec .param-row { padding: 10px 14px; }
+.proj-spec .param-row {
+  grid-template-columns: 128px minmax(0, 1fr);
+  padding: 10px 14px;
+}
+.proj-spec dd { font-size: 0.88rem; }
+
+@media (max-width: 720px) {
+  .proj-spec .param-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+  }
+  .proj-spec dd { text-align: left; }
+}
 
 /* 概览正文 */
 .proj-p { font-size: 0.94rem; color: var(--muted); }

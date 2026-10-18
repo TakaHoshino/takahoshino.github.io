@@ -4,7 +4,7 @@
 推送到 `main` 分支后由 GitHub Pages 直接发布。
 
 - 线上地址：https://takahoshino.github.io/
-- 站点结构：个人主页（`/`）+ 项目详情页（`/wenku8reader/`、`/fuckets/`），
+- 站点结构：个人主页（`/`）+ 项目详情页（`/wenku8reader/`、`/fuckets/`、`/betternrp/`），
   共用同一套设计令牌与组件语言
 - 设计方向：白色编辑化海报 / 高密度信息图层 / 工业战术 UI
 - 骨架色：白 · 近黑 · 冷灰；系统色：单一高亮 `#53ff18`（只用于编号、状态、
@@ -40,6 +40,7 @@
 ├── 404.html                   # 404 页面
 ├── wenku8reader/index.html    # 项目详情页：Wenku8Reader（FILE NO.001）
 ├── fuckets/index.html         # 项目详情页：FuckETS（FILE NO.002）
+├── betternrp/index.html       # 项目详情页：BetterRNP（FILE NO.003）
 ├── favicon.svg                # 站点图标
 ├── robots.txt / sitemap.xml   # 搜索引擎相关（新增页面记得补 sitemap）
 ├── .nojekyll                  # 让 GitHub Pages 跳过 Jekyll 处理
@@ -90,7 +91,7 @@ $env:PREVIEW_BROWSER='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.e
 | 编号 | 区块 | 锚点 | 内容 |
 | --- | --- | --- | --- |
 | — | 首屏档案页 | `#top` | 编辑化海报 + 空间化背景，见下方 |
-| 01 | WORK 作品 | `#work` | 4 张作品档案卡（编号 / 类型 / 年份 / 技术栈 / 状态条 / 生成式缩略图），2 大 2 小的错落网格 |
+| 01 | WORK 作品 | `#work` | 4 张作品档案卡（Wenku8Reader / FuckETS / BetterRNP / 本站）+ 一张满宽的待开放槽位 |
 | 02 | PROFILE 档案 | `#profile` | 系统参数面板 + 能力雷达（含数值图例）+ 12 格模块阵列 |
 | 03 | LOG 日志 | `#log` | 5 条时间线记录（真实日期，取自 GitHub 仓库） |
 | 04 | CONTACT 联络 | `#contact` | 终端式提交面板 + 联系方式列表 |
@@ -129,7 +130,7 @@ $env:PREVIEW_BROWSER='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.e
 
 ## 项目详情页
 
-`/wenku8reader/`、`/fuckets/` 是结构相同的项目档案页，沿用主页的设计语言
+`/wenku8reader/`、`/fuckets/`、`/betternrp/` 是结构相同的项目档案页，沿用主页的设计语言
 （HUD 状态条 / 竖排边注 / 横向色带 / 细框卡组 / 幽灵字 / 时间线），一页讲清一个项目：
 
 | 编号 | 区块 | 锚点 | 内容 |
@@ -175,11 +176,11 @@ $env:PREVIEW_BROWSER='C:\Program Files (x86)\Microsoft\Edge\Application\msedge.e
 
 ### 静态资源版本号
 
-各页面引用的 CSS / JS 都带 `?v=` 版本号（当前 `?v=20261002e`）。
+各页面引用的 CSS / JS 都带 `?v=` 版本号（当前 `?v=20261018d`）。
 GitHub Pages 的静态资源会被浏览器缓存，如果出现「新版 HTML + 旧版 style.css」的混排，
 页面会整体错乱（首屏标题被裁、参数逐字换行等）；换 URL 能强制重新拉取。
 
-> **改完 `assets/` 下的 CSS / JS，记得把所有页面里的 `?v=` 同步递增**（例如 `20261002f`）。
+> **改完 `assets/` 下的 CSS / JS，记得把所有页面里的 `?v=` 同步递增**（例如 `20261018e`）。
 
 ## 常见修改
 

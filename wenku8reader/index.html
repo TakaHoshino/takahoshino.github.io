@@ -22,7 +22,7 @@
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="../favicon.svg" />
   <!-- 资源版本号：改动 assets 下的 CSS / JS 后同步递增，避免浏览器缓存旧文件与新页面混用 -->
-  <link rel="stylesheet" href="../assets/css/style.css?v=20261002e" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=20261018d" />
 
   <script>
     (function () {
@@ -45,7 +45,7 @@
     "image": "https://takahoshino.github.io/assets/img/wenku8reader.png",
     "applicationCategory": "BookReaderApplication",
     "operatingSystem": "Android 8.0+",
-    "softwareVersion": "v0.7.0",
+    "softwareVersion": "v0.8.1",
     "license": "https://www.gnu.org/licenses/gpl-3.0.html",
     "codeRepository": "https://github.com/TakaHoshino/Wenku8Reader",
     "author": { "@type": "Person", "name": "Hoshino", "url": "https://takahoshino.github.io/" },
@@ -96,7 +96,7 @@
         </span>
         <span class="nav-live"><i></i>ONLINE</span>
         <button class="nav-toggle" id="themeToggle" type="button" aria-label="切换配色模式" title="切换配色模式">
-          <span aria-hidden="true">◐</span><b id="themeLabel">NEGATIVE</b>
+          <span aria-hidden="true">◐</span><b id="themeLabel">POSITIVE</b>
         </button>
       </div>
     </div>
@@ -176,8 +176,8 @@
             </div>
 
             <dl class="hero-readout fx-in">
-              <div><dt>STARS</dt><dd><b data-count="11" data-gh="stars">11</b></dd></div>
-              <div><dt>FORKS</dt><dd><b data-count="0" data-gh="forks">0</b></dd></div>
+              <div><dt>STARS</dt><dd><b data-count="18" data-gh="stars">18</b></dd></div>
+              <div><dt>FORKS</dt><dd><b data-count="1" data-gh="forks">1</b></dd></div>
               <div><dt>ISSUES</dt><dd><b data-count="0" data-gh="issues">0</b></dd></div>
               <div><dt>LANG</dt><dd><b>KOTLIN</b></dd></div>
             </dl>
@@ -187,7 +187,7 @@
           <div class="proj-media fx-in">
             <dl class="param-list proj-spec">
               <div class="param-row"><dt>STATUS</dt><dd><span class="param-ok">ACTIVE</span> 持续维护</dd></div>
-              <div class="param-row"><dt>VERSION</dt><dd><span data-gh="version">v0.7.0</span><span data-gh="channel">（正式版）</span></dd></div>
+              <div class="param-row"><dt>VERSION</dt><dd><span data-gh="version">v0.8.1</span><span data-gh="channel">（正式版）</span></dd></div>
               <div class="param-row"><dt>PLATFORM</dt><dd>Android 8.0+ <span class="param-dim">API 26</span></dd></div>
               <div class="param-row"><dt>LICENSE</dt><dd>GNU GPL-3.0</dd></div>
               <div class="param-row"><dt>CHANNEL</dt><dd>正式版 · GitHub Releases</dd></div>
@@ -195,12 +195,12 @@
               <div class="param-row"><dt>SOURCE</dt><dd>TakaHoshino/Wenku8Reader</dd></div>
               <div class="param-row"><dt>DATA</dt><dd>wenku8.net 轻小说文库</dd></div>
               <div class="param-row"><dt>MODULES</dt><dd>07 功能模块 <span class="param-dim">05 界面</span></dd></div>
-              <div class="param-row"><dt>UPDATED</dt><dd><span data-gh="date">2026.09.25</span></dd></div>
+              <div class="param-row"><dt>UPDATED</dt><dd><span data-gh="date">2026.10.18</span></dd></div>
             </dl>
 
             <article class="mod">
               <span class="mod-head"><b>NOW</b><em>当前进行中</em><span class="mod-state is-progress">IN PROGRESS</span></span>
-              <span class="mod-meta">LAST COMMIT 2026.10.01</span>
+              <span class="mod-meta">LAST COMMIT 2026.10.18</span>
               <span class="mod-body">阅读器排版、缓存策略与网络韧性持续迭代中。</span>
               <span class="mod-foot"><span class="mod-coord">CASE W-001</span><span class="mod-go is-quiet">维护中</span></span>
             </article>
@@ -208,10 +208,10 @@
         </div>
 
         <div class="statusbar fx-in">
-          <span class="statusbar-item"><b>LATEST</b><span data-gh="version">v0.7.0</span></span>
-          <span class="statusbar-item"><b>APK</b><span data-gh="size">16.8 MB</span></span>
+          <span class="statusbar-item"><b>LATEST</b><span data-gh="version">v0.8.1</span></span>
+          <span class="statusbar-item"><b>APK</b><span data-gh="size">11.8 MB</span></span>
           <span class="statusbar-item"><b>MIN ANDROID</b>8.0 / API 26</span>
-          <span class="statusbar-item"><b>DOWNLOADS</b><span data-gh="downloads">59</span></span>
+          <span class="statusbar-item"><b>DOWNLOADS</b><span data-gh="downloads">5</span></span>
           <span class="statusbar-item"><b>LICENSE</b>GPL-3.0</span>
         </div>
       </div>
@@ -486,6 +486,28 @@
         <ol class="log">
           <li class="log-item fx-in">
             <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.10.18</span>
+            <span class="log-no">RL-008</span>
+            <div class="log-body">
+              <h3 class="log-title">v0.8.1 搜索修复版</h3>
+              <p class="log-note">搜索改用 Cronet POST /so.php；直连被 Cloudflare 拦截时，搜索 / 详情 / 目录 / 正文统一改走绕过栈，修复搜索 403。</p>
+            </div>
+            <span class="log-state is-live">STABLE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.10.17</span>
+            <span class="log-no">RL-007</span>
+            <div class="log-body">
+              <h3 class="log-title">v0.8.0 账户与站方书架</h3>
+              <p class="log-note">账户登录实验开关与账户二级页；Wenku8 书架接入书架页，与本地书架同等地位；启动检查更新、网络日志导出、收藏按钮整合。</p>
+            </div>
+            <span class="log-state is-active">RELEASE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
             <span class="log-date">2026.09.26</span>
             <span class="log-no">RL-006</span>
             <div class="log-body">
@@ -601,7 +623,7 @@
             <li class="contact-item">
               <span class="contact-key">RELEASES</span>
               <a class="contact-val" data-gh="release-url" href="https://github.com/TakaHoshino/Wenku8Reader/releases" target="_blank" rel="noopener noreferrer">
-                <span data-gh="version">v0.7.0</span>
+                <span data-gh="version">v0.8.1</span>
                 <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
               </a>
             </li>
@@ -666,7 +688,7 @@
     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" /></svg>
   </button>
 
-  <script src="../assets/js/main.js?v=20261002b" defer></script>
-  <script src="../assets/js/version-sync.js?v=20261002b" defer></script>
+  <script src="../assets/js/main.js?v=20261018d" defer></script>
+  <script src="../assets/js/version-sync.js?v=20261018d" defer></script>
 </body>
 </html>

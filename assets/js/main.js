@@ -50,7 +50,8 @@
   /* ------------------------------------- 滚动进度 / 回到顶部 / 扫掠动效 */
   var progress = document.getElementById("navProgress");
   var toTop = document.getElementById("toTop");
-  var consoleGrid = document.querySelector("[data-camera]");
+  // 首页用 [data-camera]；项目详情页沿用 .console-grid
+  var consoleGrid = document.querySelector("[data-camera], .console-grid");
 
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;

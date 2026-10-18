@@ -756,6 +756,37 @@ html[data-theme="positive"] {
 }
 
 .case-wide { grid-column: span 7; }
+.case-full { grid-column: span 12; }
+
+/* 满宽收尾卡：左侧图形、右侧文案，作为「下一个项目」的收口 */
+@media (min-width: 861px) {
+  .case-full {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .case-full .case-head { grid-column: 1 / -1; grid-row: 1; }
+
+  .case-full .case-media {
+    grid-column: 1;
+    grid-row: 2;
+    height: 100%;
+    min-height: 168px;
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+  }
+
+  .case-full .case-body {
+    grid-column: 2;
+    grid-row: 2;
+    justify-content: center;
+    padding: 26px 30px;
+  }
+
+  .case-full .case-foot { grid-column: 1 / -1; grid-row: 3; }
+  .case-full .case-desc { max-width: 62ch; }
+}
 
 .case::before {
   content: "";
@@ -913,6 +944,28 @@ html[data-theme="positive"] {
   background:
     linear-gradient(var(--line-2), var(--line-2)) 50% 30% / 1px 40% no-repeat,
     linear-gradient(var(--line-2), var(--line-2)) 30% 50% / 40% 1px no-repeat;
+}
+
+/* 座位抽样图形：一格点亮的座位矩阵 */
+.case-seatgrid {
+  position: absolute;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  grid-template-columns: repeat(5, 14px);
+  gap: 9px;
+}
+
+.case-seatgrid i {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--line-2);
+}
+
+.case-seatgrid i.is-on {
+  background: var(--acc);
+  border-color: var(--acc);
 }
 
 .case-body {

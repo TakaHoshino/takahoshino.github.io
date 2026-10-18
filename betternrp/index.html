@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="positive" data-gh-repo="TakaHoshino/BetterRandomNamePicker">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>BetterRNP // 课堂随机抽取工具 · 项目档案</title>
+  <meta name="description" content="BetterRNP —— 面向课堂、会议与活动现场的 Windows 随机抽取工具。名字、数字、座位三种滚停式抽取，C# / .NET 8 / WPF 实现，支持托盘常驻、悬浮球、加密本地存储、背景主题与 .rnpp 插件。" />
+  <meta name="author" content="Hoshino" />
+  <meta name="keywords" content="BetterRNP, 随机点名, 随机抽取, 随机座位, 课堂工具, C#, .NET 8, WPF, 插件, 开源, Hoshino" />
+  <meta name="theme-color" content="#0a0b0b" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f5f3" media="(prefers-color-scheme: light)" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="BetterRNP // 课堂随机抽取工具 · 项目档案" />
+  <meta property="og:description" content="名字、数字、座位三种滚停式抽取，托盘常驻与悬浮球，加密本地存储与 .rnpp 插件扩展。" />
+  <meta property="og:url" content="https://takahoshino.github.io/betternrp/" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="canonical" href="https://takahoshino.github.io/betternrp/" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="../favicon.svg" />
+  <!-- 资源版本号：改动 assets 下的 CSS / JS 后同步递增，避免浏览器缓存旧文件与新页面混用 -->
+  <link rel="stylesheet" href="../assets/css/style.css?v=20261018d" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        if (saved === "negative" || saved === "positive") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) { /* 保持默认 positive */ }
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BetterRNP",
+    "alternateName": "BetterRandomNamePicker",
+    "url": "https://takahoshino.github.io/betternrp/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Windows 10 / 11 (x64)",
+    "softwareVersion": "v2.1.0",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "codeRepository": "https://github.com/TakaHoshino/BetterRandomNamePicker",
+    "author": { "@type": "Person", "name": "Hoshino", "url": "https://takahoshino.github.io/" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+  }
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#overview">跳到主要内容</a>
+
+  <div class="fx" aria-hidden="true">
+    <span class="fx-grid"></span>
+    <span class="fx-lines"></span>
+    <span class="fx-drift fx-drift-a"></span>
+    <span class="fx-drift fx-drift-b"></span>
+    <span class="fx-noise"></span>
+    <span class="fx-scan"></span>
+    <span class="fx-sweep"></span>
+  </div>
+
+  <!-- ============================ 顶部状态栏 ============================ -->
+  <header class="nav" id="nav">
+    <span class="nav-progress" aria-hidden="true"><i id="navProgress"></i></span>
+
+    <div class="nav-inner">
+      <a class="nav-brand" href="../" aria-label="返回个人档案首页">
+        <span class="nav-mark" aria-hidden="true">HS</span>
+        <span class="nav-brand-text">
+          <b>HOSHINO</b>
+          <small>← BACK TO ARCHIVE</small>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="页内导航">
+        <a class="nav-link is-active" href="#top"><i>00</i>TOP<em>顶部</em></a>
+        <a class="nav-link" href="#overview"><i>01</i>OVERVIEW<em>概览</em></a>
+        <a class="nav-link" href="#features"><i>02</i>FEATURES<em>特性</em></a>
+        <a class="nav-link" href="#stack"><i>03</i>STACK<em>技术</em></a>
+        <a class="nav-link" href="#changelog"><i>04</i>LOG<em>版本</em></a>
+        <a class="nav-link" href="#download"><i>05</i>DOWNLOAD<em>下载</em></a>
+      </nav>
+
+      <div class="nav-status">
+        <span class="nav-clock">
+          <small>LOCAL</small>
+          <b id="navClock">--:--:--</b>
+        </span>
+        <span class="nav-live"><i></i>ONLINE</span>
+        <button class="nav-toggle" id="themeToggle" type="button" aria-label="切换配色模式" title="切换配色模式">
+          <span aria-hidden="true">◐</span><b id="themeLabel">POSITIVE</b>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============================== HERO ============================== -->
+    <section class="hero proj-hero" id="top">
+      <div class="shell hero-shell">
+        <div class="stage" aria-hidden="true">
+          <span class="stage-glow"></span>
+          <span class="stage-wall"></span>
+          <span class="stage-wall stage-wall-inner"></span>
+        </div>
+
+        <span class="edge-label" aria-hidden="true">BETTERRNP // FILE NO.003 — CLASSROOM TOOL</span>
+
+        <div class="hero-fx" aria-hidden="true">
+          <span class="reg-mark reg-a"></span>
+          <span class="reg-mark reg-b"></span>
+        </div>
+
+        <div class="axis axis-x" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">X:003</span>
+          <span class="axis-tick"></span>
+        </div>
+
+        <div class="axis axis-y" aria-hidden="true">
+          <span class="axis-line"></span>
+          <span class="axis-label">Y:207</span>
+          <span class="axis-tick"></span>
+        </div>
+
+        <div class="console-grid">
+          <!-- 左：项目身份 -->
+          <div class="identity">
+            <ul class="hud-strip fx-in">
+              <li class="hud-item is-live"><i></i>ACTIVE</li>
+              <li class="hud-item">FILE NO.003</li>
+              <li class="hud-item">WINDOWS · X64</li>
+              <li class="hud-item">APACHE-2.0</li>
+            </ul>
+
+            <p class="crumbs fx-in"><a href="../">← 返回作品档案</a></p>
+
+            <h1 class="hero-title fx-in">
+              <span class="hero-title-line">
+                <span class="tri-field" aria-hidden="true"></span>
+                <span class="hero-slice" aria-hidden="true"></span>
+                <span class="hero-title-en"><span>BETTER</span><span>RNP</span></span>
+              </span>
+              <span class="hero-plate">
+                <b class="plate-code">W-003</b>
+                <span class="plate-text">课堂与活动现场 · 随机抽取工具</span>
+              </span>
+            </h1>
+
+            <p class="hero-lead fx-in">
+              点名，抽号，排座<span class="sep">/</span>一个窗口解决现场随机。
+            </p>
+            <p class="hero-desc fx-in">
+              Windows 桌面工具：把随机点名、随机数字与随机座位收进一套方案。
+              选择名单后滚停式抽取，结果定格即写入日志；主窗口可收进托盘，
+              悬浮球置顶双击即可抽取，名单与配置在本地加密保存。
+            </p>
+
+            <div class="hero-actions fx-in">
+              <a class="btn btn-primary" href="https://github.com/TakaHoshino/BetterRandomNamePicker/releases/latest" target="_blank" rel="noopener noreferrer">
+                <span class="btn-num">01</span>
+                下载最新版
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" /></svg>
+              </a>
+              <a class="btn btn-ghost" href="https://github.com/TakaHoshino/BetterRandomNamePicker" target="_blank" rel="noopener noreferrer">
+                <span class="btn-num">02</span>
+                查看源码
+              </a>
+            </div>
+
+            <dl class="hero-readout fx-in">
+              <div><dt>STARS</dt><dd><b data-count="0" data-gh="stars">0</b></dd></div>
+              <div><dt>FORKS</dt><dd><b data-count="0" data-gh="forks">0</b></dd></div>
+              <div><dt>ISSUES</dt><dd><b data-count="0" data-gh="issues">0</b></dd></div>
+              <div><dt>LANG</dt><dd><b>C#</b></dd></div>
+            </dl>
+          </div>
+
+          <!-- 右：参数 + 进行中 -->
+          <div class="proj-media fx-in">
+            <dl class="param-list proj-spec">
+              <div class="param-row"><dt>STATUS</dt><dd><span class="param-ok">ACTIVE</span> 持续维护</dd></div>
+              <div class="param-row"><dt>VERSION</dt><dd><span data-gh="version">v2.1.0</span><span data-gh="channel">（正式版）</span></dd></div>
+              <div class="param-row"><dt>PLATFORM</dt><dd>Windows 10 / 11 <span class="param-dim">x64</span></dd></div>
+              <div class="param-row"><dt>LICENSE</dt><dd>Apache License 2.0</dd></div>
+              <div class="param-row"><dt>PACKAGE</dt><dd>自包含版 / 框架依赖版</dd></div>
+              <div class="param-row"><dt>RUNTIME</dt><dd>.NET 8 <span class="param-dim">WPF</span></dd></div>
+              <div class="param-row"><dt>SOURCE</dt><dd>TakaHoshino/<wbr>BetterRandomNamePicker</dd></div>
+              <div class="param-row"><dt>DATA</dt><dd>./data · ./log <span class="param-dim">AES-GCM</span></dd></div>
+              <div class="param-row"><dt>MODES</dt><dd>03 抽取模式 <span class="param-dim">.rnpp 插件</span></dd></div>
+              <div class="param-row"><dt>UPDATED</dt><dd><span data-gh="date">2026.10.17</span></dd></div>
+            </dl>
+
+            <article class="mod">
+              <span class="mod-head"><b>NOW</b><em>当前进行中</em><span class="mod-state is-progress">IN PROGRESS</span></span>
+              <span class="mod-meta">LAST COMMIT 2026.10.18</span>
+              <span class="mod-body">单实例唤醒与 Apache-2.0 许可落地，插件 SDK 持续完善。</span>
+              <span class="mod-foot"><span class="mod-coord">CASE B-003</span><span class="mod-go is-quiet">维护中</span></span>
+            </article>
+          </div>
+        </div>
+
+        <div class="statusbar fx-in">
+          <span class="statusbar-item"><b>LATEST</b><span data-gh="version">v2.1.0</span></span>
+          <span class="statusbar-item"><b>CHANNEL</b>GitHub Releases</span>
+          <span class="statusbar-item"><b>PLATFORM</b>win-x64</span>
+          <span class="statusbar-item"><b>PLUGIN</b>.rnpp / PluginSdk</span>
+          <span class="statusbar-item"><b>LICENSE</b>Apache-2.0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 01 OVERVIEW ============================ -->
+    <section class="section" id="overview">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">OVERVIEW</span>
+          <span class="sec-index">01</span>
+          <h2 class="sec-title">项目概览<em>OVERVIEW</em></h2>
+          <span class="sec-meta">RECORD 03 / DESKTOP</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="profile-grid">
+          <article class="param-panel glass corners fx-in">
+            <header class="param-head">
+              <span>WHAT IT IS</span>
+              <span class="param-head-code">P.01</span>
+            </header>
+
+            <p class="proj-p">
+              <strong>BetterRNP</strong>是一款面向课堂、会议和活动现场的 Windows 随机抽取工具。
+              它把<strong>随机点名、随机数字和随机座位</strong>集中在一个轻量桌面程序里：
+              不用准备表格公式，也不用临时写脚本，选好方案和模式即可开始滚动抽取。
+            </p>
+            <p class="proj-p">
+              程序支持常驻系统托盘、置顶悬浮球快速抽取、加密本地存储、可配置的照片背景，
+              以及 <code>.rnpp</code> 插件扩展。v2.0.0 起从 Java Swing 完整重写为
+              <strong>.NET 8 / C# / WPF</strong>，界面保持接近 Windows 原生对话框的观感；
+              旧版 Java 保存的加密名单、数字与座位数据可以继续读取。
+            </p>
+
+            <header class="param-head proj-head-2">
+              <span>SYSTEM REQUIREMENTS</span>
+              <span class="param-head-code">SYS</span>
+            </header>
+            <dl class="param-list">
+              <div class="param-row"><dt>OS</dt><dd>Windows 10 / 11 <span class="param-dim">x64</span></dd></div>
+              <div class="param-row"><dt>SELF-CONTAINED</dt><dd>内置 .NET 8 运行时 <span class="param-dim">解压即用，推荐</span></dd></div>
+              <div class="param-row"><dt>FRAMEWORK</dt><dd>需预装 .NET 8 桌面运行时 <span class="param-dim">体积小</span></dd></div>
+              <div class="param-row"><dt>BUILD</dt><dd>Windows + .NET 8 SDK <span class="param-dim">dotnet build</span></dd></div>
+            </dl>
+
+            <p class="param-note">
+              项目以 Apache License 2.0 发布。所有数据默认保存在程序目录，不登录、不依赖云端；
+              升级程序不会覆盖已有的 data/ 与 plugins/ 内容。
+            </p>
+          </article>
+
+          <article class="panel fx-in">
+            <header class="panel-head">
+              <span>WORKFLOW</span>
+              <span class="panel-head-note">06 STEPS</span>
+            </header>
+            <table class="tbl">
+              <thead>
+                <tr><th>步骤</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><b>选择方案</b></td><td>从顶部选择预设方案，可分别为不同班级 / 活动建立</td></tr>
+                <tr><td><b>切换模式</b></td><td>名字列表、数字或座位模式，共用同一套方案与交互</td></tr>
+                <tr><td><b>开始抽取</b></td><td>点击「开始抽取」，结果按 50ms 间隔滚动</td></tr>
+                <tr><td><b>停止定格</b></td><td>再次点击「停止」保留最终结果，并写入操作日志</td></tr>
+                <tr><td><b>配置数据</b></td><td>进入「配置名单」或对应模式窗口，显式保存修改</td></tr>
+                <tr><td><b>现场辅助</b></td><td>在设置中启用托盘、悬浮球、背景主题与自动检查更新</td></tr>
+              </tbody>
+            </table>
+
+            <p class="panel-foot">
+              <span class="barcode barcode-sm" aria-hidden="true"></span>
+              抽取结果会写入 log/，并在 data/ 与备份目录保留多份副本
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 02 FEATURES ============================ -->
+    <section class="section" id="features">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">FEATURES</span>
+          <span class="sec-index">02</span>
+          <h2 class="sec-title">功能特性<em>FEATURES</em></h2>
+          <span class="sec-meta">07 MODULES</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="cap-grid">
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4.6" width="6.4" height="6.4" /><rect x="13.6" y="4.6" width="6.4" height="6.4" /><rect x="4" y="13.4" width="6.4" height="6.4" /><rect x="13.6" y="13.4" width="6.4" height="6.4" /></svg>
+              </span>
+              <span class="cap-head-text"><b>三种抽取模式</b><small>MODULE 01</small></span>
+            </header>
+            <p class="cap-desc">名字列表、随机数字、随机座位共用同一套方案与交互，覆盖点名、抽号与排座。</p>
+            <ul class="chips"><li class="chip">名字列表</li><li class="chip">数字</li><li class="chip">座位 30×30</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4" /><path d="M12 7.6v4.8l3.2 2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>滚停式抽取</b><small>MODULE 02</small></span>
+            </header>
+            <p class="cap-desc">结果快速轮换，点击停止后定格，比直接弹出结果更有现场氛围；每次抽取自动记录。</p>
+            <ul class="chips"><li class="chip">50ms 轮换</li><li class="chip">大字号投影</li><li class="chip">操作日志</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3.6" y="5" width="16.8" height="11.4" rx="1.6" /><path d="M8 19.4h8M12 16.4v3" /></svg>
+              </span>
+              <span class="cap-head-text"><b>托盘与悬浮球</b><small>MODULE 03</small></span>
+            </header>
+            <p class="cap-desc">主窗口可隐藏到托盘，原生 Win32 右键菜单；悬浮球置顶、可拖动、双击即抽取。</p>
+            <ul class="chips"><li class="chip">原生托盘</li><li class="chip">置顶悬浮球</li><li class="chip">单实例唤醒</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M4.4 6.4h15.2M4.4 12h15.2M4.4 17.6h9.6" /></svg>
+              </span>
+              <span class="cap-head-text"><b>方案与名单</b><small>MODULE 04</small></span>
+            </header>
+            <p class="cap-desc">为不同班级 / 活动建立独立方案，名单支持手动增删与 TXT 导入导出，启动恢复上次方案。</p>
+            <ul class="chips"><li class="chip">多方案</li><li class="chip">TXT 导入导出</li><li class="chip">显式保存</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3.6" y="4.6" width="16.8" height="14.8" rx="1.6" /><path d="M3.6 9.4h16.8M8.4 14.6h4.8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>背景主题</b><small>MODULE 05</small></span>
+            </header>
+            <p class="cap-desc">导入 PNG / JPG / BMP / GIF / TIFF，支持全局与分类背景、五种填充方式、自由裁切与遮罩。</p>
+            <ul class="chips"><li class="chip">图片库</li><li class="chip">自由裁切</li><li class="chip">可调遮罩</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3.4 19.4 7.8v8.4L12 20.6 4.6 16.2V7.8Z" /><path d="M12 12v8.6M12 12l7.4-4.2M12 12 4.6 7.8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>插件扩展</b><small>MODULE 06</small></span>
+            </header>
+            <p class="cap-desc"><code>.rnpp</code> 插件可添加菜单命令或注册新的抽取模式；插件 SDK 构建时自动打包。</p>
+            <ul class="chips"><li class="chip">PluginSdk</li><li class="chip">.rnpp</li><li class="chip">启停 / 移除</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3.6 19 6.4v5.2c0 4.2-2.8 7.2-7 8.8-4.2-1.6-7-4.6-7-8.8V6.4Z" /><path d="M9 12.2l2.2 2.2 3.8-4.2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>数据与安全</b><small>MODULE 07</small></span>
+            </header>
+            <p class="cap-desc">名单、数字与座位配置以 AES-GCM 加密并带 SHA-256 校验，三副本自动恢复；配置可锁定。</p>
+            <ul class="chips"><li class="chip">AES-GCM</li><li class="chip">SHA-256</li><li class="chip">PBKDF2</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= 03 STACK ============================= -->
+    <section class="section" id="stack">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">STACK</span>
+          <span class="sec-index">03</span>
+          <h2 class="sec-title">技术实现<em>STACK</em></h2>
+          <span class="sec-meta">100% C# / .NET</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="cap-grid cap-grid-2">
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3.4" y="4.6" width="17.2" height="14.8" rx="2" /><path d="M8 9.4 5.6 12 8 14.6M16 9.4 18.4 12 16 14.6" /></svg>
+              </span>
+              <span class="cap-head-text"><b>客户端</b><small>CLIENT</small></span>
+            </header>
+            <p class="cap-desc">
+              原生 <strong>C# / .NET 8 / WPF</strong> 桌面应用，使用系统字体、系统颜色与 WPF
+              默认控件样式，接近 Windows 原生对话框的观感。
+            </p>
+            <ul class="chips"><li class="chip">C#</li><li class="chip">.NET 8</li><li class="chip">WPF</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4.6" width="16" height="11.4" rx="1.6" /><path d="M9 19.4h6M12 16.4v3M8 8h8" /></svg>
+              </span>
+              <span class="cap-head-text"><b>原生 Windows 集成</b><small>WIN32</small></span>
+            </header>
+            <p class="cap-desc">
+              托盘图标与右键菜单直接调用 Win32 <code>Shell_NotifyIcon</code>、
+              <code>CreatePopupMenu</code> 与 <code>TrackPopupMenu</code>，不依赖第三方外壳。
+            </p>
+            <ul class="chips"><li class="chip">Shell_NotifyIcon</li><li class="chip">TrackPopupMenu</li><li class="chip">单实例</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="9.6" width="14" height="9.4" rx="1.6" /><path d="M8.4 9.6V7.4a3.6 3.6 0 0 1 7.2 0v2.2M12 13.4v2.2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>数据安全</b><small>CRYPTO</small></span>
+            </header>
+            <p class="cap-desc">
+              AES-GCM 加密 + SHA-256 完整性校验，主目录 / 备份目录 / 日志目录三副本自愈；
+              密码散列使用 PBKDF2-HMAC-SHA256。
+            </p>
+            <ul class="chips"><li class="chip">AES-GCM</li><li class="chip">SHA-256</li><li class="chip">PBKDF2</li></ul>
+          </article>
+
+          <article class="panel cap-card fx-in">
+            <header class="cap-head">
+              <span class="cap-icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3.6v9.6M8.4 9.6 12 13.2l3.6-3.6M4.6 16.4v2.2c0 .9.7 1.6 1.6 1.6h11.6c.9 0 1.6-.7 1.6-1.6v-2.2" /></svg>
+              </span>
+              <span class="cap-head-text"><b>插件 SDK 与发布</b><small>SDK / CI</small></span>
+            </header>
+            <p class="cap-desc">
+              <strong>BetterRNP.PluginSdk</strong> NuGet 包 + <code>.rnpp</code> 自动打包；
+              Release 同时提供自包含版、框架依赖版与插件 SDK。
+            </p>
+            <ul class="chips"><li class="chip">NuGet</li><li class="chip">.rnpp</li><li class="chip">GitHub Releases</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 04 CHANGELOG ============================ -->
+    <section class="section" id="changelog">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">RELEASES</span>
+          <span class="sec-index">04</span>
+          <h2 class="sec-title">版本记录<em>RELEASES</em></h2>
+          <span class="sec-meta">TAGS / RELEASES</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <ol class="log">
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.10.17</span>
+            <span class="log-no">RL-003</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.1.0 插件 SDK 发布</h3>
+              <p class="log-note">正式提供 BetterRNP.PluginSdk：插件接口、清单模型与 .rnpp 打包工具；引用 SDK 后构建即自动生成插件包，并自动排除宿主程序集。</p>
+            </div>
+            <span class="log-state is-live">STABLE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.10.17</span>
+            <span class="log-no">RL-002</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.0.1 界面与主题更新</h3>
+              <p class="log-note">设置页与结果区改为透明背景，背景图可直接透出；图片库改成缩略图列表，新增自由裁切与拖拽选区。</p>
+            </div>
+            <span class="log-state is-active">RELEASE</span>
+          </li>
+
+          <li class="log-item fx-in">
+            <span class="log-node" aria-hidden="true"></span>
+            <span class="log-date">2026.10.17</span>
+            <span class="log-no">RL-001</span>
+            <div class="log-body">
+              <h3 class="log-title">v2.0.0 .NET 8 / WPF 重写版</h3>
+              <p class="log-note">由 Java Swing 迁移到 .NET 8 / C# / WPF：三种滚停式抽取、.rnpp 插件体系、原生 Win32 托盘菜单、更新检查与背景主题一次到位。</p>
+            </div>
+            <span class="log-state is-active">RELEASE</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================ 05 DOWNLOAD ============================ -->
+    <section class="section" id="download">
+      <div class="shell">
+        <header class="sec-head fx-in">
+          <span class="ghost" aria-hidden="true">DOWNLOAD</span>
+          <span class="sec-index">05</span>
+          <h2 class="sec-title">下载与构建<em>DOWNLOAD</em></h2>
+          <span class="sec-meta">CHANNEL OPEN</span>
+          <span class="sec-rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="contact-grid">
+          <article class="terminal glass corners fx-in">
+            <header class="terminal-head">
+              <span class="terminal-dot" aria-hidden="true"></span>
+              <span class="terminal-path">CHANNEL://RELEASES.BETTERRNP</span>
+              <span class="terminal-code">P.05</span>
+            </header>
+
+            <div class="terminal-body">
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 安装包通过 GitHub Releases 发布，「下载最新版」始终指向<strong>最新正式版</strong>。</p>
+              <p class="terminal-line"><span class="terminal-prompt">&gt;</span> 自包含版内置 .NET 8 运行时（约 63 MB，解压即用）；框架依赖版需预装 .NET 8 桌面运行时。</p>
+
+              <pre class="codeblock"># 从源码构建（Windows + .NET 8 SDK）
+dotnet build BetterRNP.sln -c Release
+dotnet run --project src\BetterRNP\BetterRNP.csproj
+
+# 生成自包含版 / 框架依赖版 / 插件 SDK
+powershell -ExecutionPolicy Bypass -File tools\build-release.ps1</pre>
+
+              <div class="terminal-actions">
+                <a class="btn btn-primary" data-gh="release-url" href="https://github.com/TakaHoshino/BetterRandomNamePicker/releases" target="_blank" rel="noopener noreferrer">
+                  <span class="btn-num">A</span>
+                  前往 Releases
+                  <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+                </a>
+                <a class="btn btn-ghost" href="https://github.com/TakaHoshino/BetterRandomNamePicker" target="_blank" rel="noopener noreferrer">
+                  <span class="btn-num">B</span>
+                  浏览仓库
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <ul class="contact-list fx-in">
+            <li class="contact-item">
+              <span class="contact-key">RELEASES</span>
+              <a class="contact-val" data-gh="release-url" href="https://github.com/TakaHoshino/BetterRandomNamePicker/releases" target="_blank" rel="noopener noreferrer">
+                <span data-gh="version">v2.1.0</span>
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">SOURCE</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/BetterRandomNamePicker" target="_blank" rel="noopener noreferrer">
+                TakaHoshino/BetterRandomNamePicker
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">插件文档</span>
+              <!-- 用 HEAD 而不是分支名：仓库默认分支变更后链接依然有效 -->
+              <a class="contact-val" href="https://github.com/TakaHoshino/BetterRandomNamePicker/blob/HEAD/docs/PLUGIN_SDK.md" target="_blank" rel="noopener noreferrer">
+                PLUGIN_SDK.md
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">示例插件</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/BetterRandomNamePicker/tree/HEAD/examples" target="_blank" rel="noopener noreferrer">
+                examples/
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">许可</span>
+              <span class="contact-val is-text">Apache License 2.0</span>
+            </li>
+            <li class="contact-item">
+              <span class="contact-key">反馈</span>
+              <a class="contact-val" href="https://github.com/TakaHoshino/BetterRandomNamePicker/issues" target="_blank" rel="noopener noreferrer">
+                Issues
+                <svg class="ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 16.5 16.5 7.5M9.4 7.5h7.1v7.1" /></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <p class="proj-note fx-in">
+          数据默认保存在程序目录：<code>data/</code> 存配置、方案、主题与插件状态，
+          <code>log/</code> 存操作日志与加密备份，<code>plugins/</code> 存 .rnpp 插件；
+          升级程序不会覆盖这些目录。插件开发见仓库
+          <a href="https://github.com/TakaHoshino/BetterRandomNamePicker/blob/HEAD/docs/PLUGIN_SDK.md" target="_blank" rel="noopener noreferrer">docs/PLUGIN_SDK.md</a>。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="shell foot-inner">
+      <div class="foot-left">
+        <span class="barcode barcode-sm" aria-hidden="true"></span>
+        <p>© <span id="year">2026</span> HOSHINO · FILE NO.003 / BETTERRNP</p>
+      </div>
+      <p class="foot-right">
+        <a href="../">← 返回个人档案</a>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" type="button" aria-label="回到顶部" title="回到顶部">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5.6M5.4 12.2 12 5.6l6.6 6.6" /></svg>
+  </button>
+
+  <script src="../assets/js/main.js?v=20261018d" defer></script>
+  <script src="../assets/js/version-sync.js?v=20261018d" defer></script>
+</body>
+</html>
